@@ -6,19 +6,23 @@ class World(object):
 
     def __init__(self):
         self.__cars = []
-        self.__map = None  # Map(map_id, name, version, roads)
+        self.__world_map = None  # Map(map_id, name, version, roads)
 
-    def get_cars(self):
+    @property
+    def cars(self):
         return self.__cars
 
-    def get_map(self):
-        return self.__map
-
-    def set_cars(self, cars):
+    @cars.setter
+    def cars(self, cars):
         self.__cars = cars
 
-    def set_map(self, world_map):
-        self.__map = world_map
+    @property
+    def world_map (self):
+        return self.__world_map
+
+    @world_map .setter
+    def world_map (self, world_map ):
+        self.__world_map = world_map
 
     # def init_cars(self, type):
     #

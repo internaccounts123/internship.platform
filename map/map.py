@@ -5,26 +5,34 @@ class Map:
         self.__version = version
         self.__roads = roads
 
-    def get_id(self):
+    @property
+    def id(self):
         return self.__id
 
-    def get_name(self):
-        return self.__name
-
-    def get_version(self):
-        return self.__version
-
-    def get_roads(self):
-        return self.__roads
-
-    def set_id(self, map_id):
+    @id.setter
+    def id(self, map_id):
         self.__id = map_id
 
-    def set_name(self, name):
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name):
         self.__name = name
 
-    def set_version(self, version):
-        self.__version = version
+    @property
+    def version(self):
+        return self.__version
 
-    def set_roads(self, roads):
+    @version.setter
+    def version(self, version):
+        self.__id = version
+
+    @property
+    def roads(self):
+        return self.__roads
+
+    @roads.setter
+    def roads(self, roads):
         self.__roads = roads

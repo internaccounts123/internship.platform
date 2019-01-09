@@ -7,5 +7,5 @@ class RuleBased(Vehicle):
         super(RuleBased, self).__init__(name, color, car_length, car_width, road, x, y, lane, perception)
         pass
 
-    # def move(self):
-    #     self.x = self.x + self.speed
+    #  def move(self):
+    #  self.x = self.x + self.speed

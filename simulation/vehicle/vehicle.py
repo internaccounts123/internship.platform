@@ -20,53 +20,74 @@ class Vehicle(object):
     # def update_grid(self, grid):
     #     self.grid = grid
 
-    def get_name(self):
+    @property
+    def name(self):
         return self.__name
 
-    def get_color(self):
-        return self.__color
-
-    def get_car_length(self):
-        return self.__car_length
-
-    def get_car_width(self):
-        return self.__car_width
-
-    def get_road(self):
-        return self.__road
-
-    def get_x(self):
-        return self.__x
-
-    def get_y(self):
-        return self.__y
-
-    def get_lane(self):
-        return self.__lane
-
-    def get_perception(self):
-        return self.__perception
-
-    def set_name(self, name):
+    @name.setter
+    def name(self, name):
         self.__name = name
 
-    def set_color(self, color):
+    @property
+    def color(self):
+        return self.__color
+
+    @color.setter
+    def color(self, color):
         self.__color = color
 
-    def set_car_length(self, car_length):
+    @property
+    def car_length(self):
+        return self.__car_length
+
+    @car_length.setter
+    def car_length(self, car_length):
         self.__car_length = car_length
 
-    def set_car_width(self, car_width):
+    @property
+    def car_width(self):
+        return self.__car_width
+
+    @car_width.setter
+    def car_width(self, car_width):
         self.__car_width = car_width
 
-    def set_road(self, road):
+    @property
+    def road(self):
+        return self.__road
+
+    @road.setter
+    def road(self, road):
         self.__road = road
 
-    def set_x(self, x):
+    @property
+    def x(self):
+        return self.__x
+
+    @x.setter
+    def x(self, x):
         self.__x = x
 
-    def set_y(self, y):
+    @property
+    def y(self):
+        return self.__y
+
+    @y.setter
+    def y(self, y):
         self.__y = y
 
-    def set_lane(self, lane):
+    @property
+    def lane(self):
+        return self.__lane
+
+    @lane.setter
+    def lane(self, lane):
         self.__lane = lane
+
+    @property
+    def perception(self):
+        return self.__perception
+
+    @x.setter
+    def perception(self, perception):
+        self.__perception = perception
