@@ -1,7 +1,6 @@
 # import random
 # import numpy as np
-# from simulation.Vehicle.rule_based import RuleBased
-from simulation.Map.map import Map
+from simulation.map.map import Map
 
 
 class World(object):

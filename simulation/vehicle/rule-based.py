@@ -1,4 +1,4 @@
-from simulation.Vehicle.vehicle import Vehicle
+from simulation.vehicle.vehicle import Vehicle
 
 
 class RuleBased(Vehicle):
