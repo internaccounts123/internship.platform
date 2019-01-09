@@ -1,0 +1,11 @@
+{
+
+	"fps": 28,
+	"game_id": 1,
+	"amount_hint": 5,
+	"speed_limit": 10,
+
+	"map_file": "maps.json",
+	"vehicle_file": "vehicledata.json"
+
+}

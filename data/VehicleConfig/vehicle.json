@@ -1,0 +1,54 @@
+{
+	"Vehicles": [{
+			"name": "v1",
+			"id": "1",
+			"speed": "5",
+			"type": "Rule Based",
+			"color": "black",
+			"baring": "0",
+			"car_length": "4",
+			"car_width": "2"
+		},
+		{
+			"name": "v2",
+			"id": "1",
+			"speed": "5",
+			"type": "Rule Based",
+			"color": "red",
+			"baring": "0",
+			"car_length": "4",
+			"car_width": "2"
+		},
+		{
+			"name": "v3",
+			"id": "1",
+			"speed": "5",
+			"type": "Rule Based",
+			"color": "blue",
+			"baring": "0",
+			"car_length": "4",
+			"car_width": "2"
+		},
+		{
+			"name": "v4",
+			"id": "1",
+			"speed": "5",
+			"type": "Rule Based",
+			"color": "red",
+			"baring": "0",
+			"car_length": "4",
+			"car_width": "2"
+		},
+
+		{
+			"name": "v5",
+			"id": "2",
+			"speed": "10",
+			"type": "Rule Based",
+			"color": "yellow",
+			"baring": "0",
+			"car_length": "4",
+			"car_width": "2"
+		}
+	]
+}
