@@ -6,11 +6,21 @@ from simulation.Map.map import Map
 
 class World(object):
 
-    def __init__(self, rb_size, no_of_lanes, road_length, data):
-        self.rb_size = 0
-        self.data = data
-        self.rb_cars = []
-        self.map = Map(no_of_lanes, road_length)
+    def __init__(self):
+        self.__cars = []
+        self.__map = None  # Map(map_id, name, version, roads)
+
+    def get_cars(self):
+        return self.__cars
+
+    def get_map(self):
+        return self.__map
+
+    def set_cars(self, cars):
+        self.__cars = cars
+
+    def set_map(self, world_map):
+        self.__map = world_map
 
     # def init_cars(self, type):
     #
@@ -47,13 +57,3 @@ class World(object):
 
     # function update args[6:] map road grid
     # calculate and update perception
-
-
-
-
-
-
-
-
-
-
