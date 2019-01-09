@@ -1,6 +1,5 @@
 # import random
 # import numpy as np
-from simulation.map.map import Map
 
 
 class World(object):
