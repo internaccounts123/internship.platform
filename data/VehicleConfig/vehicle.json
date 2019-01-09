@@ -1,7 +1,7 @@
 {
 	"Vehicles": [{
 			"name": "v1",
-			"speed": "5",
+
 			"type": "Rule Based",
 			"color": "black",
 
@@ -10,7 +10,7 @@
 		},
 		{
 			"name": "v2",
-			"speed": "5",
+
 			"type": "Rule Based",
 			"color": "red",
 
@@ -19,7 +19,7 @@
 		},
 		{
 			"name": "v3",
-			"speed": "5",
+
 			"type": "Rule Based",
 			"color": "blue",
 
@@ -28,7 +28,6 @@
 		},
 		{
 			"name": "v4",
-			"speed": "5",
 			"type": "Rule Based",
 			"color": "red",
 
@@ -38,7 +37,6 @@
 
 		{
 			"name": "v5",
-			"speed": "10",
 			"type": "Rule Based",
 			"color": "yellow",
 
