@@ -1,10 +1,7 @@
 {
-
 	"fps": 28,
 	"game_id": 1,
 
-
 	"map_file": "maps.json",
-	"vehicle_file": "vehicledata.json"
-
+	"vehicle_file": "vehicle.json"
 }
