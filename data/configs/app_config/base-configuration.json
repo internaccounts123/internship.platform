@@ -1,8 +1,11 @@
 {
 	"fps": 28,
 	"game_id": 1,
-	"files": {
-		"map": "maps.json",
-		"vehicle": "vehicle.json"
+	"map": "maps.json",
+	"driving": {
+		"traffic": "traffic.json",
+		"moderate": "moderate.json",
+		"aggressive": "aggressive.json",
+		"defensive": "defensive.json"
 	}
 }
