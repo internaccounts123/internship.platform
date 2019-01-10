@@ -46,7 +46,7 @@ class Road:
 
     @lanes.setter
     def id(self, lanes):
-        self.__length = lanes
+        self.__lanes = lanes
 
     @property
     def lanes(self):
@@ -54,7 +54,7 @@ class Road:
 
     @lanes.setter
     def id(self, lanes):
-        self.__length = lanes
+        self.__lanes = lanes
 
 
 
