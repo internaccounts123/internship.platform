@@ -2,8 +2,8 @@ import json
 
 
 class ConfigReader:
-    def __init__(self, filename):
-        self.data = self.create_data(filename)
+    def __init__(self):
+        pass
 
     @staticmethod
     def create_data(filename):
