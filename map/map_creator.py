@@ -1,6 +1,8 @@
 from map.lane import Lane
 from map.road import Road
 from map.map import Map
+import math
+import numpy as np
 import json
 
 
@@ -70,7 +72,7 @@ class MapCreator:
         return lanes_objects
 
     @staticmethod
-    def generate_lane_points(self, road_type, starting_point, length):
+    def __generate_lane_points(self, road_type, starting_point, length):
         """
         Sample and return lane points based on road type, starting point and length
         :param self:
@@ -79,5 +81,12 @@ class MapCreator:
         :param length:
         :return:
         """
-        return [1,2,3]
+        y = np.arange(starting_point[1], length, 0.5)
+        x = np.array([starting_point[0]] * y.shape[0])
+        coordinates = np.hstack((x.reshape(-1, 1), y.reshape(-1, 1)))
+        return coordinates
+
+
+
+
 
