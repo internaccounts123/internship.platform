@@ -38,12 +38,5 @@ class Lane:
     def id(self, starting_pos):
         self.__starting_pos = starting_pos
 
-    @property
-    def lanes(self):
-        return self.__width
-
-    @roadtype.setter
-    def id(self, width):
-        self.__width = width
 
 

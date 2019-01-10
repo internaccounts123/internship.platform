@@ -2,6 +2,8 @@ class Road:
     def __init__(self, length, name, roadtype, starting_pos, bearing, connection, lanes):
         self.__length = length
         self.__name = name
+        self.__starting_pos = starting_pos
+        self.__bearing = bearing
         self.__connection = connection
         self.__roadtype = roadtype
         self.__lanes = lanes
@@ -42,8 +44,17 @@ class Road:
     def lanes(self):
         return self.__lanes
 
-    @roadtype.setter
+    @lanes.setter
     def id(self, lanes):
         self.__length = lanes
+
+    @property
+    def lanes(self):
+        return self.__lanes
+
+    @lanes.setter
+    def id(self, lanes):
+        self.__length = lanes
+
 
 
