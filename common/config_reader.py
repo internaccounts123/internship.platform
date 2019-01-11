@@ -1,4 +1,5 @@
 import json
+from jsonpath_rw import jsonpath, parse
 
 
 class ConfigReader:
@@ -21,9 +22,17 @@ class ConfigReader:
             __instance = ConfigReader(filename)
         return __instance
 
-    def get_data(self):
-        return self.__data
+    @staticmethod
+    def get_data(query):
+        """
+        :param query: string containing query for the value it needs from the dictionary
+        :return: matches found for the query
+        """
+        path = parse('$..' + query)
+        matches = [match.value for match in path.find(ConfigReader.__data)]
+        return matches
 
+    @staticmethod
     def __create_data(self, filename):
         """
         Iterates over file names in base-config and concatenates all data into one data structure
