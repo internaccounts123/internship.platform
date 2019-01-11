@@ -67,7 +67,7 @@ class MapCreator:
         for i in list(lanes):
             data = lanes[str(i)]
             lane_points = MapCreator.generate_lane_points(road_type, starting_position, length)
-            lanes_objects.append(Lane(data["name"], data["width"], lane_points))
+            lanes_objects.append(Lane(i, data["name"], data["width"], lane_points))
         return lanes_objects
 
     @staticmethod
