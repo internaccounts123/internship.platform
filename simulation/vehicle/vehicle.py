@@ -86,6 +86,6 @@ class Vehicle(object):
     def perception(self):
         return self.__perception
 
-    @x.setter
+    @perception.setter
     def perception(self, perception):
         self.__perception = perception

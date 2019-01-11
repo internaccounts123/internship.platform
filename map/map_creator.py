@@ -10,7 +10,6 @@ class MapCreator:
     def create_map():
         """
         Create a map from map file which it will get from ConfigReader
-        :param self:
         :return: Map object
         """
         # Get map file name
@@ -32,7 +31,6 @@ class MapCreator:
     def __create_roads(roads):
         """
         Create a list of roads from dictionary and return
-        :param self:
         :param roads: roads dictionary from the json file
         :return: list of road objects
         """
@@ -50,7 +48,6 @@ class MapCreator:
     def __create_lanes(lanes, road_type, starting_position, length):
         """
         Create a list of lanes from the dictionary and return
-        :param self:
         :param lanes: lanes dictionary from the json file
         :param road_type: type of road
         :param starting_position: starting point of lane/road
@@ -69,7 +66,6 @@ class MapCreator:
     def generate_lane_points(road_type, starting_point, length):
         """
         Sample and return lane points based on road type, starting point and length
-        :param self:
         :param road_type: tpye of road/lane
         :param starting_point: starting position of lane/road points
         :param length:

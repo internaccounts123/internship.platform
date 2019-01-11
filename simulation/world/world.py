@@ -1,12 +1,14 @@
 # import random
 # import numpy as np
+from simulation.vehicle.traffic_creator import TrafficCreator
 
 
 class World(object):
 
-    def __init__(self):
-        self.__cars = []
-        self.__world_map = None  # Map(map_id, name, version, roads)
+    def __init__(self, map):
+        self.__world_map = map  # Map(map_id, name, version, roads)
+        self.__cars = TrafficCreator(map).traffic
+        self.__grid = None
 
     @property
     def cars(self):
@@ -58,4 +60,3 @@ class World(object):
     # self.rbSize += 1
 
     # function update args[6:] map road grid
-    # calculate and update perception
