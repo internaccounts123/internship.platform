@@ -24,9 +24,9 @@ class Lane:
     def lane_points(self):
         return self.__lane_points
 
-    @name.setter
-    def lane_points(self, lane_ponts):
-        self.__lane_points = lane_ponts
+    @lane_points.setter
+    def lane_points(self, lane_points):
+        self.__lane_points = lane_points
 
 
 

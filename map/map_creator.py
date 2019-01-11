@@ -1,16 +1,13 @@
 from map.lane import Lane
 from map.road import Road
-from map.map import Map
-import math
-import numpy as np
+from map.map_class import Map
 import json
 
 
 class MapCreator:
 
-
     @staticmethod
-    def create_map(self):
+    def create_map():
         """
         Create a map from map file which it will get from ConfigReader
         :param self:
@@ -19,7 +16,7 @@ class MapCreator:
         # Get map file name
         # file_name = ConfigReader.get_value("map")
 
-        file_name = "maps.json"
+        file_name = "/Users/firzoknadeem/PycharmProjects/internship.platform/data/map/maps.json"
 
         with open(file_name) as f:
 
@@ -28,13 +25,11 @@ class MapCreator:
         map_id = data["Mapid"]
         map_name = data["MapName"]
         map_version = data["MapVersion"]
-        roads = self.__create_roads(data["roads"])
+        roads = MapCreator.__create_roads(data["roads"])
         return Map(map_id, map_name, map_version, roads)
 
-
-
     @staticmethod
-    def __create_roads(self, roads):
+    def __create_roads(roads):
         """
         Create a list of roads from dictionary and return
         :param self:
@@ -45,15 +40,14 @@ class MapCreator:
 
         for i in list(roads):
             data = roads[str(i)]
-            lanes = self.__create_lanes(data["lanes"], data["roadtype"], data["starting_pos"], data["length"])
+            lanes = MapCreator.__create_lanes(data["lanes"], data["roadtype"], data["starting_pos"], data["length"])
 
             road_objects.append(Road(data["length"], data["name"], data["roadtype"], data["starting_pos"], data["bearing"], data["connection"], lanes))
 
         return road_objects
 
-
     @staticmethod
-    def __create_lanes(self, lanes, road_type, starting_position, length):
+    def __create_lanes(lanes, road_type, starting_position, length):
         """
         Create a list of lanes from the dictionary and return
         :param self:
@@ -67,12 +61,12 @@ class MapCreator:
 
         for i in list(lanes):
             data = lanes[str(i)]
-            lane_points = self.generate_lane_points(road_type, starting_position, length)
+            lane_points = MapCreator.generate_lane_points(road_type, starting_position, length)
             lanes_objects.append(Lane(data["name"], data["width"], lane_points))
         return lanes_objects
 
     @staticmethod
-    def __generate_lane_points(self, road_type, starting_point, length):
+    def generate_lane_points(road_type, starting_point, length):
         """
         Sample and return lane points based on road type, starting point and length
         :param self:
@@ -81,12 +75,4 @@ class MapCreator:
         :param length:
         :return:
         """
-        y = np.arange(starting_point[1], length, 0.5)
-        x = np.array([starting_point[0]] * y.shape[0])
-        coordinates = np.hstack((x.reshape(-1, 1), y.reshape(-1, 1)))
-        return coordinates
-
-
-
-
-
+        return [1, 2, 3]

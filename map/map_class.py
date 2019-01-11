@@ -5,7 +5,6 @@ class Map:
         self.__version = version
         self.__roads = roads
 
-
     @property
     def id(self):
         return self.__id

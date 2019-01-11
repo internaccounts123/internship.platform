@@ -7,11 +7,9 @@ class Vehicle(object):
         self.__car_length = car_length
         self.__car_width = car_width
         self.__road = road
-
         self.__x = x
         self.__y = y
         self.__lane = lane
-
         self.__perception = perception
 
     # def move(self):

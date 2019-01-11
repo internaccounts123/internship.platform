@@ -6,7 +6,7 @@ class ConfigReader:
     __data = ""
     __instance = ""
 
-    def __init__(self, filename="base-configuration.json"):
+    def __init__(self, filename = "base-configuration.json"):
         """
         Virtually private constructor
         :param filename: json (base-config) containing basic config of simulation and all other json file names 
@@ -17,7 +17,8 @@ class ConfigReader:
             raise Exception("Object already exists")
 
     @staticmethod
-    def get_instance(filename="base-configuration.json"):
+    def get_instance(filename = "base-configuration.json"):
+
         if ConfigReader.__instance == "":
             __instance = ConfigReader(filename)
         return __instance
@@ -28,7 +29,7 @@ class ConfigReader:
         :param query: string containing query for the value it needs from the dictionary
         :return: matches found for the query
         """
-        path = parse('$..' + query)
+        path = parse(query)
         matches = [match.value for match in path.find(ConfigReader.__data)]
         return matches
 
