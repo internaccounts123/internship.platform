@@ -12,7 +12,7 @@ class ConfigReader:
         :param filename: json (base-config) containing basic config of simulation and all other json file names 
         """
         if ConfigReader.__instance == "":
-            ConfigReader.__data = self.__create_data(filename)
+            ConfigReader.__data = ConfigReader.__create_data(filename)
         else:
             raise Exception("Object already exists")
 
@@ -33,7 +33,7 @@ class ConfigReader:
         return matches
 
     @staticmethod
-    def __create_data(self, filename):
+    def __create_data(filename):
         """
         Iterates over file names in base-config and concatenates all data into one data structure
         :param filename: json (base-config) containing basic config of simulation and all other json file names
