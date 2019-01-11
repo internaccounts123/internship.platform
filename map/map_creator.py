@@ -1,6 +1,7 @@
 from map.lane import Lane
 from map.road import Road
 from map.map_class import Map
+from common.config_reader import ConfigReader
 import json
 
 
@@ -14,11 +15,12 @@ class MapCreator:
         :return: Map object
         """
         # Get map file name
-        # file_name = ConfigReader.get_value("map")
+        # file_name = ConfigReader.get_data('map')[0]
 
-        file_name = "/Users/firzoknadeem/PycharmProjects/internship.platform/data/map/maps.json"
+        #for testing delete this when Game class is made
+        file_name = "maps.json"
 
-        with open(file_name) as f:
+        with open("./data/map/"+file_name) as f:
 
             data = json.load(f)
 
