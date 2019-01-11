@@ -14,6 +14,9 @@ class MapCreator:
         :param self:
         :return: Map object
         """
+
+
+        #TODO: Implement this after game class is done
         # Get map file name
         # file_name = ConfigReader.get_data('map')[0]
 
