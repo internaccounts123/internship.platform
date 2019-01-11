@@ -1,0 +1,125 @@
+{
+	"Mapid": 1,
+	"MapName": "A9_Nord_clipped",
+	"MapVersion": 33,
+
+	"roads": {
+
+		"1": {
+			"name": "FFJ",
+			"length": 10,
+			"roadtype":"Straight",
+			"starting_pos": [0, 0],
+			"bearing": 0,
+			"connection": "GT",
+			"lanes": {
+				"1": {
+					"name": "passing lane",
+					"width": 3
+				},
+				"2": {
+					"name": "through lane",
+					"width": 3
+				},
+				"3": {
+					"name": "fast lane",
+					"width": 3
+				}
+			}
+		},
+
+		"2": {
+			"name": "GTRoad",
+			"length": 10,
+			"roadtype":"Straight",
+			"starting_pos": [0, 10],
+			"bearing": 0,
+			"connection": "MallRoad",
+			"lanes": {
+				"1": {
+					"name": "passing lane",
+					"width": 3
+				},
+				"2": {
+					"name": "through lane",
+					"width": 3
+				},
+				"3": {
+					"name": "fast lane",
+					"width": 3
+				}
+			}
+		},
+
+		"3": {
+			"name": "MallRoad",
+			"length": 10,
+			"roadtype":"Straight",
+			"starting_pos": [0, 20],
+			"bearing": 0,
+			"connection": "MotorWay",
+			"lanes": {
+				"1": {
+					"name": "passing lane",
+					"width": 3
+				},
+				"2": {
+					"name": "through lane",
+					"width": 3
+				},
+				"3": {
+					"name": "fast lane",
+					"width": 3
+				}
+			}
+		},
+
+		"4": {
+			"name": "MotorWay",
+			"length": 10,
+			"roadtype":"Curved",
+			"starting_pos": [0, 30],
+			"bearing": 0,
+			"connection": "TheRoad",
+			"lanes": {
+				"1": {
+					"name": "passing lane",
+					"width": 3
+				},
+				"2": {
+					"name": "through lane",
+					"width": 3
+				},
+				"3": {
+					"name": "fast lane",
+					"width": 3
+				}
+			}
+		},
+
+		"5": {
+			"name": "TheRoad",
+			"length": 10,
+			"roadtype":"Curved",
+			"starting_pos": [0, 40],
+			"bearing": 0,
+			"connection": "FFJ",
+			"lanes": {
+				"1": {
+					"name": "passing lane",
+					"width": 3
+				},
+				"2": {
+					"name": "through lane",
+					"width": 3
+				},
+				"3": {
+					"name": "fast lane",
+					"width": 3
+				}
+			}
+		}
+
+	}
+
+}
