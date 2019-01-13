@@ -31,7 +31,7 @@
 		"2": {
 			"name": "GTRoad",
 			"length": 10,
-			"roadtype":"Diagonal",
+			"roadtype":"Straight",
 			"starting_pos": [0, 10],
 			"bearing": 0.7,
 			"connection": "MallRoad",
