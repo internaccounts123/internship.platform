@@ -61,7 +61,14 @@ class Map:
 
         return Lateral_lanes
 
-    #def GetRoadInfo ( self, currentposition ):
+    def GetRoadInfo ( self, currentposition ): #returns Road Name on the basis of a Vehicle's current position
+
+        for r in self.__roads:
+            for l in r.__lanes:
+                for lp in l.__lanepoints:
+                    if (lp == currentposition):
+                        return r.__name
+                        break
 
 
 
