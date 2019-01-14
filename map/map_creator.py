@@ -77,7 +77,7 @@ class MapCreator:
         """
         coordinates = np.array([])
 
-        if road_type == "Straight" or road_type == "Diagonal":
+        if road_type == "Straight":
 
             final_x = length * np.cos(bearing) + starting_position[0]
             final_y = length * np.sin(bearing) + starting_position[1]
