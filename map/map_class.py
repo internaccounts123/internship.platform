@@ -1,9 +1,17 @@
+import numpy as np
+
+
 class Map:
     def __init__(self, map_id, name, version, roads):
         self.__id = map_id
         self.__name = name
         self.__version = version
         self.__roads = roads
+
+    def points_in_yrange(self, road_idx, lane_idx, _range):
+        possible_points = np.array(self.roads[road_idx].lanes[lane_idx].lane_points)
+        return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
+
 
     @property
     def id(self):
