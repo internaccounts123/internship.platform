@@ -37,5 +37,13 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
+    def GetNextLanePoint(self, currentPoint, laneId, roadname):
+        road = self.__roads[[x.roadname for x in self.__roads].index(roadname)]
+        lane = road.__lanes[[x.__id for x in self.__lanes].index(laneId)]
+        CurrentPointIndex = lane.__lane_points.index(currentPoint)
+        return lane.__lane_points[CurrentPointIndex + 1]
+
+
+
 
 
