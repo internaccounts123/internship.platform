@@ -10,11 +10,11 @@ class TrafficCreator(object):
         "defensive": ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")
     }
     __traffic = []
-    __instance = ""
+    __instance = None
 
     def __init__(self, map1):
 
-        if TrafficCreator.__instance == "":
+        if TrafficCreator.__instance is None:
             TrafficCreator.__traffic = TrafficCreator.__create_traffic(map1)
         else:
             raise Exception("Object already exists")
@@ -22,7 +22,7 @@ class TrafficCreator(object):
     @staticmethod
     def get_instance(map1):
 
-        if TrafficCreator.__instance == "":
+        if TrafficCreator.__instance is None:
             __instance = TrafficCreator(map1)
         return __instance
 
