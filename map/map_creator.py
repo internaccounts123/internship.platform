@@ -1,6 +1,7 @@
 from map.lane import Lane
 from map.road import Road
 from map.map_class import Map
+from common.utility import *
 import json
 import numpy as np
 
@@ -66,7 +67,7 @@ class MapCreator:
         for i in range(1, len(lanes)):
             data = lanes[str(i)]
             lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
-            starting_position[1] += lane_width  # Subject to change on the basis of renderer meeting
+            starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             lane_objects.append(Lane(i, data["name"], lane_width, lane_points))
         return lane_objects
 
@@ -80,11 +81,12 @@ class MapCreator:
         : return:
         """
         coordinates = np.array([])
+        starting_position_x = starting_position[0] + (lane_width / 2)
+        starting_position_y = starting_position[1]
+        bearing = deg2rad(bearing)
 
         if road_type == "Straight":
 
-            starting_position_x = starting_position[0] + (lane_width/2)
-            starting_position_y = starting_position[1] + (lane_width/2)
             final_x = length * np.cos(bearing) + starting_position_x
             final_y = length * np.sin(bearing) + starting_position_y
             x = np.linspace(starting_position_x, final_x, num=length)
