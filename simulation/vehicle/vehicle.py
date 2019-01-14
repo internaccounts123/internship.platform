@@ -31,7 +31,6 @@ class Vehicle(object):
 
     @road.setter
     def road(self, road):
-        print ("in hereeee", road)
         self.__road = road
 
     @property

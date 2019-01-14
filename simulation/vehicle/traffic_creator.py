@@ -4,31 +4,15 @@ import random
 
 
 class TrafficCreator(object):
-    ConfigReader()
     __percentages = {
         "aggressive": ConfigReader.get_data("driving.traffic.driver_profile_type.aggressive")[0],
         "moderate": ConfigReader.get_data("driving.traffic.driver_profile_type.moderate")[0],
         "defensive": ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")[0]
     }
     __traffic = []
-    __instance = None
-
-    def __init__(self, map1):
-
-        if TrafficCreator.__instance is None:
-            TrafficCreator.__traffic = TrafficCreator.__create_traffic(map1)
-        else:
-            raise Exception("Object already exists")
 
     @staticmethod
-    def get_instance(map1):
-
-        if TrafficCreator.__instance is None:
-            __instance = TrafficCreator(map1)
-        return __instance
-
-    @staticmethod
-    def __create_traffic(map1):
+    def create_traffic(map1):
 
         taken = []
         for i in range(len(TrafficCreator.__percentages)):
@@ -54,6 +38,7 @@ class TrafficCreator(object):
         road_idx = None
         lane_idx = None
         xy_id = None
+
         # choose a point where a car is not already present
         while (tup in taken) or (_do is True):
             _do = False
@@ -61,14 +46,7 @@ class TrafficCreator(object):
             lane_idx = random.randint(0, len(map1.roads[road_idx].lanes)-1)
 
             # pick random points from list of possible lane points
-            # print ("ri", road_idx)
-            # print("li",lane_idx)
-            # print("car_len ",type(v.car_length))
-            # print("half car ", (v.car_length/2.0))
-            # print("len ", len(map1.roads[road_idx].lanes[lane_idx].lane_points))
-            # print("poora ", (len(map1.roads[road_idx].lanes[lane_idx].lane_points) - (v.car_length/2.0))-1)
             xy_id = random.randint((v.car_length/2.0), (len(map1.roads[road_idx].lanes[lane_idx].lane_points) - (v.car_length/2.0))-1)
-            # print("m", xy_id)
             tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1])
 
         lower_limit = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1] - (v.car_length/2.0)
@@ -83,9 +61,6 @@ class TrafficCreator(object):
             taken.append(tup)
 
         # set car attributes
-        # print("road len ", len(map1.roads))
-        # print("road_idx: ",map1.roads[road_idx])
-        # print("name: ",map1.roads[road_idx].name)
         v.road = map1.roads[road_idx].name
         v.lane = map1.roads[road_idx].lanes[lane_idx].id
         v.x = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][0]
