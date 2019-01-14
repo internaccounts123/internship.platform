@@ -37,11 +37,34 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-    def GetNextLanePoint(self, currentPoint, laneId, roadname):
+
+    #Returns Next Lane Point using the road name, LaneId and Current Position of the Car
+    def GetNextLanePoint_byName(self, currentPoint, laneId, roadname):
         road = self.__roads[[x.roadname for x in self.__roads].index(roadname)]
         lane = road.__lanes[[x.__id for x in self.__lanes].index(laneId)]
         CurrentPointIndex = lane.__lane_points.index(currentPoint)
         return lane.__lane_points[CurrentPointIndex + 1]
+
+    # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
+
+    def GetLateralLanes (self, laneId, roadname):
+
+        Lateral_lanes = []
+
+        roadIdx = [x.roadname for x in self.__roads].index(roadname)
+        LaneIdx = [x.__id for x in self.__lanes].index(laneId)
+        if (LaneIdx < 3) :
+            Lateral_lanes. append (self.__roads[roadIdx].__lanes[LaneIdx + 1])
+
+        if (LaneIdx > 0):
+            Lateral_lanes.append(self.__roads[roadIdx].__lanes[LaneIdx - 1])
+
+        return Lateral_lanes
+
+    #def GetRoadInfo ( self, currentposition ):
+
+
+
 
 
 
