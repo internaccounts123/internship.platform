@@ -36,6 +36,3 @@ class Lane:
     @lane_points.setter
     def lane_points(self, lane_points):
         self.__lane_points = lane_points
-
-
-
