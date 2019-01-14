@@ -7,11 +7,9 @@ class Vehicle(object):
         self.__car_length = car_length
         self.__car_width = car_width
         self.__road = road
-
         self.__x = x
         self.__y = y
         self.__lane = lane
-
         self.__perception = perception
 
     # def move(self):
@@ -88,6 +86,6 @@ class Vehicle(object):
     def perception(self):
         return self.__perception
 
-    @x.setter
+    @perception.setter
     def perception(self, perception):
         self.__perception = perception
