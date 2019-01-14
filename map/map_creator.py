@@ -22,7 +22,7 @@ class MapCreator:
         # For testing delete this when Game class is made
         file_name = "maps.json"
 
-        with open("../../data/map/" + file_name) as f:
+        with open("../data/map/" + file_name) as f:
             data = json.load(f)
 
         map_id = data["Map_id"]

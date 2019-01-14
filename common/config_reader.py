@@ -41,12 +41,12 @@ class ConfigReader:
         :return: concatenated data structure of all json files
         """
 
-        with open("../../data/configs/app_config/"+filename) as f:
+        with open("../data/configs/app_config/"+filename) as f:
             data = json.load(f)
 
         for i in range(len(data["driving"])):
 
-            with open("../../data/driving/" + list(data["driving"].values())[i]) as f:
+            with open("../data/driving/" + list(data["driving"].values())[i]) as f:
                 data["driving"][list(data["driving"].keys())[i]] = json.load(f)
 
         return data
