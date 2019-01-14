@@ -5,8 +5,8 @@ from simulation.vehicle.traffic_creator import TrafficCreator
 
 class World(object):
 
-    def __init__(self, map):
-        self.__world_map = map  # Map(map_id, name, version, roads)
+    def __init__(self, map1):
+        self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator(map).traffic
         self.__grid = None
 

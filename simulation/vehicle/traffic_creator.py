@@ -4,9 +4,11 @@ import random
 
 
 class TrafficCreator(object):
-    __percentage_aggressive = ConfigReader.get_data("driving.traffic.driver_profile_type.aggressive")
-    __percentage_moderate = ConfigReader.get_data("driving.traffic.driver_profile_type.moderate")
-    __percentage_defensive = ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")
+    __percentages = {
+        "aggressive": ConfigReader.get_data("driving.traffic.driver_profile_type.aggressive"),
+        "moderate": ConfigReader.get_data("driving.traffic.driver_profile_type.moderate"),
+        "defensive": ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")
+    }
     __traffic = []
     __instance = ""
 
@@ -28,55 +30,60 @@ class TrafficCreator(object):
     def __create_traffic(map1):
 
         taken = []
-        for i in range(ConfigReader.get_data("driving.traffic.traffic_amount") * TrafficCreator.__percentage_aggressive):
 
-            v = Vehicle(ConfigReader.get_data("driving.aggressive.perception_size"),
-                                ConfigReader.get_data("driving.aggressive.speed_limit"),
-                                ConfigReader.get_data("driving.aggressive.acceleration"),
-                                ConfigReader.get_data("driving.aggressive.de_acceleration"),
-                                ConfigReader.get_data("driving.aggressive.length"), "aggressive")
-
+        for i in range(len(ConfigReader.__percentages)):
+            v = TrafficCreator.__vehicle_creator(list(TrafficCreator.__percentages.values())[i], list(TrafficCreator.__percentages.keys())[i])
             v = TrafficCreator.__set_position(v, map1, taken)
             TrafficCreator.__traffic.append(v)
 
-        for i in range(ConfigReader.get_data("driving.traffic.traffic_amount") * TrafficCreator.__percentage_moderate):
-
-            v = Vehicle(ConfigReader.get_data("driving.moderate.perception_size"),
-                                ConfigReader.get_data("driving.moderate.speed_limit"),
-                                ConfigReader.get_data("driving.moderate.acceleration"),
-                                ConfigReader.get_data("driving.moderate.de_acceleration"),
-                                ConfigReader.get_data("driving.moderate.length"), "moderate")
-
-            v = TrafficCreator.__set_position(v, map1, taken)
-            TrafficCreator.__traffic.append(v)
-
-        for i in range(ConfigReader.get_data("driving.traffic.traffic_amount") * TrafficCreator.__percentage_defensive):
-            v = Vehicle(ConfigReader.get_data("driving.defensive.perception_size"),
-                                ConfigReader.get_data("driving.defensive.speed_limit"),
-                                ConfigReader.get_data("driving.defensive.acceleration"),
-                                ConfigReader.get_data("driving.defensive.de_acceleration"),
-                                ConfigReader.get_data("driving.defensive.length"), "defensive")
-
-            v = TrafficCreator.__set_position(v, map1, taken)
-            TrafficCreator.__traffic.append(v)
         return TrafficCreator.__traffic
 
     @staticmethod
     def __set_position(v, map1, taken):
 
-        while tup in taken:
-            road_id = random.randint(len(map1.roads))
-            lane_id = random.randint(len(map1.roads[road_id].lanes))
-            xy_id = random.randint(v.car_length, len(map1.roads[road_id].lanes[lane_id].lane_points))
-            tup = (road_id, lane_id, xy_id)
+        """
+        :param v: Vehicle not assigned a position
+        :param map1: full map
+        :param taken: already allotted points
+        :return: vehicle with assigned initial position
+        """
 
-        for i in range(v.car_length):
-            tup = (road_id, lane_id, xy_id-i)
+        # choose a point where a car is not already present
+        while tup in taken:
+            road_idx = random.randint(len(map1.roads))
+            lane_idx = random.randint(len(map1.roads[road_idx].lanes))
+
+            # pick random points from list of possible lane points
+            xy_id = random.randint((v.car_length/2.0), len(map1.roads[road_idx].lanes[lane_idx].lane_points) - (v.car_length/2.0))
+            tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id[1]])
+
+        lower_limit = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id[1]] - (v.car_length/2.0)
+        upper_limit = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id[1]] + (v.car_length/2.0)
+
+        # taken points by this car
+        points = map1.points_in_yrange(map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, (lower_limit, upper_limit))
+
+        # remove taken points by this car
+        for p in points:
+            tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, p[1])
             taken.append(tup)
-        v.road(map1.roads[road_id].name)
-        v.lane(map1.roads[road_id].lanes[lane_id].id)
-        v.x(map1.roads[road_id].lanes[lane_id].lane_points[xy_id][0])
-        v.y(map1.roads[road_id].lanes[lane_id].lane_points[xy_id][1])
+
+        # set car attributes
+        v.road(map1.roads[road_idx].name)
+        v.lane(map1.roads[road_idx].lanes[lane_idx].id)
+        v.x(map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][0])
+        v.y(map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1])
+
+        return v
+
+    @staticmethod
+    def __vehicle_creator(percentage, type1):
+        for i in range(ConfigReader.get_data("driving.traffic.traffic_amount") * percentage):
+            v = Vehicle(ConfigReader.get_data("driving." + type1 + ".perception_size"),
+                                ConfigReader.get_data("driving." + type1 + ".speed_limit"),
+                                ConfigReader.get_data("driving." + type1 + ".acceleration"),
+                                ConfigReader.get_data("driving." + type1 + ".de_acceleration"),
+                                ConfigReader.get_data("driving." + type1 + ".length"), type1)
 
         return v
 
