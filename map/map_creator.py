@@ -23,9 +23,8 @@ class MapCreator:
         # For testing delete this when Game class is made
         file_name = "maps.json"
 
-        maps_path = os.path.realpath(os.path.join(ConfigReader.get_data('base_path'), '/data/map/'))
-        print(os.path.realpath(maps_path) + "/" + file_name)
-        with open(os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name)), 'r') as f:
+        maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name))
+        with open(maps_path, 'r') as f:
             data = json.load(f)
 
         map_id = data["Map_id"]
