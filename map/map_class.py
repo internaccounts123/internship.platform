@@ -8,11 +8,6 @@ class Map:
         self.__version = version
         self.__roads = roads
 
-    def points_in_yrange(self, road_idx, lane_idx, _range):
-        possible_points = np.array(self.roads[road_idx].lanes[lane_idx].lane_points)
-        return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
-
-
     @property
     def id(self):
         return self.__id
@@ -44,7 +39,6 @@ class Map:
     @roads.setter
     def roads(self, roads):
         self.__roads = roads
-
 
     #Returns Next Lane Point using the road name, LaneId and Current Position of the Car
     def GetNextLanePoint_byName(self, currentPoint, laneId, roadname):

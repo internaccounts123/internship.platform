@@ -16,6 +16,7 @@ class Vehicle(object):
         self.__lane = None
         self.__road = None
         self.__perception = None
+        self.__id = None
 
     @property
     def car_length(self):
@@ -32,6 +33,14 @@ class Vehicle(object):
     @road.setter
     def road(self, road):
         self.__road = road
+
+    @property
+    def id(self):
+        return self.__id
+
+    @id.setter
+    def id(self, _id):
+        self.__id = _id
 
     @property
     def x(self):

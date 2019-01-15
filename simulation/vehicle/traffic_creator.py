@@ -1,30 +1,35 @@
 from common.config_reader import ConfigReader
 from simulation.vehicle.vehicle import Vehicle
 import random
+from common.utility import deg2rad
+import numpy as np
 
 
 class TrafficCreator(object):
-    __percentages = {
-        "aggressive": ConfigReader.get_data("driving.traffic.driver_profile_type.aggressive")[0],
-        "moderate": ConfigReader.get_data("driving.traffic.driver_profile_type.moderate")[0],
-        "defensive": ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")[0]
-    }
+
     __traffic = []
 
     @staticmethod
-    def create_traffic(map1):
+    def create_traffic(map1, world_id):
+        __percentages = {
+            "aggressive": ConfigReader.get_data("driving.traffic.driver_profile_type.aggressive")[0],
+            "moderate": ConfigReader.get_data("driving.traffic.driver_profile_type.moderate")[0],
+            "defensive": ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")[0]
+        }
 
         taken = []
-        for i in range(len(TrafficCreator.__percentages)):
-            vehicle = TrafficCreator.__vehicle_creator(list(TrafficCreator.__percentages.values())[i], list(TrafficCreator.__percentages.keys())[i])
+        ind_x = 1
+        for i in range(len(__percentages)):
+            vehicle = TrafficCreator.vehicle_creator(list(__percentages.values())[i], list(__percentages.keys())[i])
             for v in vehicle:
-                v = TrafficCreator.__set_position(v, map1, taken)
+                v.id = str(world_id)+"_"+str(ind_x)
+                v = TrafficCreator.set_position(v, map1, taken)
                 TrafficCreator.__traffic.append(v)
-
+                ind_x += 1
         return TrafficCreator.__traffic
 
     @staticmethod
-    def __set_position(v, map1, taken):
+    def set_position(v, map1, taken):
 
         """
         :param v: Vehicle not assigned a position
@@ -45,15 +50,21 @@ class TrafficCreator(object):
             road_idx = random.randint(0, len(map1.roads)-1)
             lane_idx = random.randint(0, len(map1.roads[road_idx].lanes)-1)
 
-            # pick random points from list of possible lane points
-            xy_id = random.randint((v.car_length/2.0), (len(map1.roads[road_idx].lanes[lane_idx].lane_points) - (v.car_length/2.0))-1)
-            tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1])
+        # pick random points from list of possible lane points
+            __road = map1.roads[road_idx]
 
-        lower_limit = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1] - (v.car_length/2.0)
-        upper_limit = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1] + (v.car_length/2.0)
+            lane_points = TrafficCreator.generate_lane_points(__road.starting_pos, __road.length, __road.road_type,
+                                                              __road.bearing, __road.lanes[lane_idx].width,
+                                                              __road.lanes[lane_idx].id)
+
+            xy_id = random.randint((v.car_length/2.0), (len(lane_points) - (v.car_length/2.0))-1)
+            tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, lane_points[xy_id][1])
+
+        lower_limit = lane_points[xy_id][1] - (v.car_length/2.0)
+        upper_limit = lane_points[xy_id][1] + (v.car_length/2.0)
 
         # taken points by this car
-        points = map1.points_in_yrange(road_idx, lane_idx, (lower_limit, upper_limit))
+        points = TrafficCreator.points_in_yrange(map1, road_idx, lane_idx, (lower_limit, upper_limit))
 
         # remove taken points by this car
         for p in points:
@@ -63,21 +74,21 @@ class TrafficCreator(object):
         # set car attributes
         v.road = map1.roads[road_idx].name
         v.lane = map1.roads[road_idx].lanes[lane_idx].id
-        v.x = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][0]
-        v.y = map1.roads[road_idx].lanes[lane_idx].lane_points[xy_id][1]
+        v.x = lane_points[xy_id][0]
+        v.y = lane_points[xy_id][1]
 
         return v
 
     @staticmethod
-    def __vehicle_creator(percentage, type1):
+    def vehicle_creator(percentage, type1):
 
         vehicles = []
         for i in range(int(ConfigReader.get_data("driving.traffic.traffic_amount")[0] * percentage)):
             vehicles.append(Vehicle(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
-                                ConfigReader.get_data("driving." + type1 + ".speed_limit")[0],
-                                ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
-                                ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
-                                ConfigReader.get_data("driving." + type1 + ".length")[0], type1,))
+                                    ConfigReader.get_data("driving." + type1 + ".speed_limit")[0],
+                                    ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
+                                    ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
+                                    ConfigReader.get_data("driving." + type1 + ".length")[0], type1,))
 
         return vehicles
 
@@ -88,3 +99,34 @@ class TrafficCreator(object):
     @traffic.setter
     def traffic(self, traffic):
         TrafficCreator.__traffic = traffic
+
+    @staticmethod
+    def generate_lane_points(starting_position, length, road_type, bearing, lane_width, lane_id):
+        """
+        Sample and return lane points based on road type, starting point and length
+        : param road_type: type of road/lane
+        : param starting_point: starting position of lane/road points
+        : param length:
+        : return:
+        """
+
+        coordinates = np.array([])
+        starting_position_x = lane_width*(lane_id-1) + (lane_width / 2)
+        starting_position_y = starting_position[1]
+        bearing = deg2rad(bearing)
+
+        if road_type == "Straight":
+
+            final_x = length * np.cos(bearing) + starting_position_x
+            final_y = length * np.sin(bearing) + starting_position_y
+            x = np.linspace(starting_position_x, final_x, num=length)
+            y = np.linspace(starting_position_y, final_y, num=length)
+            coordinates = np.array([x, y]).T
+            coordinates = coordinates.astype(int)
+
+        return coordinates
+
+    @staticmethod
+    def points_in_yrange(map1, road_idx, lane_idx, _range):
+        possible_points = np.array(map1.roads[road_idx].lanes[lane_idx].lane_points)
+        return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
