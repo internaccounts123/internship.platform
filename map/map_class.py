@@ -1,17 +1,9 @@
-import numpy as np
-
-
 class Map:
     def __init__(self, map_id, name, version, roads):
         self.__id = map_id
         self.__name = name
         self.__version = version
         self.__roads = roads
-
-    def points_in_yrange(self, road_idx, lane_idx, _range):
-        possible_points = np.array(self.roads[road_idx].lanes[lane_idx].lane_points)
-        return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
-
 
     @property
     def id(self):
@@ -45,43 +37,34 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-
-    #Returns Next Lane Point using the road name, LaneId and Current Position of the Car
-    def GetNextLanePoint_byName(self, currentPoint, laneId, roadname):
-        road = self.__roads[[x.roadname for x in self.__roads].index(roadname)]
-        lane = road.__lanes[[x.__id for x in self.__lanes].index(laneId)]
-        CurrentPointIndex = lane.__lane_points.index(currentPoint)
-        return lane.__lane_points[CurrentPointIndex + 1]
+    # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
+    def get_next_lane_point_by_name(self, current_point, lane_id, road_name):
+        road = self.__roads[[x.roadname for x in self.__roads].index(road_name)]
+        lane = road.__lanes[[x.__id for x in self.__lanes].index(lane_id)]
+        current_point_index = lane.__lane_points.index(current_point)
+        return lane.__lane_points[current_point_index + 1]
 
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
 
-    def GetLateralLanes (self, laneId, roadname):
+    def get_lateral_lanes (self, lane_id, road_name):
 
-        Lateral_lanes = []
+        lateral_lanes = []
 
-        roadIdx = [x.roadname for x in self.__roads].index(roadname)
-        LaneIdx = [x.__id for x in self.__lanes].index(laneId)
-        if (LaneIdx < 3) :
-            Lateral_lanes. append (self.__roads[roadIdx].__lanes[LaneIdx + 1])
+        road_idx = [x.roadname for x in self.__roads].index(road_name)
+        lane_idx = [x.__id for x in self.__lanes].index(lane_id)
+        if lane_idx < 3:
+            lateral_lanes. append (self.__roads[road_idx].__lanes[lane_idx + 1])
 
-        if (LaneIdx > 0):
-            Lateral_lanes.append(self.__roads[roadIdx].__lanes[LaneIdx - 1])
+        if lane_idx > 0:
+            lateral_lanes.append(self.__roads[road_idx].__lanes[lane_idx - 1])
 
-        return Lateral_lanes
+        return lateral_lanes
 
-    def GetRoadInfo ( self, currentposition ): #returns Road Name on the basis of a Vehicle's current position
-
+    # Returns Road Name on the basis of a Vehicle's current position
+    def get_road_info (self, current_position):
         for r in self.__roads:
             for l in r.__lanes:
                 for lp in l.__lanepoints:
-                    if (lp == currentposition):
+                    if lp == current_position:
                         return r.__name
                         break
-
-
-
-
-
-
-
-
