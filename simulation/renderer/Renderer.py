@@ -1,4 +1,6 @@
 import pygame
+import os
+from common.config_reader import ConfigReader
 
 
 class Renderer:
@@ -18,7 +20,7 @@ class Renderer:
         self.__screen = pygame.display.set_mode((screen_width, screen_height))
 
         try:
-            self.__myCar = pygame.image.load("../../data/sprites/red_car.png").convert_alpha()
+            self.__myCar = pygame.image.load(os.path.join(ConfigReader.get_data('base_path'), 'data/sprites/{}'.format('red_car.png'))).convert_alpha()
         except FileNotFoundError:
             raise UserWarning("Error reading red_car.png file from sprites folder")
 
@@ -42,29 +44,46 @@ class Renderer:
         """
         self.__myCar = pygame.transform.scale(self.__myCar, (scale_x, scale_y))
 
-    def draw_road(self, number_of_lanes):
-        """
-        Draws road based on number_of_lanes
-        :param number_of_lanes:
-        :return:
-        """
-        # Width of one lane
-        lane_width = self.__myCar.get_size()[0] + 20
-        # x coordinate for road
-        road_start_x = (self.__screen_width / 2) - (lane_width * (number_of_lanes / 2))
-        # total width of road(all lanes)
-        road_width = lane_width * number_of_lanes
-        # Grey road background
-        # pygame.draw.rect(screen, color, (x,y,width,height), thickness)
-        pygame.draw.rect(self.__screen, (204, 204, 204), (road_start_x, 0, road_width, self.__screen_height))
+    # def draw_road(self, number_of_lanes):
+    #     """
+    #     Draws road based on number_of_lanes
+    #     :param number_of_lanes:
+    #     :return:
+    #     """
+    #     # Width of one lane
+    #     lane_width = self.__myCar.get_size()[0] + 20
+    #     # x coordinate for road
+    #     road_start_x = (self.__screen_width / 2) - (lane_width * (number_of_lanes / 2))
+    #     # total width of road(all lanes)
+    #     road_width = lane_width * number_of_lanes
+    #     # Grey road background
+    #     # pygame.draw.rect(screen, color, (x,y,width,height), thickness)
+    #     pygame.draw.rect(self.__screen, (204, 204, 204), (road_start_x, 0, road_width, self.__screen_height))
+    #
+    #     # Lane splitting lines
+    #     for i in range(number_of_lanes):
+    #         if i > 0:
+    #             # pygame.draw.lines(screen, color, closed, pointlist, thickness)
+    #             pygame.draw.lines(self.__screen, (255, 255, 255), True,
+    #                               [(road_start_x + (lane_width * i), 0), (road_start_x + (lane_width * i), self.__screen_height)],
+    #                               5)
 
-        # Lane splitting lines
-        for i in range(number_of_lanes):
-            if i > 0:
-                # pygame.draw.lines(screen, color, closed, pointlist, thickness)
-                pygame.draw.lines(self.__screen, (255, 255, 255), True,
-                                  [(road_start_x + (lane_width * i), 0), (road_start_x + (lane_width * i), self.__screen_height)],
-                                  5)
+
+    def draw_road(self, road):
+
+        for i in range(len(road)):
+            print(road[i])
+
+            for j in range(len(road[i])):
+                print(road[i].lanes[j])
+
+
+
+
+
+
+
+
 
     def run_simulation(self):
         """
