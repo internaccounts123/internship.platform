@@ -1,4 +1,6 @@
 import numpy as np
+
+
 class Map:
     def __init__(self, map_id, name, version, roads):
         self.__id = map_id
@@ -67,7 +69,6 @@ class Map:
                 for lp in l.__lanepoints:
                     if self.check_point_fit(current_position, lp):
                         return r.__name
-
 
     def check_point_fit(self, current_position, lane_points):
 
