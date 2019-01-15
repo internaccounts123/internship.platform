@@ -1,10 +1,11 @@
-import json
+import json, os
 from jsonpath_rw import jsonpath, parse
 
 
 class ConfigReader:
     __data = ""
     __instance = ""
+    __base_path = ""
 
     def __init__(self, filename = "base-configuration.json"):
         """
@@ -12,7 +13,9 @@ class ConfigReader:
         :param filename: json (base-config) containing basic config of simulation and all other json file names 
         """
         if ConfigReader.__instance == "":
+            ConfigReader.__base_path = os.path.realpath(os.path.join(os.getcwd(), '../../'))
             ConfigReader.__data = ConfigReader.__create_data(filename)
+
         else:
             raise Exception("Object already exists")
 
@@ -29,6 +32,8 @@ class ConfigReader:
         :param query: string containing query for the value it needs from the dictionary
         :return: matches found for the query
         """
+        if query == 'base_path':
+            return ConfigReader.__base_path
         path = parse(query)
         matches = [match.value for match in path.find(ConfigReader.__data)]
         return matches
@@ -41,12 +46,12 @@ class ConfigReader:
         :return: concatenated data structure of all json files
         """
 
-        with open("../data/configs/app_config/"+filename) as f:
+        with open(os.path.join(ConfigReader.get_data('base_path'), 'data/configs/app_config/{}'.format(filename))) as f:
             data = json.load(f)
 
         for i in range(len(data["driving"])):
-
-            with open("../data/driving/" + list(data["driving"].values())[i]) as f:
+            with open(os.path.join(ConfigReader.get_data('base_path'), 'data/driving/{}'.format(list(data["driving"].values())[i])) ) as f:
                 data["driving"][list(data["driving"].keys())[i]] = json.load(f)
 
         return data
+

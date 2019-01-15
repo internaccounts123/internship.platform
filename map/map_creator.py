@@ -2,8 +2,9 @@ from map.lane import Lane
 from map.road import Road
 from map.map_class import Map
 from common.utility import *
-import json
+import json, os
 import numpy as np
+from common.config_reader import ConfigReader
 
 
 class MapCreator:
@@ -22,7 +23,8 @@ class MapCreator:
         # For testing delete this when Game class is made
         file_name = "maps.json"
 
-        with open("../data/map/" + file_name) as f:
+        maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name))
+        with open(maps_path, 'r') as f:
             data = json.load(f)
 
         map_id = data["Map_id"]
