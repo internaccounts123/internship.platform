@@ -1,3 +1,4 @@
+import numpy as np
 class Map:
     def __init__(self, map_id, name, version, roads):
         self.__id = map_id
@@ -37,6 +38,7 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
+
     # Returns next lane point using the road name, laneId and current Position of the car
     def get_next_lane_point(self, current_point, laneId, roadname):
         road = self.__roads[[x.roadname for x in self.__roads].index(roadname)]
@@ -59,8 +61,7 @@ class Map:
 
         return lateral_lanes
 
-    def get_road_info(self, current_position):  # returns Road Name on the basis of a Vehicle's current position
-
+    def get_road_info (self, current_position):
         for r in self.__roads:
             for l in r.__lanes:
                 for lp in l.__lanepoints:
@@ -90,5 +91,4 @@ class Map:
         # checking if point lies on the line:
 
         return current_position[1] == slope * current_position[0] - y_intercept
-
 

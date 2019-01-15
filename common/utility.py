@@ -1,4 +1,5 @@
-M_PI = 3.141519
+import numpy as np
+M_PI = np.pi
 
 
 # This function converts an input angle from degree to radians
