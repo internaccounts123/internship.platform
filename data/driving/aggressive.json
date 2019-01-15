@@ -1,6 +1,7 @@
 {
-  "perception size ": [110,3],
+  "perception_size": [110,50,3],
   "speed_limit": 225,
   "acceleration": 2.448,
-  "deacceleration": 2.88
+  "de_acceleration": 2.88,
+  "length": 4
 }
