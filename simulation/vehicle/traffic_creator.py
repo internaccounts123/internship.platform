@@ -22,7 +22,7 @@ class TrafficCreator(object):
         for i in range(len(__percentages)):
             vehicle = TrafficCreator.vehicle_creator(list(__percentages.values())[i], list(__percentages.keys())[i])
             for v in vehicle:
-                v.id = str(world_id)+"_"+str(ind_x)
+                v.id = (1000*world_id) + ind_x
                 v = TrafficCreator.set_position(v, map1, taken)
                 TrafficCreator.__traffic.append(v)
                 ind_x += 1
