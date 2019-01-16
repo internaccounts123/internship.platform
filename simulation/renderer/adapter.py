@@ -3,7 +3,7 @@ import numpy as np
 class Adapter:
 
     old_max = []
-    old_min = [0, 0]
+    old_min = [-4, 0]
 
 
     @staticmethod
@@ -18,10 +18,10 @@ class Adapter:
 
         for i in range(len(_map.roads)):
             if _map.roads[i].road_type == "Straight":
-                array_x.append(_map.roads[i].lanes[-1].lane_points[0][0])
-                array_y.append(_map.roads[i].lanes[0].lane_points[-1][1])
+                array_x.append(_map.roads[i].ending_width[0])
+                array_y.append(_map.roads[i].ending_height[1])
 
-        Adapter.old_max.append(max(array_x))
+        Adapter.old_max.append(max(array_x) + 4)
         Adapter.old_max.append(max(array_y))
 
 
@@ -40,7 +40,7 @@ class Adapter:
         :param objHeight:
         :return:
         """
-        return coords[0], height - coords[1] - obj_height
+        return abs(coords[0]), abs(height - coords[1] - obj_height)
 
     @staticmethod
     def scaling(value, new_max, new_min):
@@ -74,5 +74,5 @@ class Adapter:
 
     @staticmethod
     def get_length(road_type, starting_pos, ending_pos):
-        if road_type == "straight":
+        if road_type == "Straight":
             return np.linalg.norm(ending_pos-starting_pos)

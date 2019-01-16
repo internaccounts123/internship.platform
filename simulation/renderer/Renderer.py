@@ -38,7 +38,12 @@ class Renderer:
         :param y: int y coordinate
         :return:
         """
-        self.__screen.blit(self.__myCar, (x, y))
+        car_coordinate =  Adapter.scaling([x, y], [self.__screen_width, self.__screen_height], [0, 0])
+        car_coordinate = Adapter.inversion(car_coordinate, self.__screen_height, car_coordinate[1])
+
+        # self.scale_car(car_coordinate[0], car_coordinate[1])
+
+        self.__screen.blit(self.__myCar, (car_coordinate[0], car_coordinate[1]))
 
     def scale_car(self, scale_x, scale_y):
         """
@@ -48,38 +53,6 @@ class Renderer:
         :return:
         """
         self.__myCar = pygame.transform.scale(self.__myCar, (scale_x, scale_y))
-
-    # def draw_road(self, number_of_lanes):
-    #     """
-    #     Draws road based on number_of_lanes
-    #     :param number_of_lanes:
-    #     :return:
-    #     """
-    #     # Width of one lane
-    #     lane_width = self.__myCar.get_size()[0] + 20
-    #     # x coordinate for road
-    #     road_start_x = (self.__screen_width / 2) - (lane_width * (number_of_lanes / 2))
-    #     # total width of road(all lanes)
-    #     road_width = lane_width * number_of_lanes
-    #     # Grey road background
-    #     # pygame.draw.rect(screen, color, (x,y,width,height), thickness)
-    #     pygame.draw.rect(self.__screen, (204, 204, 204), (road_start_x, 0, road_width, self.__screen_height))
-    #
-    #     # Lane splitting lines
-    #     for i in range(number_of_lanes):
-    #         if i > 0:
-    #             # pygame.draw.lines(screen, color, closed, pointlist, thickness)
-    #             pygame.draw.lines(self.__screen, (255, 255, 255), True,
-    #                               [(road_start_x + (lane_width * i), 0), (road_start_x + (lane_width * i), self.__screen_height)],
-    #                               5)
-
-    # def draw_road(self, road):
-    #
-    #     for i in range(len(road)):
-    #         print(road[i])
-    #
-    #         for j in range(len(road[i])):
-    #             print(road[i].lanes[j])
 
     def draw_road(self, road):
         """
@@ -112,7 +85,7 @@ class Renderer:
         grey_color = (204, 204, 204)
         #      pygame.draw.rect(self.__screen, color, (x,y,width,height), thickness)
         pygame.draw.rect(self.__screen, grey_color,
-                         (road_coordinate_start, road_coordinate_end, road_width, road_length))
+                         (road_coordinate_start[0], road_coordinate_start[1], road_width, road_length))
 
         # Lane / road splitter
         number_of_lanes = len(road.lanes)
@@ -123,8 +96,8 @@ class Renderer:
             if i > 0:
                 #       pygame.draw.lines(screen, color, closed, pointlist, thickness)
                 pygame.draw.lines(self.__screen, white_color, True,
-                                  [(road_coordinate_start + (lane_width * i), 0), (road_coordinate_start + (lane_width * i), road_length)],
-                                  5)
+                                  [(road_coordinate_start[0] + (lane_width * i), road_coordinate_start[1]),
+                                   (road_coordinate_end[0] + (lane_width * i), road_coordinate_end[1])], 5)
 
     def run_simulation(self):
         """
@@ -145,7 +118,10 @@ class Renderer:
 
             self.draw_road(self.__world.world_map.roads[0])
 
-            # self.draw_car(520, road)
+            for car in self.__world.cars:
+                if car.road == self.__world.world_map.roads[0].name:
+                    self.draw_car(car.x, car.y)
+
             pygame.display.update()
             # ----- event handler -----
             for event in pygame.event.get():
