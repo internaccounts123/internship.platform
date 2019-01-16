@@ -52,7 +52,7 @@ class Map:
     def get_lateral_lanes(self, lane_id, road_name):
         lateral_lanes = []
         road_idx = [x.roadname for x in self.__roads].index(road_name)
-        lane_idx = [x.__id for x in self.__lanes].index(lane_id)
+        lane_idx = [x.__id for x in self.__roads[road_idx].__lanes].index(lane_id)
         if lane_idx < 3:
             lateral_lanes. append(self.__roads[road_idx].__lanes[lane_idx + 1])
 
