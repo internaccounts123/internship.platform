@@ -43,6 +43,7 @@ class TrafficCreator(object):
         road_idx = None
         lane_idx = None
         xy_id = None
+        lane_points = []
 
         # choose a point where a car is not already present
         while (tup in taken) or (_do is True):
@@ -76,6 +77,9 @@ class TrafficCreator(object):
         v.lane = map1.roads[road_idx].lanes[lane_idx].id
         v.x = lane_points[xy_id][0]
         v.y = lane_points[xy_id][1]
+
+        v.front_point = (v.x, upper_limit)
+        v.back_point = (v.x, lower_limit)
 
         return v
 

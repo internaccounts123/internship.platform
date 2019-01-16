@@ -1,10 +1,7 @@
-import numpy as np
-
-
 class Vehicle(object):
 
     def __init__(self, perception_size, speed_limit, acceleration, de_acceleration, length, type1):
-
+        self.__id = None
         self.__perception_size = perception_size
         self.__speed_limit = speed_limit
         self.__acceleration = acceleration
@@ -16,7 +13,8 @@ class Vehicle(object):
         self.__lane = None
         self.__road = None
         self.__perception = None
-        self.__id = None
+        self.__front_point = None
+        self.__back_point = None
 
     @property
     def car_length(self):
@@ -113,3 +111,19 @@ class Vehicle(object):
     @perception.setter
     def perception(self, perception):
         self.__perception = perception
+
+    @property
+    def front_point(self):
+        return self.__front_point
+
+    @front_point.setter
+    def front_point(self, front_point):
+        self.__front_point = front_point
+
+    @property
+    def back_point(self):
+        return self.__back_point
+
+    @back_point.setter
+    def back_point(self, back_point):
+        self.__back_point = back_point
