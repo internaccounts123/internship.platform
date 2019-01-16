@@ -43,34 +43,36 @@ class Map:
     # Returns next lane point using the road name, laneId and current Position of the car
 
     def get_next_lane_point(self, current_point, lane_id, road_name):
-        road = self.__roads[[x.roadname for x in self.__roads].index(road_name)]
-        lane = road.__lanes[[x.__id for x in road.__lanes].index(lane_id)]
-        current_point_index = lane.__lane_points.index(current_point)
-        return lane.__lane_points[current_point_index + 1]
+        road = self.__roads[[x.name for x in self.__roads].index(road_name)]
+        lane = road.lanes[[x.id for x in road.lanes].index(lane_id)]
+        lane_point_list = lane.lane_points.tolist()
+        current_point_index = lane_point_list.index(current_point)
+        return lane_point_list[current_point_index + 1]
 
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
     def get_lateral_lanes(self, lane_id, road_name):
         lateral_lanes = []
-        road_idx = [x.roadname for x in self.__roads].index(road_name)
+        road_idx = [x.name for x in self.__roads].index(road_name)
         lane_idx = [x.__id for x in self.__roads[road_idx].__lanes].index(lane_id)
         if lane_idx < 3:
-            lateral_lanes. append(self.__roads[road_idx].__lanes[lane_idx + 1])
+            lateral_lanes. append(self.__roads[road_idx].lanes[lane_idx + 1])
 
         if lane_idx > 0:
-            lateral_lanes.append(self.__roads[road_idx].__lanes[lane_idx - 1])
+            lateral_lanes.append(self.__roads[road_idx].lanes[lane_idx - 1])
 
         return lateral_lanes
 
     def get_road_info(self, current_position):
         for r in self.__roads:
-            for l in r.__lanes:
-                    if self.check_point_fit(current_position, l.__lanepoints):
-                        return r.__name
+            for l in r.lanes:
+                    lane_points = l.lane_points
+                    if self.check_point_fit(current_position, lane_points):
+                        return r.name
 
-    @staticmethod
+
+
     def check_point_fit(self, current_position, lane_points):
 
-        lane_points = np.array(lane_points)
         dx = lane_points[1][0] - lane_points[2][0]
 
         dy = lane_points[1][1] - lane_points[2][1]
@@ -80,8 +82,15 @@ class Map:
 
         else:
             slope = 0
+            intercept = lane_points[2][0] - slope * lane_points[2][1]
+            return current_position[0]==intercept
 
-        y_intercept = lane_points[1][0] - slope * lane_points[1][1]
+        intercept = lane_points[2][0] - slope * lane_points[2][1]
+
+
         # checking if point lies on the line:
-        return current_position[1] == slope * current_position[0] - y_intercept
+
+        return current_position[1] == slope * current_position[0] - intercept
+
+
 
