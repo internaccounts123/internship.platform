@@ -40,21 +40,19 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-
     # Returns next lane point using the road name, laneId and current Position of the car
-    def get_next_lane_point(self, current_point, laneId, roadname):
-        road = self.__roads[[x.roadname for x in self.__roads].index(roadname)]
-        lane = road.__lanes[[x.__id for x in self.__lanes].index(laneId)]
+
+    def get_next_lane_point(self, current_point, lane_id, road_name):
+        road = self.__roads[[x.roadname for x in self.__roads].index(road_name)]
+        lane = road.__lanes[[x.__id for x in self.__lanes].index(lane_id)]
         current_point_index = lane.__lane_points.index(current_point)
         return lane.__lane_points[current_point_index + 1]
 
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
-    def get_lateral_lanes(self, lane_Id, road_name):
-
+    def get_lateral_lanes(self, lane_id, road_name):
         lateral_lanes = []
-
         road_idx = [x.roadname for x in self.__roads].index(road_name)
-        lane_idx = [x.__id for x in self.__lanes].index(lane_Id)
+        lane_idx = [x.__id for x in self.__lanes].index(lane_id)
         if lane_idx < 3:
             lateral_lanes. append(self.__roads[road_idx].__lanes[lane_idx + 1])
 
@@ -63,13 +61,13 @@ class Map:
 
         return lateral_lanes
 
-    def get_road_info (self, current_position):
+    def get_road_info(self, current_position):
         for r in self.__roads:
             for l in r.__lanes:
-                for lp in l.__lanepoints:
-                    if self.check_point_fit(current_position, lp):
+                    if self.check_point_fit(current_position, l.__lanepoints):
                         return r.__name
 
+    @staticmethod
     def check_point_fit(self, current_position, lane_points):
 
         lane_points = np.array(lane_points)
@@ -84,12 +82,6 @@ class Map:
             slope = 0
 
         y_intercept = lane_points[1][0] - slope * lane_points[1][1]
-
-        print("gradient", slope)
-
-        print("y_intercept", y_intercept)
-
         # checking if point lies on the line:
-
         return current_position[1] == slope * current_position[0] - y_intercept
 
