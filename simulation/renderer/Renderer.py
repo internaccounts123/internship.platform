@@ -5,15 +5,16 @@ from common.config_reader import ConfigReader
 
 class Renderer:
 
-    def __init__(self, fps=30, screen_width=1024, screen_height=720):
+    def __init__(self, world, fps=30, screen_width=1024, screen_height=720):
         """
         Default constructor
+        :param world: world object to draw
         :param fps: frames per second, default value: 30
         :param screen_width: width of screen, default value: 1024
         :param screen_height: height of screen, default value: 720
         """
         self.__FPS = fps
-
+        self.__world = world
         self.__screen_width = screen_width
         self.__screen_height = screen_height
 
@@ -113,7 +114,7 @@ class Renderer:
 
 
 
-    def run_simulation(self, road):
+    def run_simulation(self):
         """
         Run the main loop of simulation
         :return: playtime in seconds
