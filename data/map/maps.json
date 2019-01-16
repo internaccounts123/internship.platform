@@ -8,6 +8,7 @@
 		"1": {
 			"name": "FFJ",
 			"length": 10,
+			"width": 12,
 			"road_type":"Straight",
 			"starting_pos": [0, 0],
 			"bearing": 90,
@@ -29,6 +30,7 @@
 		"2": {
 			"name": "GTRoad",
 			"length": 10,
+			"width": 12,
 			"road_type":"Straight",
 			"starting_pos": [0, 10],
 			"bearing": 90,
@@ -50,6 +52,7 @@
 		"3": {
 			"name": "MallRoad",
 			"length": 10,
+			"width": 12,
 			"road_type":"Straight",
 			"starting_pos": [0, 20],
 			"bearing": 90,
@@ -71,6 +74,7 @@
 		"4": {
 			"name": "MotorWay",
 			"length": 10,
+			"width": 12,
 			"road_type":"Straight",
 			"starting_pos": [0, 30],
 			"bearing": 90,
@@ -92,6 +96,7 @@
 		"5": {
 			"name": "TheRoad",
 			"length": 10,
+			"width": 12,
 			"road_type":"Straight",
 			"starting_pos": [0, 40],
 			"bearing": 90,
