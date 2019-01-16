@@ -49,10 +49,39 @@ class MapCreator:
             lanes = MapCreator.create_lanes(data["lanes"], data["road_type"], data["starting_pos"],
                                             data["length"], data["bearing"])
             data = (roads[str(i)])
+            ending_height, ending_width = MapCreator.generate_end_points(data["starting_pos"], data["length"],
+                                                                         data["width"], data["road_type"],
+                                                                         data["bearing"])
             road_objects.append(Road(data["length"], data["name"], data["road_type"], data["starting_pos"],
-                                data["bearing"], data["connection"], lanes))
+                                ending_height, ending_width, data["bearing"], data["connection"], lanes))
 
         return road_objects
+
+    @staticmethod
+    def generate_end_points(starting_position, length, width, road_type, bearing):
+        """
+        Sample and return lane points based on road type, starting point and length
+        : param road_type: type of road/lane
+        : param starting_point: starting position of lane/road points
+        : param length:
+        : return:
+        """
+        ending_height_x, ending_height_y, ending_width_x, ending_width_y = 0, 0, 0, 0
+
+        if road_type == "Straight":
+            bearing_height = deg2rad(bearing)
+            ending_height_x = length * np.cos(bearing_height) + starting_position[0]
+            ending_height_x = ending_height_x.astype(int)
+            ending_height_y = length * np.sin(bearing_height) + starting_position[1]
+            ending_height_y = ending_height_y.astype(int)
+
+            bearing_width = deg2rad(90 - bearing)
+            ending_width_x = width * np.cos(bearing_width) + starting_position[0]
+            ending_width_x = ending_width_x.astype(int)
+            ending_width_y = width * np.sin(bearing_width) + starting_position[1]
+            ending_width_y = ending_width_y.astype(int)
+
+        return (ending_height_x, ending_height_y), (ending_width_x, ending_width_y)
 
     @staticmethod
     def create_lanes(lanes, road_type, starting_position, length, bearing):
