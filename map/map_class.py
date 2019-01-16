@@ -40,14 +40,6 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-    # Returns next lane point using the road name, laneId and current Position of the car
-
-    def get_next_lane_point(self, current_point, lane_id, road_name):
-        road = self.__roads[[x.name for x in self.__roads].index(road_name)]
-        lane = road.lanes[[x.id for x in road.lanes].index(lane_id)]
-        lane_point_list = lane.lane_points.tolist()
-        current_point_index = lane_point_list.index(current_point)
-        return lane_point_list[current_point_index + 1]
 
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
     def get_lateral_lanes(self, lane_id, road_name):
