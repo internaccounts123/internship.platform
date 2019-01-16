@@ -13,7 +13,7 @@ class Game:
         self.__renderer = Renderer(self.__world)
 
     def run(self):
-        pass
+        self.renderer.run_simulation()
 
     @property
     def map1(self):
