@@ -38,7 +38,7 @@ class Renderer:
         :param y: int y coordinate
         :return:
         """
-        car_coordinate =  Adapter.scaling([x, y], [self.__screen_width, self.__screen_height], [0, 0])
+        car_coordinate = Adapter.scaling([x, y], [self.__screen_width, self.__screen_height], [0, 0])
         car_coordinate = Adapter.inversion(car_coordinate, self.__screen_height, car_coordinate[1])
 
         # self.scale_car(car_coordinate[0], car_coordinate[1])
