@@ -5,6 +5,10 @@ from common.utility import *
 import json, os
 import numpy as np
 from common.config_reader import ConfigReader
+<<<<<<< HEAD
+=======
+import copy
+>>>>>>> development
 
 
 class MapCreator:
@@ -16,26 +20,33 @@ class MapCreator:
         :return: Map object
         """
 
-        # TODO: Implement this after game class is done
+        # TODO: Implement this after game_dir class is done
         # Get map file name
         # file_name = ConfigReader.get_data('map')[0]
 
         # For testing delete this when Game class is made
         file_name = "maps.json"
 
+<<<<<<< HEAD
         maps_path = os.path.realpath(os.path.join(ConfigReader.get_data('base_path'), '/data/map/'))
         print(os.path.realpath(maps_path) + "/" + file_name)
         with open(os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name)), 'r') as f:
             data = json.load(f)
+=======
+        maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name))
+        with open(maps_path, 'r') as f:
+            __data = json.load(f)
+>>>>>>> development
 
+        data = copy.deepcopy(__data)
         map_id = data["Map_id"]
         map_name = data["Map_Name"]
         map_version = data["Map_Version"]
-        roads = MapCreator.__create_roads(data["roads"])
+        roads = MapCreator.create_roads(data["roads"])
         return Map(map_id, map_name, map_version, roads)
 
     @staticmethod
-    def __create_roads(roads):
+    def create_roads(roads):
         """
         Create a list of roads from dictionary and return
         : param roads: roads dictionary from the json file
@@ -44,17 +55,17 @@ class MapCreator:
         road_objects = []
 
         for i in list(roads):
-            data = roads[str(i)]
-            lanes = MapCreator.__create_lanes(data["lanes"], data["road_type"], data["starting_pos"],
-                                              data["length"], data["bearing"])
-
+            data = copy.deepcopy(roads[str(i)])
+            lanes = MapCreator.create_lanes(data["lanes"], data["road_type"], data["starting_pos"],
+                                            data["length"], data["bearing"])
+            data = (roads[str(i)])
             road_objects.append(Road(data["length"], data["name"], data["road_type"], data["starting_pos"],
                                 data["bearing"], data["connection"], lanes))
 
         return road_objects
 
     @staticmethod
-    def __create_lanes(lanes, road_type, starting_position, length, bearing):
+    def create_lanes(lanes, road_type, starting_position, length, bearing):
         """
         Create a list of lanes from the dictionary and return
         : param lanes: lanes dictionary from the json file
@@ -68,14 +79,14 @@ class MapCreator:
         lane_width = lanes["lane_width"]
 
         for i in range(1, len(lanes)):
-            data = lanes[str(i)]
-            lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
+            lane_points = MapCreator.generate_lane_points(starting_position, length, road_type, bearing, lane_width)
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
+            data = (lanes[str(i)])
             lane_objects.append(Lane(i, data["name"], lane_width, lane_points))
         return lane_objects
 
     @staticmethod
-    def __generate_lane_points(starting_position, length, road_type, bearing, lane_width):
+    def generate_lane_points(starting_position, length, road_type, bearing, lane_width):
         """
         Sample and return lane points based on road type, starting point and length
         : param road_type: type of road/lane

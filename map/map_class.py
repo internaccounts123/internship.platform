@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Map:
     def __init__(self, map_id, name, version, roads):
         self.__id = map_id
@@ -37,13 +40,56 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-    def GetNextLanePoint(self, currentPoint, laneId, roadname):
+
+    # Returns next lane point using the road name, laneId and current Position of the car
+    def get_next_lane_point(self, current_point, laneId, roadname):
         road = self.__roads[[x.roadname for x in self.__roads].index(roadname)]
         lane = road.__lanes[[x.__id for x in self.__lanes].index(laneId)]
-        CurrentPointIndex = lane.__lane_points.index(currentPoint)
-        return lane.__lane_points[CurrentPointIndex + 1]
+        current_point_index = lane.__lane_points.index(current_point)
+        return lane.__lane_points[current_point_index + 1]
 
+    # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
+    def get_lateral_lanes(self, lane_id, road_name):
 
+        lateral_lanes = []
 
+        road_idx = [x.roadname for x in self.__roads].index(road_name)
+        lane_idx = [x.__id for x in self.__lanes].index(lane_id)
+        if lane_idx < 3:
+            lateral_lanes. append(self.__roads[road_idx].__lanes[lane_idx + 1])
 
+        if lane_idx > 0:
+            lateral_lanes.append(self.__roads[road_idx].__lanes[lane_idx - 1])
+
+        return lateral_lanes
+
+    def get_road_info (self, current_position):
+        for r in self.__roads:
+            for l in r.__lanes:
+                for lp in l.__lanepoints:
+                    if self.check_point_fit(current_position, lp):
+                        return r.__name
+
+    def check_point_fit(self, current_position, lane_points):
+
+        lane_points = np.array(lane_points)
+        dx = lane_points[1][0] - lane_points[2][0]
+
+        dy = lane_points[1][1] - lane_points[2][1]
+
+        if dx != 0 and dy != 0:
+            slope = dy / dx
+
+        else:
+            slope = 0
+
+        y_intercept = lane_points[1][0] - slope * lane_points[1][1]
+
+        print("gradient", slope)
+
+        print("y_intercept", y_intercept)
+
+        # checking if point lies on the line:
+
+        return current_position[1] == slope * current_position[0] - y_intercept
 

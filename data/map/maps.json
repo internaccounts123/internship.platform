@@ -71,7 +71,7 @@
 		"4": {
 			"name": "MotorWay",
 			"length": 10,
-			"road_type":"Curved",
+			"road_type":"Straight",
 			"starting_pos": [0, 30],
 			"bearing": 90,
 			"connection": "TheRoad",
@@ -92,7 +92,7 @@
 		"5": {
 			"name": "TheRoad",
 			"length": 10,
-			"road_type":"Curved",
+			"road_type":"Straight",
 			"starting_pos": [0, 40],
 			"bearing": 90,
 			"connection": "FFJ",
