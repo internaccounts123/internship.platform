@@ -44,7 +44,7 @@ class Map:
 
     def get_next_lane_point(self, current_point, lane_id, road_name):
         road = self.__roads[[x.roadname for x in self.__roads].index(road_name)]
-        lane = road.__lanes[[x.__id for x in self.__lanes].index(lane_id)]
+        lane = road.__lanes[[x.__id for x in road.__lanes].index(lane_id)]
         current_point_index = lane.__lane_points.index(current_point)
         return lane.__lane_points[current_point_index + 1]
 
