@@ -69,6 +69,7 @@ class Map:
 
         dy = lane_points[1][1] - lane_points[2][1]
 
+        #calculating slope of the lane
         if dx != 0 and dy != 0:
             slope = dy / dx
 
@@ -83,6 +84,35 @@ class Map:
         # checking if point lies on the line:
 
         return current_position[1] == slope * current_position[0] - intercept
+
+    def get_shortest_dist_from_lane(self, current_position, lane_points, road):
+
+        lane_points = np.array(lane_points)
+        starting_position_x = lane_points[0][0]
+        starting_position_y = lane_points[0][1]
+
+        final_x = road.length * np.cos(road.bearing) + starting_position_x
+        final_y = road.length * np.sin(road.bearing) + starting_position_y
+
+        midpoint_x = starting_position_x + final_x / 2
+
+        midpoint_y = starting_position_y + final_y / 2
+
+        dist_from_point = np.sqrt((current_position[0] - midpoint_x) ** 2 + (current_position[1] - midpoint_y) ** 2)
+
+        return dist_from_point
+
+    # A function to track location of points not falling with in the range, the outliers
+    def get_closest_road(self, current_position):
+        distances = []
+        road_names = []
+        for r in self.__roads:
+            for l in r.lanes:
+                lane_points = l.lane_points
+                distances.append(self.get_shortest_dist_from_lane(current_position, lane_points, r))
+                road_names.append(r.name)
+        min_index = distances.index(min(distances))
+        return road_names[min_index]
 
 
 
