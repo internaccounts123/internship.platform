@@ -1,5 +1,5 @@
 from common.config_reader import ConfigReader
-from simulation.Vehicle.vehicle import Vehicle
+from simulation.vehicle.vehicle import Vehicle
 import random
 from common.utility import deg2rad
 import numpy as np
