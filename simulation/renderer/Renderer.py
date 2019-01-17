@@ -31,34 +31,45 @@ class Renderer:
 
         pygame.init()
 
-    def draw_car(self, x, y):
+    def draw_car(self, front_point, back_point, road_width, no_of_lanes):
+        """
+        :param front_point: car front point
+        :param back_point: car back point
+        :param road_width: scaled road width
+        :param no_of_lanes: number of lanes in the road
+        :return: None
         """
 
-        :param x: int x coordinate
-        :param y: int y coordinate
-        :return:
-        """
-        car_coordinate = Adapter.scaling([x, y], [self.__screen_width, self.__screen_height], [0, 0])
-        car_coordinate = Adapter.inversion(car_coordinate, self.__screen_height, car_coordinate[1])
+        # Scaling
+        front_coordinate = Adapter.scaling([front_point[0], front_point[1]], [self.__screen_width, self.__screen_height], [0, 0])
+        back_coordinate = Adapter.scaling([back_point[0], back_point[1]], [self.__screen_width, self.__screen_height], [0, 0])
 
-        # self.scale_car(car_coordinate[0], car_coordinate[1])
+        car_length = Adapter.get_length("Straight", list(front_coordinate), list(back_coordinate))
+        car_width = int((road_width / float(no_of_lanes)) * 0.8)
 
-        self.__screen.blit(self.__myCar, (car_coordinate[0], car_coordinate[1]))
+        # Inversion
+        front_coordinate = Adapter.inversion(front_coordinate, self.__screen_height, car_length)
 
-    def scale_car(self, scale_x, scale_y):
+        # Scaling Car
+        self.scale_car(car_width, car_length)
+
+        # Draw Car
+        self.__screen.blit(self.__myCar, (front_coordinate[0]-(car_width/2), front_coordinate[1]))
+
+    def scale_car(self, scale_w, scale_h):
         """
         Change the size of car to scale_x by scale_y
-        :param scale_x: width
-        :param scale_y: height
+        :param scale_w: width
+        :param scale_h: height
         :return:
         """
-        self.__myCar = pygame.transform.scale(self.__myCar, (scale_x, scale_y))
+        self.__myCar = pygame.transform.scale(self.__myCar, (int(scale_w), int(scale_h)))
 
     def draw_road(self, road):
         """
         Convert real coordinates to pygame coordinates and draws a road based on the road object passed
         :param road:
-        :return:
+        :return: scaled road width
         """
 
         # Bottom left coordinate
@@ -99,6 +110,8 @@ class Renderer:
                                   [(road_coordinate_start[0] + (lane_width * i), road_coordinate_start[1]),
                                    (road_coordinate_end[0] + (lane_width * i), road_coordinate_end[1])], 5)
 
+        return road_width
+
     def run_simulation(self):
         """
         Run the main loop of simulation
@@ -116,11 +129,11 @@ class Renderer:
             milliseconds = clock.tick(self.__FPS)  # do not go faster than this frame rate
             playtime += milliseconds / 1000.0
 
-            self.draw_road(self.__world.world_map.roads[0])
+            road_width = self.draw_road(self.__world.world_map.roads[0])
 
             for car in self.__world.cars:
                 if car.road == self.__world.world_map.roads[0].name:
-                    self.draw_car(car.x, car.y)
+                    self.draw_car(car.x, car.y,car.front_point,car.back_point, road_width, len(self.__world.world_map.roads[0].lanes))
 
             pygame.display.update()
             # ----- event handler -----

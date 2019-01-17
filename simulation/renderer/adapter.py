@@ -4,7 +4,7 @@ import numpy as np
 class Adapter:
 
     old_max = []
-    old_min = [-4, 0]
+    old_min = [-40, 0]
 
     @staticmethod
     def calculate_initials(_map):
@@ -21,7 +21,7 @@ class Adapter:
                 array_x.append(_map.roads[i].ending_width[0])
                 array_y.append(_map.roads[i].ending_height[1])
 
-        Adapter.old_max.append(max(array_x) + 4)
+        Adapter.old_max.append(max(array_x) + 40)
         Adapter.old_max.append(max(array_y))
 
     @staticmethod
@@ -68,4 +68,4 @@ class Adapter:
     @staticmethod
     def get_length(road_type, starting_pos, ending_pos):
         if road_type == "Straight":
-            return np.linalg.norm(ending_pos-starting_pos)
+            return np.linalg.norm(np.array(ending_pos)-np.array(starting_pos))
