@@ -2,6 +2,7 @@ from common.config_reader import ConfigReader
 from simulation.vehicle.vehicle import Vehicle
 import random
 from common.utility import deg2rad
+from common.road_types import RoadType
 import numpy as np
 
 
@@ -59,7 +60,7 @@ class TrafficCreator(object):
                                                               __road.lanes[lane_idx].id)
 
             xy_id = random.randint((v.car_length/2.0), (len(lane_points) - (v.car_length/2.0))-1)
-            tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, lane_points[xy_id][1])
+            tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, lane_points[xy_id][1])
 
         lower_limit = lane_points[xy_id][1] - (v.car_length/2.0)
         upper_limit = lane_points[xy_id][1] + (v.car_length/2.0)
@@ -69,11 +70,11 @@ class TrafficCreator(object):
 
         # remove taken points by this car
         for p in points:
-            tup = (map1.roads[road_idx].name, map1.roads[road_idx].lanes[lane_idx].id, p[1])
+            tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, p[1])
             taken.append(tup)
 
         # set car attributes
-        v.road = map1.roads[road_idx].name
+        v.road = map1.roads[road_idx].road_id
         v.lane = map1.roads[road_idx].lanes[lane_idx].id
         v.x = lane_points[xy_id][0]
         v.y = lane_points[xy_id][1]
@@ -119,7 +120,7 @@ class TrafficCreator(object):
         starting_position_y = starting_position[1]
         bearing = deg2rad(bearing)
 
-        if road_type == "Straight":
+        if RoadType[road_type].value == RoadType.Straight.value:
 
             final_x = length * np.cos(bearing) + starting_position_x
             final_y = length * np.sin(bearing) + starting_position_y

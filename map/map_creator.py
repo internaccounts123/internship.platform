@@ -5,6 +5,7 @@ from common.utility import *
 import json, os
 import numpy as np
 from common.config_reader import ConfigReader
+from common.road_types import RoadType
 import copy
 
 
@@ -23,7 +24,6 @@ class MapCreator:
 
         # For testing delete this when Game class is made
         file_name = "maps.json"
-
 
         maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name))
         with open(maps_path, 'r') as f:
@@ -45,21 +45,21 @@ class MapCreator:
         """
         road_objects = []
 
-        for i in list(roads):
+        for road_id, i in enumerate(list(roads)):
             data = copy.deepcopy(roads[str(i)])
             lanes = MapCreator.create_lanes(data["lanes"], data["road_type"], data["starting_pos"],
                                             data["length"], data["bearing"])
             data = (roads[str(i)])
-            ending_height, ending_width = MapCreator.generate_end_points(data["starting_pos"], data["length"],
-                                                                         data["width"], data["road_type"],
-                                                                         data["bearing"])
-            road_objects.append(Road(data["length"], data["name"], data["road_type"], data["starting_pos"],
+            ending_height, ending_width = MapCreator.__generate_end_points(data["starting_pos"], data["length"],
+                                                                           data["width"], data["road_type"],
+                                                                           data["bearing"])
+            road_objects.append(Road(road_id+1, data["length"], data["name"], data["road_type"], data["starting_pos"],
                                 ending_height, ending_width, data["bearing"], data["connection"], lanes))
 
         return road_objects
 
     @staticmethod
-    def generate_end_points(starting_position, length, width, road_type, bearing):
+    def __generate_end_points(starting_position, length, width, road_type, bearing):
         """
         Sample and return lane points based on road type, starting point and length
         : param road_type: type of road/lane
@@ -69,7 +69,7 @@ class MapCreator:
         """
         ending_height_x, ending_height_y, ending_width_x, ending_width_y = 0, 0, 0, 0
 
-        if road_type == "Straight":
+        if RoadType[road_type].value == RoadType.Straight.value:
             bearing_height = deg2rad(bearing)
             ending_height_x = length * np.cos(bearing_height) + starting_position[0]
             ending_height_x = ending_height_x.astype(int)
@@ -99,14 +99,14 @@ class MapCreator:
         lane_width = lanes["lane_width"]
 
         for i in range(1, len(lanes)):
-            lane_points = MapCreator.generate_lane_points(starting_position, length, road_type, bearing, lane_width)
+            lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             data = (lanes[str(i)])
             lane_objects.append(Lane(i, data["name"], lane_width, lane_points))
         return lane_objects
 
     @staticmethod
-    def generate_lane_points(starting_position, length, road_type, bearing, lane_width):
+    def __generate_lane_points(starting_position, length, road_type, bearing, lane_width):
         """
         Sample and return lane points based on road type, starting point and length
         : param road_type: type of road/lane
@@ -119,7 +119,7 @@ class MapCreator:
         starting_position_y = starting_position[1]
         bearing = deg2rad(bearing)
 
-        if road_type == "Straight":
+        if RoadType[road_type].value == RoadType.Straight.value:
 
             final_x = length * np.cos(bearing) + starting_position_x
             final_y = length * np.sin(bearing) + starting_position_y
