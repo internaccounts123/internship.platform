@@ -28,13 +28,10 @@ class TrafficCreator(object):
                 TrafficCreator.__traffic.append(v)
                 ind_x += 1
 
-        for v in TrafficCreator.__traffic:
-            print("(x,y) ", v.x, "    ", v.y,"    ","back", v.back_point,"    ","front:", v.front_point)
         return TrafficCreator.__traffic
 
     @staticmethod
     def set_position(v, map1, taken):
-
         """
         :param v: Vehicle not assigned a position
         :param map1: full map
@@ -66,11 +63,6 @@ class TrafficCreator(object):
             xy_id = random.randint((v.car_length/2.0), (len(lane_points) - (v.car_length/2.0))-1)
             tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, lane_points[xy_id][1])
 
-            print("----------------tupple in taken------------")
-            print("tup: ", tup)
-            print("taken: ", taken)
-            print("--------------------------------------------")
-
         lower_limit = lane_points[xy_id][1] - (v.car_length/2.0)
         upper_limit = lane_points[xy_id][1] + (v.car_length/2.0)
 
@@ -87,13 +79,8 @@ class TrafficCreator(object):
         v.lane_id = map1.roads[road_idx].lanes[lane_idx].id
         v.x = lane_points[xy_id][0]
         v.y = lane_points[xy_id][1]
-        print ("---------------xy-------------")
-        print ("x", v.x)
-        print("y",v.y)
-        print("-------------------------------")
         v.front_point = (v.x, upper_limit)
         v.back_point = (v.x, lower_limit)
-        print("----------vehicle setttttt---------------")
         return v
 
     @staticmethod
@@ -108,7 +95,6 @@ class TrafficCreator(object):
 
             for p in points:
                 p_tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, p[1])
-                print("POINTS: ", p_tup)
                 if p_tup in taken:
                     return False
             return True
