@@ -9,3 +9,4 @@ def deg2rad(degree):
 
 def rad2deg(angle):
     return angle * (180.0 / M_PI)
+

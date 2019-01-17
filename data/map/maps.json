@@ -1,13 +1,13 @@
 {
 	"Map_id": 1,
-	"Map_Name": "A9_Nord_clipped",
+	"Map_Name": "A9_Nerd_clipped",
 	"Map_Version": 33,
 
 	"roads": {
 
 		"1": {
 			"name": "FFJ",
-			"length": 1000,
+			"length": 100,
 			"width": 12,
 			"road_type":"Straight",
 			"starting_pos": [0, 0],
