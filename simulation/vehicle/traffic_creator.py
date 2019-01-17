@@ -33,7 +33,7 @@ class TrafficCreator(object):
     def set_position(v, map1, taken):
 
         """
-        :param v: Vehicle not assigned a position
+        :param v: vehicle not assigned a position
         :param map1: full map
         :param taken: already allotted points
         :return: vehicle with assigned initial position

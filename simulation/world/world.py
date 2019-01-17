@@ -1,5 +1,6 @@
 # import random
 # import numpy as np
+import logging
 from simulation.vehicle.traffic_creator import TrafficCreator
 
 
@@ -32,7 +33,7 @@ class World(object):
         return self.__world_map
 
     @world_map .setter
-    def world_map (self, world_map ):
+    def world_map(self, world_map):
         self.__world_map = world_map
 
     # def init_cars(self, type):
@@ -69,3 +70,14 @@ class World(object):
     # self.rbSize += 1
 
     # function update args[6:] map road grid
+
+    def logger(self):
+        logging.basicConfig(filename='traffic.log', level=logging.DEBUG)
+        for car in self.cars:
+            car_id = car.id
+            car_x = car.x
+            car_y = car.y
+            car_road = car.road_id
+            car_lane = car.lane_id
+            log = logging.getLogger("traffic-logger")
+            log.info('car_id : ' + str(car_id) + 'car_x : ' + str(car_x) + 'car_y : ' + str(car_y) + 'car road : ' + str(car_road) + 'car lane : ' + str(car_lane))

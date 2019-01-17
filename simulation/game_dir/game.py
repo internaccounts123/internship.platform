@@ -14,7 +14,7 @@ class Game:
 
     def run(self):
         self.renderer.run_simulation()
-
+        self.world.logger()
     @property
     def map1(self):
         return self.__map
