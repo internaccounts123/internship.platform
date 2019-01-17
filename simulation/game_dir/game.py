@@ -1,5 +1,5 @@
 from map.map_creator import MapCreator
-from simulation.world.world import World
+from simulation.World.world import World
 from simulation.renderer.Renderer import Renderer
 from common.config_reader import ConfigReader
 
