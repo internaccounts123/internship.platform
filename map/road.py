@@ -1,12 +1,23 @@
 class Road:
-    def __init__(self, length, name, road_type, starting_pos, bearing, connection, lanes):
+    def __init__(self, road_id, length, name, road_type, starting_pos, ending_height, ending_width, bearing, connection, lanes):
+        self.__road_id = road_id
         self.__length = length
         self.__name = name
         self.__starting_pos = starting_pos
+        self.__ending_height = ending_height
+        self.__ending_width = ending_width
         self.__bearing = bearing
         self.__connection = connection
         self.__road_type = road_type
         self.__lanes = lanes
+
+    @property
+    def road_id(self):
+        return self.__road_id
+
+    @road_id.setter
+    def road_id(self, road_id):
+        self.__road_id = road_id
 
     @property
     def length(self):
@@ -31,6 +42,22 @@ class Road:
     @starting_pos.setter
     def starting_pos(self, starting_pos):
         self.__starting_pos = starting_pos
+
+    @property
+    def ending_height(self):
+        return self.__ending_height
+
+    @ending_height.setter
+    def ending_height(self, ending_height):
+        self.__ending_height = ending_height
+
+    @property
+    def ending_width(self):
+        return self.__ending_width
+
+    @ending_width.setter
+    def ending_width(self, ending_width):
+        self.__ending_width = ending_width
 
     @property
     def bearing(self):

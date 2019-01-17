@@ -13,6 +13,7 @@ class ConfigReader:
         :param filename: json (base-config) containing basic config of simulation and all other json file names 
         """
         if ConfigReader.__instance == "":
+
             ConfigReader.__base_path = os.path.realpath(os.path.join(os.getcwd(), '../'))
             ConfigReader.__data = ConfigReader.__create_data(filename)
 

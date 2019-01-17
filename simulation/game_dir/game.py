@@ -1,5 +1,5 @@
 from map.map_creator import MapCreator
-from simulation.World.world import World
+from simulation.world.world import World
 from simulation.renderer.Renderer import Renderer
 from common.config_reader import ConfigReader
 
@@ -13,7 +13,7 @@ class Game:
         self.__renderer = Renderer(self.__world)
 
     def run(self):
-        pass
+        self.renderer.run_simulation()
 
     @property
     def map1(self):

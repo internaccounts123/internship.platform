@@ -1,10 +1,7 @@
-import numpy as np
-
-
 class Vehicle(object):
 
     def __init__(self, perception_size, speed_limit, acceleration, de_acceleration, length, type1):
-
+        self.__id = None
         self.__perception_size = perception_size
         self.__speed_limit = speed_limit
         self.__acceleration = acceleration
@@ -13,10 +10,11 @@ class Vehicle(object):
         self.__type = type1
         self.__x = None
         self.__y = None
-        self.__lane = None
-        self.__road = None
+        self.__lane_id = None
+        self.__road_id = None
         self.__perception = None
-        self.__id = None
+        self.__front_point = None
+        self.__back_point = None
 
     @property
     def car_length(self):
@@ -27,12 +25,12 @@ class Vehicle(object):
         self.__car_length = car_length
 
     @property
-    def road(self):
-        return self.__road
+    def road_id(self):
+        return self.__road_id
 
-    @road.setter
-    def road(self, road):
-        self.__road = road
+    @road_id.setter
+    def road_id(self, road_id):
+        self.__road_id = road_id
 
     @property
     def id(self):
@@ -99,12 +97,12 @@ class Vehicle(object):
         self.__y = y
 
     @property
-    def lane(self):
-        return self.__lane
+    def lane_id(self):
+        return self.__lane_id
 
-    @lane.setter
-    def lane(self, lane):
-        self.__lane = lane
+    @lane_id.setter
+    def lane_id(self, lane_id):
+        self.__lane_id = lane_id
 
     @property
     def perception(self):
@@ -113,3 +111,19 @@ class Vehicle(object):
     @perception.setter
     def perception(self, perception):
         self.__perception = perception
+
+    @property
+    def front_point(self):
+        return self.__front_point
+
+    @front_point.setter
+    def front_point(self, front_point):
+        self.__front_point = front_point
+
+    @property
+    def back_point(self):
+        return self.__back_point
+
+    @back_point.setter
+    def back_point(self, back_point):
+        self.__back_point = back_point

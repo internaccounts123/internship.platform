@@ -1,6 +1,6 @@
 # import random
 # import numpy as np
-from simulation.Vehicle.traffic_creator import TrafficCreator
+from simulation.vehicle.traffic_creator import TrafficCreator
 
 
 class World(object):
