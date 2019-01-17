@@ -74,8 +74,8 @@ class TrafficCreator(object):
             taken.append(tup)
 
         # set car attributes
-        v.road = map1.roads[road_idx].road_id
-        v.lane = map1.roads[road_idx].lanes[lane_idx].id
+        v.road_id = map1.roads[road_idx].road_id
+        v.lane_id = map1.roads[road_idx].lanes[lane_idx].id
         v.x = lane_points[xy_id][0]
         v.y = lane_points[xy_id][1]
 

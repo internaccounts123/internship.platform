@@ -133,7 +133,7 @@ class Renderer:
             road_width = self.draw_road(self.__world.world_map.roads[0])
 
             for car in self.__world.cars:
-                if car.road == self.__world.world_map.roads[0].road_id:
+                if car.road_id == self.__world.world_map.roads[0].road_id:
                     self.draw_car(car.front_point,car.back_point, road_width, len(self.__world.world_map.roads[0].lanes))
 
             pygame.display.update()
