@@ -85,6 +85,17 @@ class TrafficCreator(object):
 
     @staticmethod
     def __is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1, road_idx, lane_idx):
+        """
+        :param tup: (road id, lane id, y-coordinate)
+        :param taken: list of already taken tup
+        :param lane_points: possible generated lane points of a road
+        :param xy_id: index of selected lane_point
+        :param car_length: length of car
+        :param map1: map object
+        :param road_idx:  index of selected road
+        :param lane_idx:  index of selected lane
+        :return: bool
+        """
         _taken = taken.copy()
         if (tup is not None) and (len(taken) != 0):
             lower_limit = lane_points[xy_id][1] - (car_length / 2.0)
