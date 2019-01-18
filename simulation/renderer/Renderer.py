@@ -12,8 +12,8 @@ class Renderer:
         Default constructor
         :param world: world object to draw
         :param fps: frames per second, default value: 30
-        :param screen_width: width of screen, default value: 1024
-        :param screen_height: height of screen, default value: 720
+        :param screen_width: width of screen, default value: 800
+        :param screen_height: height of screen, default value: 800
         """
         self.__FPS = fps
         self.__world = world
@@ -30,7 +30,7 @@ class Renderer:
         except FileNotFoundError:
             raise UserWarning("Error reading red_car.png file from sprites folder")
 
-        pygame.init()
+
 
     def draw_car(self, front_point, back_point, road_width, no_of_lanes):
         """
@@ -113,11 +113,14 @@ class Renderer:
 
         return road_width
 
-    def run_simulation(self):
+    def run_simulation(self, _event):
         """
         Run the main loop of simulation
         :return: playtime in seconds
         """
+
+        pygame.init()
+
         clock = pygame.time.Clock()
         mainloop = True
         playtime = 0.0
@@ -127,6 +130,7 @@ class Renderer:
         # pygame.display.update(self.draw_car(520, road))
         # print("Run simulation")
         while mainloop:
+
             milliseconds = clock.tick(self.__FPS)  # do not go faster than this frame rate
             playtime += milliseconds / 1000.0
 
@@ -137,6 +141,7 @@ class Renderer:
                     self.draw_car(car.front_point,car.back_point, road_width, len(self.__world.world_map.roads[0].lanes))
 
             pygame.display.update()
+
             # ----- event handler -----
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -144,7 +149,9 @@ class Renderer:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         mainloop = False  # user pressed ESC
+                    print("key down")
             pygame.display.set_caption("renderer")
+            _event.set()
 
         pygame.quit()
         return playtime
