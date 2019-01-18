@@ -2,6 +2,7 @@ from map.map_creator import MapCreator
 from simulation.world.world import World
 from simulation.renderer.Renderer import Renderer
 from common.config_reader import ConfigReader
+from common.logger_class import Logger
 
 
 class Game:
@@ -14,7 +15,8 @@ class Game:
 
     def run(self):
         self.renderer.run_simulation()
-        self.world.logger()
+        Logger.log_map(self.map1)
+        Logger.log_cars(self.world.cars)
     @property
     def map1(self):
         return self.__map
