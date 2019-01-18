@@ -27,11 +27,11 @@ class TrafficCreator(object):
                 v = TrafficCreator.set_position(v, map1, taken)
                 TrafficCreator.__traffic.append(v)
                 ind_x += 1
+
         return TrafficCreator.__traffic
 
     @staticmethod
     def set_position(v, map1, taken):
-
         """
         :param v: Vehicle not assigned a position
         :param map1: full map
@@ -45,9 +45,10 @@ class TrafficCreator(object):
         lane_idx = None
         xy_id = None
         lane_points = []
+        car_length = v.car_length
 
         # choose a point where a car is not already present
-        while (tup in taken) or (_do is True):
+        while (TrafficCreator.__is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1, road_idx, lane_idx) is False) or (_do is True):
             _do = False
             road_idx = random.randint(0, len(map1.roads)-1)
             lane_idx = random.randint(0, len(map1.roads[road_idx].lanes)-1)
@@ -78,11 +79,38 @@ class TrafficCreator(object):
         v.lane_id = map1.roads[road_idx].lanes[lane_idx].id
         v.x = lane_points[xy_id][0]
         v.y = lane_points[xy_id][1]
-
         v.front_point = (v.x, upper_limit)
         v.back_point = (v.x, lower_limit)
-
         return v
+
+    @staticmethod
+    def __is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1, road_idx, lane_idx):
+        """
+        :param tup: (road id, lane id, y-coordinate)
+        :param taken: list of already taken tup
+        :param lane_points: possible generated lane points of a road
+        :param xy_id: index of selected lane_point
+        :param car_length: length of car
+        :param map1: map object
+        :param road_idx:  index of selected road
+        :param lane_idx:  index of selected lane
+        :return: bool
+        """
+        _taken = taken.copy()
+        if (tup is not None) and (len(taken) != 0):
+            lower_limit = lane_points[xy_id][1] - (car_length / 2.0)
+            upper_limit = lane_points[xy_id][1] + (car_length / 2.0)
+
+            # taken points by this car
+            points = TrafficCreator.points_in_yrange(map1, road_idx, lane_idx, (lower_limit, upper_limit))
+
+            for p in points:
+                p_tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, p[1])
+                if p_tup in taken:
+                    return False
+            return True
+        else:
+            return True
 
     @staticmethod
     def vehicle_creator(percentage, type1):
@@ -116,7 +144,7 @@ class TrafficCreator(object):
         """
 
         coordinates = np.array([])
-        starting_position_x = lane_width*(lane_id-1) + (lane_width / 2)
+        starting_position_x = lane_width*(lane_id-1) + (lane_width / 2.0)
         starting_position_y = starting_position[1]
         bearing = deg2rad(bearing)
 

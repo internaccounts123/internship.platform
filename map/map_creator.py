@@ -50,8 +50,9 @@ class MapCreator:
             lanes = MapCreator.create_lanes(data["lanes"], data["road_type"], data["starting_pos"],
                                             data["length"], data["bearing"])
             data = (roads[str(i)])
+            road_width = len(lanes)*lanes[0].width
             ending_height, ending_width = MapCreator.__generate_end_points(data["starting_pos"], data["length"],
-                                                                           data["width"], data["road_type"],
+                                                                           road_width, data["road_type"],
                                                                            data["bearing"])
             road_objects.append(Road(road_id+1, data["length"], data["name"], data["road_type"], data["starting_pos"],
                                 ending_height, ending_width, data["bearing"], data["connection"], lanes))

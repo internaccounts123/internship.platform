@@ -2,7 +2,6 @@ import pygame
 import os
 from common.config_reader import ConfigReader
 from simulation.renderer.adapter import Adapter
-from common.road_types import RoadType
 
 
 class Renderer:
@@ -22,7 +21,7 @@ class Renderer:
 
         self.__screen = pygame.display.set_mode((screen_width, screen_height))
 
-        Adapter.calculate_initials(world.world_map)
+        Adapter.calculate_initials(world.world_map, screen_width, screen_height)
 
         try:
             self.__myCar = pygame.image.load(os.path.join(ConfigReader.get_data('base_path'),
@@ -40,22 +39,26 @@ class Renderer:
         :param no_of_lanes: number of lanes in the road
         :return: None
         """
+        self.__myCar = pygame.image.load(os.path.join(ConfigReader.get_data('base_path'),
+                                                      'data/sprites/{}'.format('red_car.png'))).convert_alpha()
 
         # Scaling
-        front_coordinate = Adapter.scaling([front_point[0], front_point[1]], [self.__screen_width, self.__screen_height], [0, 0])
-        back_coordinate = Adapter.scaling([back_point[0], back_point[1]], [self.__screen_width, self.__screen_height], [0, 0])
+        front_coordinate = Adapter.scaling([front_point[0], front_point[1]])
+        back_coordinate = Adapter.scaling([back_point[0], back_point[1]])
 
         car_length = Adapter.get_length("Straight", list(front_coordinate), list(back_coordinate))
-        car_width = int((road_width / float(no_of_lanes)) * 0.8)
+
+        car_width = int((road_width / float(no_of_lanes)) * 0.6)
 
         # Inversion
-        front_coordinate = Adapter.inversion(front_coordinate, self.__screen_height, car_length)
+        # front_coordinate = Adapter.inversion(front_coordinate, self.__screen_height, car_length)
+        back_coordinate = Adapter.inversion(back_coordinate, self.__screen_height, car_length)
 
         # Scaling Car
         self.scale_car(car_width, car_length)
 
         # Draw Car
-        self.__screen.blit(self.__myCar, (front_coordinate[0]-(car_width/2), front_coordinate[1]))
+        self.__screen.blit(self.__myCar, ((back_coordinate[0]-(car_width/2)), back_coordinate[1]))
 
     def scale_car(self, scale_w, scale_h):
         """
@@ -75,17 +78,17 @@ class Renderer:
 
         # Bottom left coordinate
         road_coordinate_start = road.starting_pos
-        road_coordinate_start = Adapter.scaling(road_coordinate_start, [self.__screen_width, self.__screen_height], [0, 0])
+        road_coordinate_start = Adapter.scaling(road_coordinate_start)
 
         # Top left coordinate
         road_coordinate_end = road.ending_height
-        road_coordinate_end = Adapter.scaling(road_coordinate_end, [self.__screen_width, self.__screen_height], [0, 0])
+        road_coordinate_end = Adapter.scaling(road_coordinate_end)
 
         road_length = Adapter.get_length(road.road_type, road_coordinate_start, road_coordinate_end)
 
         # Bottom right coordinate
         road_coordinate_start_end_width = road.ending_width
-        road_coordinate_start_end_width = Adapter.scaling(road_coordinate_start_end_width, [self.__screen_width, self.__screen_height], [0, 0])
+        road_coordinate_start_end_width = Adapter.scaling(road_coordinate_start_end_width)
 
         road_width = Adapter.get_length(road.road_type, road_coordinate_start, road_coordinate_start_end_width)
 
@@ -131,6 +134,8 @@ class Renderer:
         # print("Run simulation")
         while mainloop:
 
+            self.__screen.fill([255, 255, 255])
+
             milliseconds = clock.tick(self.__FPS)  # do not go faster than this frame rate
             playtime += milliseconds / 1000.0
 
@@ -138,7 +143,8 @@ class Renderer:
 
             for car in self.__world.cars:
                 if car.road_id == self.__world.world_map.roads[0].road_id:
-                    self.draw_car(car.front_point,car.back_point, road_width, len(self.__world.world_map.roads[0].lanes))
+                    self.draw_car(car.front_point, car.back_point, road_width,
+                                  len(self.__world.world_map.roads[0].lanes))
 
             pygame.display.update()
 
@@ -149,7 +155,20 @@ class Renderer:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         mainloop = False  # user pressed ESC
-                    print("key down")
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(event)
+                    print(event.type)
+
+                    if event.button == 4:
+                        pass
+                        # Adapter.zoom_in(self.__screen_width, self.__screen_height)
+
+                    elif event.button == 5:
+                        pass
+                        # Adapter.zoom_out(self.__screen_width, self.__screen_height)
+
+
             pygame.display.set_caption("renderer")
             _event.set()
 
