@@ -157,8 +157,6 @@ class Renderer:
                         mainloop = False  # user pressed ESC
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(event)
-                    print(event.type)
 
                     if event.button == 4:
                         pass

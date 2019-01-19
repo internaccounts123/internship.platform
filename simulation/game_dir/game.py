@@ -1,6 +1,6 @@
 from map.map_creator import MapCreator
 from simulation.world.world import World
-from simulation.renderer.Renderer import Renderer
+from simulation.renderer.renderer import Renderer
 from common.config_reader import ConfigReader
 
 import threading

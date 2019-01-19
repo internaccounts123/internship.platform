@@ -37,7 +37,6 @@ class World(object):
         self.__world_map = world_map
 
     def update(self, event):
-        print(type(event))
         for i in range(100):
             event.wait()
             for car in self.cars:
@@ -45,7 +44,6 @@ class World(object):
                 car.front_point = (car.front_point[0], car.front_point[1] + 1)
                 car.back_point = (car.back_point[0], car.back_point[1] + 1)
             event.clear()
-            print("car updated")
             time.sleep(0.01)
 
     # def init_cars(self, type):
