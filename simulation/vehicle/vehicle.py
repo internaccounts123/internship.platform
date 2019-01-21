@@ -127,3 +127,22 @@ class Vehicle(object):
     @back_point.setter
     def back_point(self, back_point):
         self.__back_point = back_point
+
+    @property
+    def serialize(self):
+        return {
+            "id": self.id,
+            "perception_size": self.perception_size,
+            "speed_limit": self.speed_limit,
+            "acceleration": self.acceleration,
+            "de_acceleration": self.de_acceleration,
+            "car_length": self.car_length,
+            "type": self.type,
+            "x": self.x,
+            "y": self.y,
+            "lane_id": self.lane_id,
+            "road_id": self.road_id,
+            "perception": self.perception,
+            "front_point": self.front_point,
+            "back_point": self.back_point
+        }
