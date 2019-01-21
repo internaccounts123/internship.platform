@@ -8,11 +8,11 @@ class Vehicle(object):
         self.__de_acceleration = de_acceleration
         self.__car_length = length
         self.__type = type1
+        self.__car_width = None
         self.__x = None
         self.__y = None
         self.__lane_id = None
         self.__road_id = None
-        self.__perception = None
         self.__front_point = None
         self.__back_point = None
 
@@ -23,6 +23,14 @@ class Vehicle(object):
     @car_length.setter
     def car_length(self, car_length):
         self.__car_length = car_length
+
+    @property
+    def car_width(self):
+        return self.__car_width
+
+    @car_width.setter
+    def car_width(self, car_width):
+        self.__car_width = car_width
 
     @property
     def road_id(self):
@@ -104,13 +112,13 @@ class Vehicle(object):
     def lane_id(self, lane_id):
         self.__lane_id = lane_id
 
-    @property
-    def perception(self):
-        return self.__perception
-
-    @perception.setter
-    def perception(self, perception):
-        self.__perception = perception
+    # @property
+    # def perception(self):
+    #     return self.__perception
+    #
+    # @perception.setter
+    # def perception(self, perception):
+    #     self.__perception = perception
 
     @property
     def front_point(self):

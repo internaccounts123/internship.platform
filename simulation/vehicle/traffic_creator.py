@@ -81,6 +81,7 @@ class TrafficCreator(object):
         v.y = lane_points[xy_id][1]
         v.front_point = (v.x, upper_limit)
         v.back_point = (v.x, lower_limit)
+        v.car_width = int((map1.roads[road_idx].width / float(len(map1.roads[road_idx].lanes))) * 0.6)
         return v
 
     @staticmethod

@@ -1,6 +1,6 @@
-# import random
-# import numpy as np
+import numpy as np
 from simulation.vehicle.traffic_creator import TrafficCreator
+from collections import defaultdict
 
 
 class World(object):
@@ -9,7 +9,12 @@ class World(object):
         self.__id = _id
         self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator.create_traffic(map1, self.__id)
-        self.__grid = None
+        self.__grid = defaultdict(lambda: defaultdict(lambda: []))
+        self.__update_init_perception()
+
+    def __update_init_perception(self):
+        for car in self.__cars:
+            self.__grid[car.road_id][car.lane_id].append(car)
 
     @property
     def id(self):
@@ -28,44 +33,17 @@ class World(object):
         self.__cars = cars
 
     @property
-    def world_map (self):
+    def world_map(self):
         return self.__world_map
 
-    @world_map .setter
-    def world_map (self, world_map ):
+    @world_map.setter
+    def world_map(self, world_map):
         self.__world_map = world_map
 
-    # def init_cars(self, type):
-    #
-    #     for i in range(len(self.data[type])):
-    #         arg_list = []
-    #
-    #         for j in self.data[type][i]:
-    #             arg_list.append(self.data[type][i][j])
-    #
-    #         indx=random.randint(len(map.roads))
-    #         arg_list.append(map.roads[indx].name)  #road name
-    #
-    #
-    #         set=0
-    #         while (set==0):
-    #             id_ = map.roads[indx].lanes[random.randint(len(map.roads[indx].lanes))].id
-    #             arg_list.append(id_)  # lane id
-    #
-    #         width=0
-    #         while(map.roads[indx].lanes.id != id_):
-    #             width+=map.roads[indx].lanes.width
-    #         arg_list.append(width) #x
-    #
-    #
-    #         y= random.randint(map.roads[indx].length)
+    @property
+    def grid(self):
+        return self.__grid
 
-    # arg_list.append()  # y
-    #
-    # for j in range(1):
-    #     arg_list.append(None)
-    #
-    # self.rbCars.append(RuleBased(arg_list))
-    # self.rbSize += 1
-
-    # function update args[6:] map road grid
+    @grid.setter
+    def grid(self, _grid):
+        self.__grid = _grid

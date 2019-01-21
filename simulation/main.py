@@ -3,6 +3,13 @@ from map.map_creator import MapCreator
 if __name__ == '__main__':
     g = Game()
     g.run()
+
+    # for i in g.world.grid.values():
+    #     for j in i.values():
+    #         print(i.keys())
+    #         for car in j:
+    #             print(car.x," ",car.y,"  ",car.lane_id,"  ",car.road_id)
+    #print(g.world.grid)
     # for i in range(0, 17):
     #     print(g.world.cars[i].id, g.world.cars[i].x, g.world.cars[i].y, g.world.cars[i].front_point,
     #           g.world.cars[i].back_point)

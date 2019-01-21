@@ -55,7 +55,7 @@ class MapCreator:
                                                                            road_width, data["road_type"],
                                                                            data["bearing"])
             road_objects.append(Road(road_id+1, data["length"], data["name"], data["road_type"], data["starting_pos"],
-                                ending_height, ending_width, data["bearing"], data["connection"], lanes))
+                                ending_height, ending_width, data["bearing"], data["connection"], lanes, road_width))
 
         return road_objects
 
