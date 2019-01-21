@@ -1,5 +1,4 @@
 from simulation.game_dir.game import Game
-from map.map_creator import MapCreator
 if __name__ == '__main__':
     g = Game()
     g.run()
@@ -23,4 +22,3 @@ if __name__ == '__main__':
         # for j in range(0, 3):
         #     print("\n\n")
         #     print(g.map1.roads[i].lanes[j].lane_points)
-
