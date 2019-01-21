@@ -15,6 +15,10 @@ class Vehicle(object):
         self.__perception = None
         self.__front_point = None
         self.__back_point = None
+        self.__speed = 0
+
+    def move(self, road_type, bearing, intercept, decision):
+        pass
 
     @property
     def car_length(self):

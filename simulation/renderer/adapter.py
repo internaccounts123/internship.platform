@@ -39,7 +39,9 @@ class Adapter:
         :param obj_height:
         :return:
         """
-        return abs(coordinates[0]), abs(height - coordinates[1] - obj_height)
+        # if (coordinates[1] - obj_height) < 0:
+        #     return coordinates[0], 0
+        return (coordinates[0]), height - abs(coordinates[1] - obj_height)
 
     @staticmethod
     def scaling(value):

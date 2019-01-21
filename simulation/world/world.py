@@ -4,6 +4,7 @@ from simulation.vehicle.traffic_creator import TrafficCreator
 import common.utility
 import time
 
+
 class World(object):
 
     def __init__(self, map1, _id):
@@ -11,6 +12,10 @@ class World(object):
         self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator.create_traffic(map1, self.__id)
         self.__grid = None
+
+    def __update_init_perception(self):
+        for car in self.__cars:
+            self.__grid[car.road_id][car.lane_id].append(car)
 
     @property
     def id(self):
@@ -40,9 +45,13 @@ class World(object):
         for i in range(100):
             event.wait()
             for car in self.cars:
-                car.y += 1
-                car.front_point = (car.front_point[0], car.front_point[1] + 1)
-                car.back_point = (car.back_point[0], car.back_point[1] + 1)
+                # car.y += 1
+                # car.front_point = (car.front_point[0], car.front_point[1] + 1)
+                # car.back_point = (car.back_point[0], car.back_point[1] + 1)
+
+                # def move(self, road_type, bearing, intercept, decision):
+                args = self.__world_map.straight_road_info(car.road_id,car.lane_id)
+                car.move(args[0], args[1], args[2], "Constant_speed")
             event.clear()
             time.sleep(0.01)
 

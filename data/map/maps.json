@@ -15,13 +15,16 @@
 			"lanes": {
 				"lane_width": 8,
 				"1": {
-					"name": "passing lane"
+					"name": "passing lane",
+					"intercept": 0
 				},
 				"2": {
-					"name": "through lane"
+					"name": "through lane",
+					"intercept": 0
 				},
 				"3": {
-					"name": "fast lane"
+					"name": "fast lane",
+					"intercept": 0
 				}
 			}
 		}

@@ -103,7 +103,7 @@ class MapCreator:
             lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             data = (lanes[str(i)])
-            lane_objects.append(Lane(i, data["name"], lane_width, lane_points))
+            lane_objects.append(Lane(i, data["name"], lane_width, lane_points, data["intercept"]))
         return lane_objects
 
     @staticmethod

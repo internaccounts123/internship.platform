@@ -40,7 +40,6 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
     def get_lateral_lanes(self, lane_id, road_name):
         lateral_lanes = []
@@ -61,10 +60,7 @@ class Map:
                     if self.check_point_fit(current_position, lane_points):
                         return r.name
 
-
-
     def check_point_fit(self, current_position, lane_points):
-
         dx = lane_points[1][0] - lane_points[2][0]
 
         dy = lane_points[1][1] - lane_points[2][1]
@@ -84,5 +80,15 @@ class Map:
 
         return current_position[1] == slope * current_position[0] - intercept
 
+    def straight_road_info(self, road_id, lane_id):
+        arr = []
+        for i in range(len(self.__roads)):
+            if self.__roads[i].road_id == road_id:
+                arr.append(self.__roads[i].road_type)
+                arr.append(self.__roads[i].bearing)
+                for lane in self.__roads[i].lanes:
+                    if lane.id == lane_id:
+                        arr.append(lane.intercept)
+                        return arr
 
-
+        # def move(self, road_type, bearing, intercept, decision):
