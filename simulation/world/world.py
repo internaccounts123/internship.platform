@@ -2,7 +2,8 @@
 # import numpy as np
 import logging
 from simulation.vehicle.traffic_creator import TrafficCreator
-
+import common.utility
+import time
 
 class World(object):
 
@@ -32,9 +33,20 @@ class World(object):
     def world_map (self):
         return self.__world_map
 
-    @world_map .setter
-    def world_map(self, world_map):
+
+    @world_map.setter
+    def world_map(self, world_map ):
         self.__world_map = world_map
+
+    def update(self, event):
+        for i in range(100):
+            event.wait()
+            for car in self.cars:
+                car.y += 1
+                car.front_point = (car.front_point[0], car.front_point[1] + 1)
+                car.back_point = (car.back_point[0], car.back_point[1] + 1)
+            event.clear()
+            time.sleep(0.01)
 
     # def init_cars(self, type):
     #

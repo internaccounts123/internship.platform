@@ -1,9 +1,7 @@
 from simulation.game_dir.game import Game
-from map.map_creator import MapCreator
 if __name__ == '__main__':
     g = Game()
     g.run()
-    x = g.map1.roads[0].serialize()
     print(x)
     # for i in range(0, 17):
     #     print(g.world.cars[i].id, g.world.cars[i].x, g.world.cars[i].y, g.world.cars[i].front_point,
@@ -18,3 +16,4 @@ if __name__ == '__main__':
         # for j in range(0, 3):
         #     print("\n\n")
         #     print(g.map1.roads[i].lanes[j].lane_points)
+
