@@ -74,23 +74,23 @@ class Adapter:
         if RoadType[road_type].value == RoadType.Straight.value:
             return np.linalg.norm(np.array(ending_pos)-np.array(starting_pos))
 
-    @staticmethod
-    def zoom_in(screen_width, screen_height):
-        Adapter.old_min = [-40, 0]
-        Adapter.old_max = [64, 60]
-        Adapter.new_min = [-400, 0]
-        Adapter.new_max = [1000, 1000]
-        screen_height = np.abs(Adapter.new_max[1] - Adapter.new_min[1])
-        screen_width = np.abs(Adapter.new_max[0] - Adapter.new_min[0])
-
-        return
-
-    @staticmethod
-    def zoom_out(screen_width, screen_height):
-        Adapter.old_min = [-40, 0]
-        Adapter.old_max = [64, 60]
-        Adapter.new_min = [0, 0]
-        Adapter.new_max = [800, 800]
-        screen_height = np.abs(Adapter.new_max[1] - Adapter.new_min[1])
-        screen_width = np.abs(Adapter.new_max[0] - Adapter.new_min[0])
-        return
+    # @staticmethod
+    # def zoom_in(screen_width, screen_height):
+    #     Adapter.old_min = [-40, 0]
+    #     Adapter.old_max = [64, 60]
+    #     Adapter.new_min = [-400, 0]
+    #     Adapter.new_max = [1000, 1000]
+    #     screen_height = np.abs(Adapter.new_max[1] - Adapter.new_min[1])
+    #     screen_width = np.abs(Adapter.new_max[0] - Adapter.new_min[0])
+    #
+    #     return
+    #
+    # @staticmethod
+    # def zoom_out(screen_width, screen_height):
+    #     Adapter.old_min = [-40, 0]
+    #     Adapter.old_max = [64, 60]
+    #     Adapter.new_min = [0, 0]
+    #     Adapter.new_max = [800, 800]
+    #     screen_height = np.abs(Adapter.new_max[1] - Adapter.new_min[1])
+    #     screen_width = np.abs(Adapter.new_max[0] - Adapter.new_min[0])
+    #     return
