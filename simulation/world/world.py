@@ -70,25 +70,3 @@ class World(object):
     # self.rbSize += 1
 
     # function update args[6:] map road grid
-
-    def logger(self):
-        logging.basicConfig(filename='traffic.log', level=logging.INFO)
-        for car in self.cars:
-            car_id = car.id
-            car_x = car.x
-            car_y = car.y
-            car_road = car.road_id
-            car_lane = car.lane_id
-            log = logging.getLogger("traffic-logger")
-            log.info('car_id : ' + str(car_id) + 'car_x : ' + str(car_x) + 'car_y : ' + str(car_y) + 'car road : ' + str(car_road) + 'car lane : ' + str(car_lane))
-
-    def logger_new(self):
-        logging.basicConfig(level=logging.INFO)
-        for car in self.cars:
-            car_id = car.id
-            car_x = car.x
-            car_y = car.y
-            car_road = car.road_id
-            car_lane = car.lane_id
-            log = logging.getLogger("traffic_new-logger")
-            log.info('car_id : ' + str(car_id) + 'car_x : ' + str(car_x) + 'car_y : ' + str(car_y) + 'car road : ' + str(car_road) + 'car lane : ' + str(car_lane))

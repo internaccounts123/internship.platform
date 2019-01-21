@@ -17,6 +17,7 @@ class Game:
         self.renderer.run_simulation()
         Logger.log_map(self.map1)
         Logger.log_cars(self.world.cars)
+
     @property
     def map1(self):
         return self.__map
