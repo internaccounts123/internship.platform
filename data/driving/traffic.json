@@ -7,9 +7,12 @@
   "driver_profile_type": {
       "Rule_based":
         {
-          "aggressive": 0.3,
-          "defensive": 0.4,
-          "moderate": 0.3
+          "model_percentage": 1.0,
+          "type_percentages": {
+            "aggressive": 0.3,
+            "defensive": 0.4,
+            "moderate": 0.3
+          }
         }
   }
 }
