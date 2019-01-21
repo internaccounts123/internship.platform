@@ -84,5 +84,15 @@ class Map:
 
         return current_position[1] == slope * current_position[0] - intercept
 
+    @property
+    def serialize(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "version" : self.version,
+            "roads" : [
+                r.serialize for r in self.roads
+            ]
+        }
 
 

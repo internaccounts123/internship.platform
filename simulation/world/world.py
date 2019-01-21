@@ -1,10 +1,13 @@
 # import random
 # import numpy as np
+from json import JSONEncoder
+
 from simulation.vehicle.traffic_creator import TrafficCreator
 import common.utility
 import time
 
-class World(object):
+
+class World():
 
     def __init__(self, map1, _id):
         self.__id = _id
@@ -29,11 +32,11 @@ class World(object):
         self.__cars = cars
 
     @property
-    def world_map (self):
+    def world_map(self):
         return self.__world_map
 
     @world_map.setter
-    def world_map (self, world_map ):
+    def world_map(self, world_map):
         self.__world_map = world_map
 
     def update(self, event):
@@ -44,7 +47,22 @@ class World(object):
                 car.front_point = (car.front_point[0], car.front_point[1] + 1)
                 car.back_point = (car.back_point[0], car.back_point[1] + 1)
             event.clear()
-            time.sleep(0.01)
+
+    def serialize(self, obj):
+
+        return {
+            "id" : self.id,
+            "world_map" : self.world_map.serialize,
+            "cars" : [
+                car.serialize for car in self.cars
+            ],
+            "grid" : self.__grid
+
+        }
+
+
+
+
 
     # def init_cars(self, type):
     #

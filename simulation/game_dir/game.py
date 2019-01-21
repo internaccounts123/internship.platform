@@ -4,8 +4,7 @@ from simulation.renderer.renderer import Renderer
 from common.config_reader import ConfigReader
 
 import threading
-import time
-
+import json
 
 class Game:
 
@@ -15,7 +14,11 @@ class Game:
         self.__world = World(self.__map, 1)
         self.__renderer = Renderer(self.__world)
 
+        print(self.__world.serialize)
+
+
     def run(self):
+
 
         # for i in range(1000):
         event = threading.Event()

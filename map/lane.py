@@ -36,3 +36,12 @@ class Lane:
     @lane_points.setter
     def lane_points(self, lane_points):
         self.__lane_points = lane_points
+
+    @property
+    def serialize(self):
+        return {
+            "id": self.__id,
+            "width": self.__width,
+            "name": self.__name,
+            "lane_points": self.__lane_points
+        }
