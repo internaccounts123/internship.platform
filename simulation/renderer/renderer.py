@@ -6,7 +6,7 @@ from simulation.renderer.adapter import Adapter
 
 class Renderer:
 
-    def __init__(self, world, fps=30, screen_width=800, screen_height=800):
+    def __init__(self, world, fps=30, screen_width=600, screen_height=600):
         """
         Default constructor
         :param world: world object to draw
@@ -28,8 +28,6 @@ class Renderer:
                                                           'data/sprites/{}'.format('red_car.png'))).convert_alpha()
         except FileNotFoundError:
             raise UserWarning("Error reading red_car.png file from sprites folder")
-
-
 
     def draw_car(self, front_point, back_point, road_width, no_of_lanes):
         """

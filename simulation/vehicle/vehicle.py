@@ -12,10 +12,10 @@ class Vehicle(object):
         self.__y = None
         self.__lane_id = None
         self.__road_id = None
-        self.__perception = None
         self.__front_point = None
         self.__back_point = None
-        self.__speed = 0
+        self.__speed = 0.0
+        self.__decision = "\0"
 
     def move(self, road_type, bearing, intercept, decision):
         pass
@@ -109,14 +109,6 @@ class Vehicle(object):
         self.__lane_id = lane_id
 
     @property
-    def perception(self):
-        return self.__perception
-
-    @perception.setter
-    def perception(self, perception):
-        self.__perception = perception
-
-    @property
     def front_point(self):
         return self.__front_point
 
@@ -131,3 +123,19 @@ class Vehicle(object):
     @back_point.setter
     def back_point(self, back_point):
         self.__back_point = back_point
+
+    @property
+    def speed(self):
+        return self.__speed
+
+    @speed.setter
+    def speed(self, speed):
+        self.__speed = speed
+
+    @property
+    def decision(self):
+        return self.__decision
+
+    @decision.setter
+    def decision(self, decision):
+        self.__decision = decision

@@ -1,9 +1,6 @@
-# import random
-# import numpy as np
 from simulation.vehicle.traffic_creator import TrafficCreator
-import common.utility
-import time
 from collections import defaultdict
+from common.logging.logger import *
 
 
 class World(object):
@@ -44,7 +41,8 @@ class World(object):
         self.__world_map = world_map
 
     def update(self, event):
-        for i in range(100):
+        for i in range(1):
+            Logger.log_cars(self.cars)
             event.wait()
             for car in self.cars:
                 # car.y += 1
@@ -52,12 +50,15 @@ class World(object):
                 # car.back_point = (car.back_point[0], car.back_point[1] + 1)
 
                 # args = road_type, bearing, intercept
+                lane_points = self.__world_map.get_lane_points(car.road_id, car.lane_id)
                 args = self.__world_map.straight_road_info(car.road_id, car.lane_id)
                 # bearing, grid
-                dec = car.decision(args[1], self.__grid)
-                car.move(args[0], args[1], args[2], dec)
+                dec = car.make_decision(args[1], self.__grid, lane_points)
+                print("dec", dec)
+                car.move(args[0], args[2], dec, lane_points)
+
             event.clear()
-            time.sleep(0.01)
+            # time.sleep(0.01)
 
     # def init_cars(self, type):
     #

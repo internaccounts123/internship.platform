@@ -54,8 +54,8 @@ class Map:
         return lateral_lanes
 
     @staticmethod
-    def get_bearing(x, y):
-        return np.arctan2(x, y)
+    def calculate_bearing(x, y):
+        return np.arctan2(y, x)
 
     def get_road_info(self, current_position):
         for r in self.__roads:
@@ -95,4 +95,11 @@ class Map:
                         arr.append(lane.intercept)
                         return arr
 
-        # def move(self, road_type, bearing, intercept, decision):
+        # def move(self, road_type, bearing, intercept, make_decision):
+
+    def get_lane_points(self, road_id, lane_id):
+        for road in self.__roads:
+            if road.road_id == road_id:
+                for lane in road.lanes:
+                    if lane.id == lane_id:
+                        return lane.lane_points

@@ -1,11 +1,10 @@
 from map.lane import Lane
 from map.road import Road
 from map.map_class import Map
-from common.utility import *
 import json, os
-import numpy as np
 from common.config_reader import ConfigReader
-from common.road_types import RoadType
+from common.enums.road_types import RoadType
+from common.utility.conversions import *
 import copy
 
 

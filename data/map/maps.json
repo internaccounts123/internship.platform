@@ -7,7 +7,7 @@
 
 		"1": {
 			"name": "FFJ",
-			"length": 60,
+			"length": 20,
 			"road_type":"Straight",
 			"starting_pos": [0, 0],
 			"bearing": 90,

@@ -1,5 +1,5 @@
 import numpy as np
-from common.road_types import RoadType
+from common.enums.road_types import RoadType
 
 
 class Adapter:

@@ -1,9 +1,9 @@
 from common.config_reader import ConfigReader
 from simulation.vehicle.rule_based import RuleBased
-from common.model_types import ModelTypes
+from common.enums.model_types import ModelTypes
 import random
-from common.utility import deg2rad
-from common.road_types import RoadType
+from common.utility.conversions import deg2rad
+from common.enums.road_types import RoadType
 import numpy as np
 
 
