@@ -3,6 +3,7 @@
 from simulation.vehicle.traffic_creator import TrafficCreator
 import common.utility
 import time
+from collections import defaultdict
 
 
 class World(object):
@@ -11,7 +12,8 @@ class World(object):
         self.__id = _id
         self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator.create_traffic(map1, self.__id)
-        self.__grid = None
+        self.__grid = defaultdict(lambda: defaultdict(lambda: []))
+        self.__update_init_perception()
 
     def __update_init_perception(self):
         for car in self.__cars:
@@ -51,7 +53,9 @@ class World(object):
 
                 # args = road_type, bearing, intercept
                 args = self.__world_map.straight_road_info(car.road_id, car.lane_id)
-                car.move(args[0], args[1], args[2], "Accelerate ")
+                # bearing, grid
+                dec = car.decision(args[1], self.__grid)
+                car.move(args[0], args[1], args[2], dec)
             event.clear()
             time.sleep(0.01)
 

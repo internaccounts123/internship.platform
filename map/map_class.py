@@ -53,6 +53,10 @@ class Map:
 
         return lateral_lanes
 
+    @staticmethod
+    def get_bearing(x, y):
+        return np.arctan2(x, y)
+
     def get_road_info(self, current_position):
         for r in self.__roads:
             for l in r.lanes:
