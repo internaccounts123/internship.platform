@@ -3,6 +3,9 @@
 import logging
 from simulation.vehicle.traffic_creator import TrafficCreator
 import common.utility
+from common.logger_class import Logger
+from time import gmtime, strftime
+import datetime
 import time
 
 class World(object):
@@ -47,6 +50,37 @@ class World(object):
                 car.back_point = (car.back_point[0], car.back_point[1] + 1)
             event.clear()
             time.sleep(0.01)
+
+
+    def log_cars(self):
+
+        for car in self.cars:
+            car_id = car.id
+            car_speed_limit = car.speed_limit
+            car_x = car.x
+            car_y = car.y
+            x = datetime.datetime.now()
+            car_road = car.road_id
+            car_lane = car.lane_id
+            log = Logger.get_logger()
+            log.info('Time : ' + str(x) + 'car_speed limit : ' + str(car_speed_limit) + 'car_id : ' + str(car_id)
+                     + 'car_x: '
+                     + str(car_x) + 'car_y : ' + str(car_y)
+                     + 'car road: ' + str(
+                car_road) + 'car lane : ' + str(car_lane))
+
+    """
+         A function to log all information about the Map to traffic.log and also to the console
+                """
+
+
+    def log_map(self):
+        map1=self.world_map
+        x = datetime.datetime.now()
+        map_id = map1.id
+        map_name = map1.name
+        log = Logger.get_logger()
+        log.info("Time : " + str(x) + "map_id: " + str(map_id) + "map_id : " + map_name)
 
     # def init_cars(self, type):
     #

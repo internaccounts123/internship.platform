@@ -2,7 +2,6 @@ from map.map_creator import MapCreator
 from simulation.world.world import World
 from simulation.renderer.renderer import Renderer
 from common.config_reader import ConfigReader
-from common.logger_class import Logger
 
 import threading
 import time
@@ -17,9 +16,6 @@ class Game:
         self.__renderer = Renderer(self.__world)
 
     def run(self):
-        self.renderer.run_simulation()
-        Logger.log_map(self.map1)
-        Logger.log_cars(self.world.cars)
 
         # for i in range(1000):
         event = threading.Event()

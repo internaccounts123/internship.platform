@@ -1,48 +1,49 @@
 import logging
+from common.config_reader import ConfigReader
 from time import gmtime, strftime
 import datetime
-
+import copy
+import json
+import os
 
 class Logger:
+    __config_filename = "logger_config.json"
+    __log_filename = ""
+    __config_type = ""
+
 
     def __init__(self):
-        """
+        file_name = self.__config_filename
 
-        """
+        maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/map/{}'.format(file_name))
+        with open(maps_path, 'r') as f:
+            __data = json.load(f)
+
+        data = copy.deepcopy(__data)
+
+        __log_filename = data["log_filename"]
+        __config_type = data["config_type"]
 
     """
-     A function to log all information about cars to traffic.log and also to the console
+     A function to return logger 
             """
+
     @staticmethod
-    def log_cars(cars):
-        logging.basicConfig(filename='traffic.log', level=logging.DEBUG)
+    def get_logger():
+        file_name = "logger_config.json"
+        maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/configs/app_config/{}'.format(file_name))
+        with open(maps_path, 'r') as f:
+            __data = json.load(f)
 
-        x = datetime.datetime.now()
+        data = copy.deepcopy(__data)
+
+        if data["config_type"] == "DEBUG":
+            logging.basicConfig(filename=data["log_filename"], level=logging.DEBUG)
+        else:
+            logging.basicConfig(filename=data["log_filename"], level=logging.INFO)
+
         logging.getLogger().addHandler(logging.StreamHandler())
-        for car in cars:
-            car_id = car.id
-            car_speed_limit = car.speed_limit
-            car_x = car.x
-            car_y = car.y
+        return logging.getLogger("traffic-logger")
 
-            car_road = car.road_id
-            car_lane = car.lane_id
-            log = logging.getLogger("traffic-logger")
-            log.info('Time : '+str(x) + 'car_speed limit : ' + str(car_speed_limit) + 'car_id : ' + str(car_id)
-                     + 'car_x: '
-                     + str(car_x) + 'car_y : ' + str(car_y)
-                     + 'car road: ' + str(
-                    car_road) + 'car lane : ' + str(car_lane))
 
-    """
-         A function to log all information about the Map to traffic.log and also to the console
-                """
-    @staticmethod
-    def log_map(map1):
-        logging.basicConfig(filename='traffic.log', level=logging.DEBUG)
-        logging.getLogger().addHandler(logging.StreamHandler())
-        x = datetime.datetime.now()
-        map_id = map1.id
-        map_name = map1.name
-        log = logging.getLogger("traffic-logger")
-        log.info("Time : "+str(x) + "map_id: "+str(map_id) + "map_id : "+map_name)
+
