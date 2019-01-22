@@ -1,5 +1,6 @@
 from common.config_reader import ConfigReader
-from simulation.vehicle.vehicle import Vehicle
+from simulation.vehicle.rule_based import RuleBased
+from common.model_types import ModelTypes
 import random
 from common.utility import deg2rad
 from common.road_types import RoadType
@@ -12,21 +13,33 @@ class TrafficCreator(object):
 
     @staticmethod
     def create_traffic(map1, world_id):
-        __percentages = {
-            "aggressive": ConfigReader.get_data("driving.traffic.driver_profile_type.aggressive")[0],
-            "moderate": ConfigReader.get_data("driving.traffic.driver_profile_type.moderate")[0],
-            "defensive": ConfigReader.get_data("driving.traffic.driver_profile_type.defensive")[0]
-        }
+
+        # names of models
+        model_names = list(ConfigReader.get_data("driving.traffic.driver_profile_type")[0].keys())
 
         taken = []
         ind_x = 1
-        for i in range(len(__percentages)):
-            vehicle = TrafficCreator.vehicle_creator(list(__percentages.values())[i], list(__percentages.keys())[i])
-            for v in vehicle:
-                v.id = (1000*world_id) + ind_x
-                v = TrafficCreator.set_position(v, map1, taken)
-                TrafficCreator.__traffic.append(v)
-                ind_x += 1
+        for model_name in model_names:
+
+            # percentage share of each model in traffic
+            model_percentage = ConfigReader.get_data("driving.traffic.driver_profile_type." + model_name +
+                                                     ".model_percentage")[0]
+
+            for type_name in ConfigReader.get_data("driving.traffic.driver_profile_type." + model_name +
+                                                   ".type_percentages")[0].keys():
+
+                # percentage share of each type of a specific model in traffic
+                type_percentage = ConfigReader.get_data("driving.traffic.driver_profile_type." + model_name +
+                                                        ".type_percentages." + type_name)[0]
+
+                # vehicle_creator(percentage, type1, model_name)
+                vehicles = TrafficCreator.vehicle_creator(type_percentage * model_percentage, type_name, model_name)
+
+                for v in vehicles:
+                    v.id = (1000 * world_id) + ind_x
+                    v = TrafficCreator.set_position(v, map1, taken)
+                    TrafficCreator.__traffic.append(v)
+                    ind_x += 1
 
         return TrafficCreator.__traffic
 
@@ -113,15 +126,16 @@ class TrafficCreator(object):
             return True
 
     @staticmethod
-    def vehicle_creator(percentage, type1):
+    def vehicle_creator(percentage, type1, model_name):
 
         vehicles = []
         for i in range(int(ConfigReader.get_data("driving.traffic.traffic_amount")[0] * percentage)):
-            vehicles.append(Vehicle(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
-                                    ConfigReader.get_data("driving." + type1 + ".speed_limit")[0],
-                                    ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
-                                    ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
-                                    ConfigReader.get_data("driving." + type1 + ".length")[0], type1,))
+            if ModelTypes[model_name].value == ModelTypes.Rule_based.value:
+                vehicles.append(RuleBased(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
+                                          ConfigReader.get_data("driving." + type1 + ".speed_limit")[0],
+                                          ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
+                                          ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
+                                          ConfigReader.get_data("driving." + type1 + ".length")[0], type1))
 
         return vehicles
 

@@ -49,9 +49,9 @@ class World(object):
                 # car.front_point = (car.front_point[0], car.front_point[1] + 1)
                 # car.back_point = (car.back_point[0], car.back_point[1] + 1)
 
-                # def move(self, road_type, bearing, intercept, decision):
-                args = self.__world_map.straight_road_info(car.road_id,car.lane_id)
-                car.move(args[0], args[1], args[2], "Constant_speed")
+                # args = road_type, bearing, intercept
+                args = self.__world_map.straight_road_info(car.road_id, car.lane_id)
+                car.move(args[0], args[1], args[2], "Accelerate ")
             event.clear()
             time.sleep(0.01)
 
