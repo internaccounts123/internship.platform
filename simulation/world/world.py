@@ -41,7 +41,7 @@ class World(object):
         self.__world_map = world_map
 
     def update(self, event):
-        for i in range(1):
+        for i in range(30):
             Logger.log_cars(self.cars)
             event.wait()
             for car in self.cars:
