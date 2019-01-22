@@ -3,7 +3,7 @@
 import logging
 from simulation.vehicle.traffic_creator import TrafficCreator
 import common.utility
-from common.logger_class import Logger
+from common.logger import Logger
 from time import gmtime, strftime
 import datetime
 import time
