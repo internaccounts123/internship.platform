@@ -3,8 +3,11 @@ from simulation.world.world import World
 from simulation.renderer.renderer import Renderer
 from common.config_reader import ConfigReader
 
-import threading
+from server.server import My_server
+
+import threading, time
 import json
+
 
 class Game:
 
@@ -14,12 +17,22 @@ class Game:
         self.__world = World(self.__map, 1)
         self.__renderer = Renderer(self.__world)
 
-        print(self.__world.serialize)
+        s = My_server()
 
+        s.run_server()
+
+        # print("server running")
+
+        data_to_send = self.world.serialize
+
+        string_data = str(data_to_send)
+        string_data = string_data.replace('\'', '\"')
+        # print(string_data)
+        time.sleep(11)
+        print("sending data...")
+        s.send_data("FRAME", json.loads(string_data))
 
     def run(self):
-
-
         # for i in range(1000):
         event = threading.Event()
         threading.Thread(target=self.world.update, args=(event,)).start()

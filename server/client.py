@@ -1,12 +1,25 @@
-import socket, pickle
+import socketio
 
-HOST = 'localhost'
-PORT = 5000
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((HOST, PORT))
+# standard Python
+sio = socketio.Client()
 
 
-data = s.recv(4096)
-data = data.decode()
-s.close()
-print ('Received', repr(data))
+@sio.on('connect')
+def on_connect():
+    print("I'm connected!")
+
+@sio.on('FRAME')
+def on_message(data):
+    print('I received FRAME!')
+    print(data)
+
+@sio.on('message')
+def on_message(data):
+    print('I received a custom message!')
+    print(data)
+
+@sio.on('disconnect')
+def on_disconnect():
+    print("I'm disconnected!")
+
+sio.connect('http://localhost:8000')

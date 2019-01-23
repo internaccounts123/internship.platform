@@ -1,5 +1,6 @@
 # import random
 # import numpy as np
+from collections import defaultdict
 from json import JSONEncoder
 
 from simulation.vehicle.traffic_creator import TrafficCreator
@@ -13,7 +14,12 @@ class World():
         self.__id = _id
         self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator.create_traffic(map1, self.__id)
-        self.__grid = None
+        self.__grid = defaultdict(lambda: defaultdict(lambda: []))
+        self.__update_init_perception()
+
+    def __update_init_perception(self):
+        for car in self.__cars:
+            self.__grid[car.road_id][car.lane_id].append(car)
 
     @property
     def id(self):
@@ -48,15 +54,12 @@ class World():
                 car.back_point = (car.back_point[0], car.back_point[1] + 1)
             event.clear()
 
-    def serialize(self, obj):
-
+    @property
+    def serialize(self):
         return {
-            "id" : self.id,
-            "world_map" : self.world_map.serialize,
-            "cars" : [
-                car.serialize for car in self.cars
-            ],
-            "grid" : self.__grid
+            'id' : self.id,
+            'world_map' : self.world_map.serialize,
+            'cars' :list(car.serialize for car in self.cars)
 
         }
 

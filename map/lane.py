@@ -3,7 +3,7 @@ class Lane:
         self.__id = id
         self.__width = width
         self.__name = name
-        self.__lane_points = lane_points
+        self.__lane_points = list(lane_points)
 
     @property
     def id(self):
@@ -40,8 +40,8 @@ class Lane:
     @property
     def serialize(self):
         return {
-            "id": self.__id,
-            "width": self.__width,
-            "name": self.__name,
-            "lane_points": self.__lane_points
+            'id': self.__id,
+            'width': self.__width,
+            'name': self.__name,
+            'lane_points': list(map(lambda x:list(x), self.lane_points))
         }

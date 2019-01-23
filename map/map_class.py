@@ -87,12 +87,11 @@ class Map:
     @property
     def serialize(self):
         return {
-            "id" : self.id,
-            "name" : self.name,
-            "version" : self.version,
-            "roads" : [
-                r.serialize for r in self.roads
-            ]
+            'id' : self.id,
+            'name' : self.name,
+            'version' : self.version,
+            'roads' : list(r.serialize for r in self.roads)
+
         }
 
 
