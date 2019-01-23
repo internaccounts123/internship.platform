@@ -89,15 +89,26 @@ class Map:
         final_x = road.length * np.cos(road.bearing) + starting_position_x
         final_y = road.length * np.sin(road.bearing) + starting_position_y
 
-        midpoint_x = starting_position_x + final_x / 2
 
+        midpoint_x = starting_position_x + final_x / 2
         midpoint_y = starting_position_y + final_y / 2
 
         dist_from_point = np.sqrt((position[0] - midpoint_x) ** 2 + (position[1] - midpoint_y) ** 2)
 
         return dist_from_point
+    @property
+    def serialize(self):
+        return {
+            'id' : self.id,
+            'name' : self.name,
+            'version' : self.version,
+            'roads' : list(r.serialize for r in self.roads)
 
-        # A function to track location of points not falling with in the range, the outliers
+        }
+
+
+
+    # A function to track location of points not falling with in the range, the outliers
 
     def get_closest_road(self, position):
         distances = []

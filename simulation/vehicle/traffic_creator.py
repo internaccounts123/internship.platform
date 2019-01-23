@@ -155,7 +155,7 @@ class TrafficCreator(object):
             x = np.linspace(starting_position_x, final_x, num=length)
             y = np.linspace(starting_position_y, final_y, num=length)
             coordinates = np.array([x, y]).T
-            coordinates = coordinates.astype(int)
+            # coordinates = coordinates.astype(int)
 
         return coordinates
 
