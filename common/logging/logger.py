@@ -14,35 +14,41 @@ class Logger:
      A function to log all information about cars to traffic.log and also to the console
     """
     @staticmethod
-    def log_cars(cars):
+    def log_cars(car):
         logging.basicConfig(filename='traffic.log', filemode='w', level=logging.DEBUG)
 
         current_time = datetime.datetime.now()
-        logging.getLogger().addHandler(logging.StreamHandler())
-        for car in cars:
-            car_id = car.id
-            car_speed_limit = car.speed_limit
-            car_x = car.x
-            car_y = car.y
+        #logging.getLogger().addHandler(logging.StreamHandler())
+        car_id = car.id
+        car_speed_limit = car.speed_limit
+        car_x = car.x
+        car_y = car.y
 
-            car_road = car.road_id
-            car_lane = car.lane_id
-            car_acc = car.acceleration
-            car_de_acc = car.de_acceleration
-            car_speed = car.speed
-            log = logging.getLogger("traffic-logger")
-            log.info('Time : ' + str(current_time)
-                     + '  Car ID: ' + str(car_id)
-                     + '  Speed limit: ' + str(car_speed_limit)
-                     + '  Car x: ' + str(car_x)
-                     + '  Car y: ' + str(car_y)
-                     + '  Speed: ' + str(car_speed)
-                     + '  Acceleration: ' + str(car_acc)
-                     + '  De-acceleration: ' + str(car_de_acc)
-                     + '  Car road: ' + str(car_road)
-                     + '  Car lane: ' + str(car_lane)
-                     + '  Car decision: ' + car.decision)
-        log.info("-------------------------------------------")
+        car_road = car.road_id
+        car_lane = car.lane_id
+        car_acc = car.acceleration
+        car_de_acc = car.de_acceleration
+        car_speed = car.speed
+        log = logging.getLogger("traffic-logger")
+        log.info('Time : ' + str(current_time)
+                 + '  Car ID: ' + str(car_id)
+                 + '  Speed limit: ' + str(car_speed_limit)
+                 + '  Car x: ' + str(car_x)
+                 + '  Car y: ' + str(car_y)
+                 + '  Speed: ' + str(car_speed)
+                 + '  Acceleration: ' + str(car_acc)
+                 + '  De-acceleration: ' + str(car_de_acc)
+                 + '  Car road: ' + str(car_road)
+                 + '  Car lane: ' + str(car_lane)
+                 + '  Car decision: ' + car.decision
+                 + '  Car Extra:  ' + str(car.extra))
+
+    @staticmethod
+    def log_end():
+        logging.basicConfig(filename='traffic.log', filemode='w', level=logging.DEBUG)
+        logging.getLogger().addHandler(logging.StreamHandler())
+        log = logging.getLogger("traffic-logger")
+        log.info("-------------------------------------------------------------")
 
     """
          A function to log all information about the Map to traffic.log and also to the console

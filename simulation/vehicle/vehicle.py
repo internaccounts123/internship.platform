@@ -1,3 +1,8 @@
+from common.config_reader import ConfigReader
+from common.enums.decisions import Decisions
+from common.utility.driving.driving_calculations import *
+
+
 class Vehicle(object):
 
     def __init__(self, perception_size, speed_limit, acceleration, de_acceleration, length, type1):
@@ -14,11 +19,39 @@ class Vehicle(object):
         self.__road_id = None
         self.__front_point = None
         self.__back_point = None
-        self.__speed = 0.0
+        self.__speed = 0.5
         self.__decision = "\0"
+        self.__extra = "\0"
+        self.__current_acc = acceleration
 
-    def move(self, road_type, bearing, intercept, decision):
-        pass
+    def move(self, road_type, intercept, decision, lane_points):
+        _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
+        bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
+
+        if Decisions[decision].value == Decisions.Accelerate.value:
+            self.speed += (self.__current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            self.x = self.x + self.speed * np.cos(bearing)
+            self.y = self.y + self.speed * np.sin(bearing)
+
+        elif Decisions[decision].value == Decisions.Constant_speed.value:
+            self.x = self.x + self.speed*np.cos(bearing)
+            self.y = self.y + self.speed * np.sin(bearing)
+
+        elif Decisions[decision].value == Decisions.De_accelerate.value:
+            new_speed = self.speed + (self.__current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            if new_speed >= 0:
+                self.speed = new_speed
+            # else:
+            #     self.speed = 0
+            self.x = self.x + self.speed * np.cos(bearing)
+            self.y = self.y + self.speed * np.sin(bearing)
+
+        elif Decisions[decision].value == Decisions.Move_right.value:
+            distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)
+            self.x = self.x + distance
+
+        self.front_point = (self.x, self.y + (self.car_length / 2.0))
+        self.back_point = (self.x, self.y - (self.car_length / 2.0))
 
     @property
     def car_length(self):
@@ -27,6 +60,14 @@ class Vehicle(object):
     @car_length.setter
     def car_length(self, car_length):
         self.__car_length = car_length
+
+    @property
+    def extra(self):
+        return self.__extra
+
+    @extra.setter
+    def extra(self, extra):
+        self.__extra = extra
 
     @property
     def road_id(self):
@@ -139,3 +180,11 @@ class Vehicle(object):
     @decision.setter
     def decision(self, decision):
         self.__decision = decision
+
+    @property
+    def current_acc(self):
+        return self.__current_acc
+
+    @current_acc.setter
+    def current_acc(self, current_acc):
+        self.__current_acc = current_acc

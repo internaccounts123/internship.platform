@@ -102,4 +102,4 @@ class Map:
             if road.road_id == road_id:
                 for lane in road.lanes:
                     if lane.id == lane_id:
-                        return lane.lane_points
+                        return lane.lane_points, lane.distance_points

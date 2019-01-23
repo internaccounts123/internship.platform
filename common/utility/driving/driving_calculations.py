@@ -23,15 +23,15 @@ def get_neighbouring_points(lane_points, point):
     point_index = np.argmin(distances)
 
     if point_index == 0:
-        return lane_points[point_index],lane_points[point_index+1]
+        return (lane_points[point_index], point_index), (lane_points[point_index+1], point_index+1)
 
     elif point_index == len(lane_points)-1:
-        return lane_points[point_index-1], lane_points[point_index]
+        return (lane_points[point_index - 1],point_index-1), (lane_points[point_index],point_index)
 
     angle = AngleCalculator.calculate_angle(lane_points, list(lane_points[point_index]), list(point),
                                             lane_points[point_index-1], lane_points[point_index + 1])
 
     if AngleCalculator.is_forward(angle):
-        return lane_points[point_index], lane_points[point_index + 1]
+        return (lane_points[point_index], point_index), (lane_points[point_index+1], point_index+1)
     else:
-        return lane_points[point_index - 1], lane_points[point_index]
+        return (lane_points[point_index - 1], point_index-1), (lane_points[point_index],point_index)

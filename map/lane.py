@@ -1,9 +1,10 @@
 class Lane:
-    def __init__(self, id, name, width, lane_points, intercept):
+    def __init__(self, id, name, width, lane_points, distance_points, intercept):
         self.__id = id
         self.__width = width
         self.__name = name
         self.__lane_points = lane_points
+        self.__distance_points = distance_points
         self.__intercept = intercept
 
     @property
@@ -45,3 +46,11 @@ class Lane:
     @intercept.setter
     def intercept(self, intercept):
         self.__intercept = intercept
+
+    @property
+    def distance_points(self):
+        return self.__distance_points
+
+    @distance_points.setter
+    def distance_points(self, distance_points):
+        self.__distance_points = distance_points
