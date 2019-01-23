@@ -1,6 +1,6 @@
 {
   "spawn_wait_time": 10,
-  "traffic_amount": 10,
+  "traffic_amount": 30,
   "traffic_speed": 1,
   "min_de_acceleration": 1,
   "_comment": "speed_limit in kph",

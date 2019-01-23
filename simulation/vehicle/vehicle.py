@@ -29,7 +29,7 @@ class Vehicle(object):
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
         if Decisions[decision].value == Decisions.Accelerate.value:
-            self.speed += (self.__current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
             self.x = self.x + self.speed * np.cos(bearing)
             self.y = self.y + self.speed * np.sin(bearing)
 
@@ -38,13 +38,13 @@ class Vehicle(object):
             self.y = self.y + self.speed * np.sin(bearing)
 
         elif Decisions[decision].value == Decisions.De_accelerate.value:
-            new_speed = self.speed + (self.__current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
             if new_speed >= 0:
-                self.speed = new_speed
+                self.__speed = new_speed
             # else:
             #     self.speed = 0
-            self.x = self.x + self.speed * np.cos(bearing)
-            self.y = self.y + self.speed * np.sin(bearing)
+            self.__x = self.__x + self.speed * np.cos(bearing)
+            self.__y = self.__y + self.speed * np.sin(bearing)
 
         elif Decisions[decision].value == Decisions.Move_right.value:
             distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)

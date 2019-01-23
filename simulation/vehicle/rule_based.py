@@ -48,31 +48,55 @@ class RuleBased(Vehicle):
         distance_between_me_and_immediate_car = np.abs(distance_points[imm_neigh_1[1]]
                                                        - distance_points[self_neigh_1[1]]) + self.car_length/2.0 + immediate_car.car_length/2.0 + 1
         time = 2.0
-        distance_two_sec_rule = (self.speed * time) + ((1/2.0) * self.acceleration * np.square(time)) + self.car_length/2.0 + immediate_car.car_length/2.0 + 1
+
+        # S = vit + 1/2at^2 + car_length + 1
+        # This is used instead of S=vt to incorporate acceleration of current car
+        distance_two_sec_rule = (self.speed * time) + ((1/2.0) * self.current_acc * np.square(time)) + self.car_length/2.0 + immediate_car.car_length/2.0 + 1
+
+        # Change as required
         margin = 2
+
+        # Audi brake limit
         maximum_brake = -8.64
 
+        # 2 second rule is violated
         if distance_between_me_and_immediate_car < distance_two_sec_rule:
 
+            # Check if it is possible to brake and avoid collision
             if distance_between_me_and_immediate_car > self.car_length/2.0 + immediate_car.car_length/2.0 + 1 + margin:
                 self.current_acc = (np.square(0.0) - np.square(self.speed)) / float\
                     (2 * distance_between_me_and_immediate_car)
 
+                # Maximum deceleration rate can be not be more than maximum brake
                 if self.current_acc < maximum_brake:
-                    self.current_acc = -8.64
+                    self.current_acc = maximum_brake
 
+                # Calculate the distance after hitting max brake
+                safe_distance = (np.square(0.0) - np.square(self.speed)) / (2.0 * self.current_acc)
 
+                # Check if the maximum deceleration does not avoid collision
+                if safe_distance < distance_between_me_and_immediate_car + self.car_length/2.0 + immediate_car.car_length/2.0 + 1+ margin:
+                    self.current_acc = maximum_brake
 
+                # No way out, stop or lane change
+                else:
+                    # Change lane
+                    # Temporary decision
+                    self.current_acc = 0
+                    self.speed = 0
+
+            # No way out, stop or lane change
             else:
                 # Change lane
                 # Temporary decision
-                self.acceleration = 0
+                self.current_acc = 0
                 self.speed = 0
 
             self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
             # "De_accelerate"
             return True
 
+        # 2 second rule not violated
         else:
             self.current_acc = self.acceleration
             self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
