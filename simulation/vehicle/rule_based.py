@@ -44,24 +44,35 @@ class RuleBased(Vehicle):
         immediate_car = c[np.argmin(np.array(dis))]
 
         self_neigh_1, self_neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
-        imm_neigh_1,imm_neigh_2 = get_neighbouring_points(lane_points, [immediate_car.x, immediate_car.y])
-        distance_between_me_and_immediate_car = np.abs(distance_points[imm_neigh_1[1]] - distance_points[self_neigh_1[1]])
-        #distance_two_sec_rule = (self.speed * (2.0)) + self.car_length + 1
-        distance_two_sec_rule = (self.speed * (2.0)) + ((1/2.0) * self.acceleration * np.square(2)) + self.car_length + 1
-        if distance_between_me_and_immediate_car < distance_two_sec_rule:
-            if distance_between_me_and_immediate_car > 0:
-                self.current_acc = (np.square(immediate_car.speed) - np.square(self.speed)) / float(
-                    2 * distance_between_me_and_immediate_car)
+        imm_neigh_1, imm_neigh_2 = get_neighbouring_points(lane_points, [immediate_car.x, immediate_car.y])
+        distance_between_me_and_immediate_car = np.abs(distance_points[imm_neigh_1[1]]
+                                                       - distance_points[self_neigh_1[1]]) + self.car_length/2.0 + immediate_car.car_length/2.0 + 1
+        time = 2.0
+        distance_two_sec_rule = (self.speed * time) + ((1/2.0) * self.acceleration * np.square(time)) + self.car_length/2.0 + immediate_car.car_length/2.0 + 1
+        margin = 2
+        maximum_brake = -8.64
 
-                if self.current_acc > -1:
-                    self.current_acc = -1.0
+        if distance_between_me_and_immediate_car < distance_two_sec_rule:
+
+            if distance_between_me_and_immediate_car > self.car_length/2.0 + immediate_car.car_length/2.0 + 1 + margin:
+                self.current_acc = (np.square(0.0) - np.square(self.speed)) / float\
+                    (2 * distance_between_me_and_immediate_car)
+
+                if self.current_acc < maximum_brake:
+                    self.current_acc = -8.64
+
+
 
             else:
-                self.current_acc = 0
+                # Change lane
+                # Temporary decision
+                self.acceleration = 0
+                self.speed = 0
 
             self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
             # "De_accelerate"
             return True
+
         else:
             self.current_acc = self.acceleration
             self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)

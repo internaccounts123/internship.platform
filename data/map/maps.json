@@ -7,13 +7,13 @@
 
 		"1": {
 			"name": "FFJ",
-			"length": 40,
+			"length": 100,
 			"road_type":"Straight",
 			"starting_pos": [0, 0],
 			"bearing": 90,
 			"connection": "GT",
 			"lanes": {
-				"lane_width": 8,
+				"lane_width": 10,
 				"1": {
 					"name": "passing lane",
 					"intercept": 0
