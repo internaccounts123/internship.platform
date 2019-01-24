@@ -39,7 +39,8 @@ class RuleBased(Vehicle):
         if len(c) == 0:
             self.current_acc = self.acceleration
             self.extra = (self.current_acc, "no immediate car", "no immediate car")
-            return "acc"
+            #return "acc"
+            return False
 
         immediate_car = c[np.argmin(np.array(dis))]
 
@@ -80,34 +81,37 @@ class RuleBased(Vehicle):
                 # Check if the maximum deceleration does not avoid collision
                 if safe_distance < distance_between_me_and_immediate_car:
                     # self.current_acc = maximum_brake
-                    return "De_accelerate"
+                    #return "De_accelerate"
+                    return True
 
                 # No way out, stop or lane change
                 else:
                     # Change lane
                     # Temporary decision
 
-                    # self.current_acc = 0
-                    # self.speed = 0
-                    return "Lane_change"
+                    self.current_acc = 0
+                    self.speed = 0
+                    # return "Lane_change"
 
             # No way out, stop or lane change
             else:
                 # Change lane
                 # Temporary decision
-                # self.current_acc = 0
-                # self.speed = 0
-                return "Lane_change"
+                self.current_acc = 0
+                self.speed = 0
+                #return "Lane_change"
 
             self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
             # "De_accelerate"
-            return "De_accelerate"
+            #return "De_accelerate"
+            return True
 
         # 2 second rule not violated
         else:
             self.current_acc = self.acceleration
             self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-            return "acc"
+            #return "acc"
+            return False
 
         # acc = (np.square(immediate_car.speed) - np.square(self.speed))/float(2 * s)
         # bearing = AngleCalculator.get_bearing(_neigh_1, _neigh_2)
@@ -132,13 +136,13 @@ class RuleBased(Vehicle):
         current_road = grid[self.road_id][self.lane_id]
         margin_point = self.speed_limit - (self.speed_limit * .01)
         two_sec_decision = self.__two_sec_rule( current_road, lane_points, d_points)
-        if self.speed > self.speed_limit or two_sec_decision == "De_accelerate":
+        if self.speed > self.speed_limit or two_sec_decision is True:
             self._Vehicle__decision = "De_accelerate"
             return "De_accelerate"
-        elif two_sec_decision == "Lane_change":
-            self._Vehicle__decision = self.lane_change_decision(grid, lane_points, d_points)
-            return self._Vehicle__decision
-            # ya right ya left ya max dec rate se break
+        # elif two_sec_decision == "Lane_change":
+        #     self._Vehicle__decision = self.lane_change_decision(grid, lane_points, d_points)
+        #     return self._Vehicle__decision
+        #     # ya right ya left ya max dec rate se break
 
         elif margin_point <= self.speed <= self.speed_limit:
             self._Vehicle__decision = "Constant_speed"
