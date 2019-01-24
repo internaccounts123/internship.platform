@@ -6,3 +6,4 @@ class Decisions(Enum):
     De_accelerate = 2
     Constant_speed = 3
     Move_right = 4
+    Move_left = 5

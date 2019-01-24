@@ -53,6 +53,38 @@ class Map:
 
         return lateral_lanes
 
+    def update_lane_info(self, road_id, l_id, dec):
+        lane_id = None
+
+        for road in self.__roads:
+            if road.road_id == road_id:
+                for lane_idx in range(len(road.lanes)):
+                    if road.lanes[lane_idx].id == l_id:
+                        if dec == "Move_right":
+                            lane_id = road.lanes[lane_idx+1].id
+                        elif dec == "Move_left":
+                            lane_id = road.lanes[lane_idx - 1].id
+                        else:
+                            lane_id = l_id
+
+        return lane_id
+
+    def get_no_of_road_lanes(self,road_id):
+        for road in self.__roads:
+            if road.id == road_id:
+                return len(road.lanes)
+
+    def is_last_lane_id(self, road_id, lane_id):
+        for road in self.__roads:
+            if road.road_id == road_id:
+                return road.lanes[len(road.lanes) - 1].id == lane_id
+
+    def is_first_lane_id(self, road_id, lane_id):
+        for road in self.__roads:
+            if road.road_id == road_id:
+                return road.lanes[0].id == lane_id
+
+
     @staticmethod
     def calculate_bearing(x, y):
         return np.arctan2(y, x)

@@ -4,6 +4,7 @@ from common.enums.decisions import Decisions
 from common.utility.conversions import *
 from common.utility.driving.angle_calculator import *
 from common.utility.driving.driving_calculations import *
+import copy
 
 
 class RuleBased(Vehicle):
@@ -14,131 +15,51 @@ class RuleBased(Vehicle):
     # def move(self, road_type, intercept, decision, lane_points):
     #     pass
 
-    def __two_sec_rule(self, car_list, lane_points, distance_points):
-        # ASSUMING BEARING -> map.calculate_bearing
-        # # v^2 = u^2 +2as
-        # # 2as = u^2
-        # # s = u^2/2a deg2r
-        # if len(car_list) == 1:
-        #     self.current_acc = self.acceleration
-        #     return False
-        # bearing = deg2rad(bearing)
+    # Good
+    def lane_change_assistant(self, right_lane_points, right_d_points, right_car_list):
+        if len(right_car_list) == 0:
+            return False
 
-        c = []
-        dis = []
-        for car in car_list:
+        _neigh_1, _neigh_2 = get_neighbouring_points(right_lane_points, [self.x, self.y])
 
-            if car.id != self.id:
-                _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
-                angle = AngleCalculator.calculate_angle(lane_points, [self.x, self.y], [car.x, car.y], _neigh_1[0], _neigh_2[0])
+        next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+        car_at_next_point = copy.deepcopy(self)
 
-                if AngleCalculator.is_forward(angle):
-                    c.append(car)
-                    dis.append(np.linalg.norm(np.array([car.x, car.y]) - np.array([self.x, self.y])))
+        car_at_next_point.x = next_point[0]
+        car_at_next_point.y = next_point[1]
 
-        if len(c) == 0:
-            self.current_acc = self.acceleration
-            self.extra = (self.current_acc, "no immediate car", "no immediate car")
-            return "acc"
+        upper_limit = car_at_next_point.y + (car_at_next_point.car_length / 2.0 + 1)
+        lower_limit = car_at_next_point.y - (car_at_next_point.car_length / 2.0 + 1)
 
-        immediate_car = c[np.argmin(np.array(dis))]
+        for car in right_car_list:
+            if lower_limit <= car.y + car.car_length/2.0 + 1 and upper_limit >= car.y - car.car_length/2.0 - 1:
+                return False
 
-        self_neigh_1, self_neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
-        imm_neigh_1, imm_neigh_2 = get_neighbouring_points(lane_points, [immediate_car.x, immediate_car.y])
-        distance_between_me_and_immediate_car = np.abs(distance_points[imm_neigh_1[1]]
-                                                       - distance_points[self_neigh_2[1]]) -( self.car_length/2.0 + immediate_car.car_length/2.0)
-        time = 2.0
+            #right_bool = False
 
-        # S = vit + 1/2at^2 + car_length + 1
-        # This is used instead of S=vt to incorporate acceleration of current car
-        distance_two_sec_rule = (self.speed * time) + ((1/2.0) * self.current_acc * np.square(time)) - self.car_length/2.0
+        # right lane checking
+        # two_sec_rule(self_car, bearing, car_list, lane_points, distance_points, _bool=True):
+        decision = two_sec_rule(car_at_next_point, right_car_list, right_lane_points, right_d_points)
 
-        # Change as required
-        margin = distance_two_sec_rule * 0.10
-
-        # Audi brake limit
-        maximum_brake = -8.64
-
-        # 2 second rule is violated
-        if distance_between_me_and_immediate_car < distance_two_sec_rule:
-
-            # Check if it is possible to brake and avoid collision
-            if distance_between_me_and_immediate_car > self.car_length/2.0 + immediate_car.car_length/2.0 + 1 + margin:
-                self.current_acc = (np.square(0.0) - np.square(self.speed)) / (2.0 * distance_between_me_and_immediate_car)
-
-                #  Minimum deceleration rate can be not be less than minimum rate
-                if self.current_acc > -1:
-                    self.current_acc = -1
-
-                # Maximum deceleration rate can be not be more than maximum brake
-                if self.current_acc < maximum_brake:
-                    self.current_acc = maximum_brake
-
-                # Calculate the distance after hitting max brake
-                safe_distance = (np.square(0.0) - np.square(self.speed)) / (2.0 * self.current_acc) - self.car_length / 2.0
-
-                # Check if the maximum deceleration does not avoid collision
-                if safe_distance < distance_between_me_and_immediate_car:
-                    # self.current_acc = maximum_brake
-                    return "De_accelerate"
-
-                # No way out, stop or lane change
-                else:
-                    # Change lane
-                    # Temporary decision
-
-                    # self.current_acc = 0
-                    # self.speed = 0
-                    return "Lane_change"
-
-            # No way out, stop or lane change
-            else:
-                # Change lane
-                # Temporary decision
-                # self.current_acc = 0
-                # self.speed = 0
-                return "Lane_change"
-
-            self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-            # "De_accelerate"
-            return "De_accelerate"
-
-        # 2 second rule not violated
+        if decision == "Lane_change":
+            # right_bool = False
+            return False
         else:
-            self.current_acc = self.acceleration
-            self.extra = (self.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-            return "acc"
+            #return "Move_right"
+            return True
 
-        # acc = (np.square(immediate_car.speed) - np.square(self.speed))/float(2 * s)
-        # bearing = AngleCalculator.get_bearing(_neigh_1, _neigh_2)
-        # s = (np.square(self.speed)) / (2.0 * self.de_acceleration)
-        # s += self.car_length
-        # x = self.x + s * np.cos(bearing)
-        # y = self.y + s * np.sin(bearing)
-        # _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [x, y])
-        # _angle = AngleCalculator.calculate_angle(lane_points, [x, y],
-        # [immediate_car.x, immediate_car.y], _neigh_1, _neigh_2)
-        # self.extra= (s, x, y, _angle,bearing)
-        # if AngleCalculator.is_forward(_angle):
-        #     # car is ahead of the point
-        #     return False
-        # # De_accelerate
-        # return True
-    def lane_change_decision(grid, lane_points, d_points):
-        pass
-
-
-    def make_decision(self, grid, lane_points, d_points):
+    def make_decision(self, grid, lane_points, d_points, right_lane_points,right_d_points,right_car_list, left_lane_points, left_d_points, left_car_list):
         current_road = grid[self.road_id][self.lane_id]
+        two_sec_decision = two_sec_rule(self, current_road, lane_points, d_points)
         margin_point = self.speed_limit - (self.speed_limit * .01)
-        two_sec_decision = self.__two_sec_rule( current_road, lane_points, d_points)
+
         if self.speed > self.speed_limit or two_sec_decision == "De_accelerate":
             self._Vehicle__decision = "De_accelerate"
             return "De_accelerate"
+
         elif two_sec_decision == "Lane_change":
-            self._Vehicle__decision = self.lane_change_decision(grid, lane_points, d_points)
+            self._Vehicle__decision = self.lane_change(right_lane_points,right_d_points,right_car_list,left_lane_points, left_d_points, left_car_list)
             return self._Vehicle__decision
-            # ya right ya left ya max dec rate se break
 
         elif margin_point <= self.speed <= self.speed_limit:
             self._Vehicle__decision = "Constant_speed"
@@ -146,3 +67,59 @@ class RuleBased(Vehicle):
         elif self.speed < margin_point:
             self._Vehicle__decision = "Accelerate"
             return "Accelerate"
+
+    def lane_change(self, right_lane_points, right_d_points, right_car_list, left_lane_points, left_d_points,
+                    left_car_list):
+
+        right_bool = self.lane_change_assistant(right_lane_points, right_d_points, right_car_list)
+
+        if right_bool is True:
+            return "Move_right"
+        else:
+            left_bool = self.lane_change_assistant(left_lane_points, left_d_points, left_car_list)
+            if left_bool is True:
+                return "Move_left"
+            else:
+                # self.acceleration = -8.64
+                self.current_acc = 0
+                self.speed = 0
+                return "De_accelerate"
+
+        # if right_bool is False:
+        #     # left lane checking
+        #
+        #     _neigh_1, _neigh_2 = get_neighbouring_points(left_lane_points, [self.x, self.y])
+        #
+        #     next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1, _neigh_2]))
+        #     car_at_next_point = copy.deepcopy(self)
+        #
+        #     car_at_next_point.x = next_point[0]
+        #     car_at_next_point.y = next_point[1]
+        #
+        #     upper_limit = car_at_next_point.y + (car_at_next_point.car_length / 2.0 + 1)
+        #     lower_limit = car_at_next_point.y - (car_at_next_point.car_length / 2.0 + 1)
+        #
+        #     left_bool = True
+        #     if len(left_car_list) == 0:
+        #         left_bool = False
+        #
+        #     for car in left_car_list:
+        #         if lower_limit <= car.y <= upper_limit:
+        #             left_bool = False
+        #             break
+        #     # right lane checking
+        #     if left_bool is True:
+        #         decision = two_sec_rule(car_at_next_point, left_car_list, left_lane_points, left_d_points, False)
+        #
+        #         if decision == "Lane_change":
+        #             # self.acceleration = -8.64
+        #             self.acceleration =0
+        #             self.speed=0
+        #             return "De_accelerate"
+        #         else:
+        #             return "Move_left"
+        #     else:
+        #         # self.acceleration = -8.64
+        #         self.acceleration = 0
+        #         self.speed = 0
+        #         return "De_accelerate"

@@ -12,11 +12,12 @@ class World(object):
         self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator.create_traffic(map1, self.__id)
         self.__grid = []
-        self.__grid = self.__update_perception()
+        self.__grid = self.__update_init_perception()
 
-    def __update_perception(self):
+    def __update_init_perception(self):
         del self.__grid
         gc.collect()
+
         _grid = defaultdict(lambda: defaultdict(lambda: []))
         for car in self.__cars:
             _grid[car.road_id][car.lane_id].append(car)
@@ -47,34 +48,52 @@ class World(object):
         self.__world_map = world_map
 
     def update(self, event):
-
         for i in range(1000):
 
             event.wait()
             # extract ys of all cars with lane ids
             # check the difference icluding car width
-
             for car in self.cars:
+                # car.y += 1
+                # car.front_point = (car.front_point[0], car.front_point[1] + 1)
+                # car.back_point = (car.back_point[0], car.back_point[1] + 1)
+
 
                 # args = road_type, bearing, intercept
                 lane_points, d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id)
-                args = self.__world_map.straight_road_info(car.road_id, car.lane_id)
+                right_lane_points = []
+                right_d_points = []
+                left_lane_points = []
+                left_d_points = []
+                # args = self.__world_map.straight_road_info(car.road_id, car.lane_id)
+
+                if self.world_map.is_last_lane_id(car.road_id, car.lane_id):
+                    right_car_list = []
+                else:
+                    right_car_list = self.__grid[car.road_id][car.lane_id + 1]
+                    right_lane_points, right_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id + 1)
+
+                if self.world_map.is_first_lane_id(car.road_id, car.lane_id):
+                    left_car_list = []
+                else:
+                    left_car_list = self.__grid[car.road_id][car.lane_id - 1]
+                    left_lane_points, left_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id - 1)
 
                 # bearing, grid, lane points
-                decision = car.make_decision(self.__grid, lane_points, d_points)
+                dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points,right_d_points,right_car_list, left_lane_points, left_d_points, left_car_list)
 
+                #dec = car.make_decision(args[1], self.__grid, lane_points, d_points)
                 Logger.log_cars(car)
+                car.move(dec, lane_points, right_lane_points, left_lane_points)
 
-                car.move(args[0], args[2], decision, lane_points)
-
-                # car.road_id, car.lane_id = self.world_map.get_road_info([car.x, car.y])
-                self.__grid = self.__update_perception()
+                car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
 
                 Logger.log_cars(car)
 
                 if car.front_point[1] >= Adapter.old_max[1]:
                     self.cars.remove(car)
-                    self.__grid[car.road_id][car.lane_id].remove(car)
+                    #self.__grid[car.road_id][car.lane_id].remove(car)
+                self.__grid = self.__update_init_perception()
 
             Logger.log_end()
             event.clear()

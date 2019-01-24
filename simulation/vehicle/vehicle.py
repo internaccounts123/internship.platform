@@ -24,7 +24,7 @@ class Vehicle(object):
         self.__extra = "\0"
         self.__current_acc = acceleration
 
-    def move(self, road_type, intercept, decision, lane_points):
+    def move(self, decision, lane_points, right_lane_points, left_lane_points):
         _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
@@ -48,8 +48,16 @@ class Vehicle(object):
             self.__y = self.__y + self.speed * np.sin(bearing)
 
         elif Decisions[decision].value == Decisions.Move_right.value:
-            distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)
-            self.x = self.x + distance
+            # distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)
+            _neigh_1, _neigh_2 = get_neighbouring_points(right_lane_points, [self.x, self.y])
+            next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            self.x = next_point[0]
+            self.y = next_point[1]
+        elif Decisions[decision].value == Decisions.Move_left.value:
+            _neigh_1, _neigh_2 = get_neighbouring_points(left_lane_points, [self.x, self.y])
+            next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            self.x = next_point[0]
+            self.y = next_point[1]
 
         self.front_point = (self.x, self.y + (self.car_length / 2.0))
         self.back_point = (self.x, self.y - (self.car_length / 2.0))
