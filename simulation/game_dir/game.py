@@ -37,6 +37,7 @@ class Game:
         event = threading.Event()
         threading.Thread(target=self.world.update, args=(event,)).start()
         # time.sleep(0.5)
+
         self.renderer.run_simulation(event)
         # time.sleep(0.5)
 

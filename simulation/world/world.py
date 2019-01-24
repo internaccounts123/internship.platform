@@ -47,9 +47,6 @@ class World():
 
 
     @world_map.setter
-
-
-
     def world_map(self, world_map):
         self.__world_map = world_map
 
@@ -86,7 +83,7 @@ class World():
             x = datetime.datetime.now()
             car_road = car.road_id
             car_lane = car.lane_id
-            log = Logger.get_logger()
+            log = Logger.get_logger("BOTH")
             log.info('Time : ' + str(x) + 'car_speed limit : ' + str(car_speed_limit) + 'car_id : ' + str(car_id)
                      + 'car_x: '
                      + str(car_x) + 'car_y : ' + str(car_y)
@@ -103,7 +100,7 @@ class World():
         x = datetime.datetime.now()
         map_id = map1.id
         map_name = map1.name
-        log = Logger.get_logger()
+        log = Logger.get_logger("BOTH")
         log.info("Time : " + str(x) + "map_id: " + str(map_id) + "map_id : " + map_name)
 
     # def init_cars(self, type):

@@ -30,7 +30,7 @@ class ConfigReader:
     @staticmethod
     def get_data(query):
         """
-        :param query: string containing query for the value it needs from the dictionary
+        :param query: string containing query for the value it neeqsds from the dictionary
         :return: matches found for the query
         """
         if query == 'base_path':
