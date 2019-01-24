@@ -1,10 +1,10 @@
 from common.config_reader import ConfigReader
 from common.enums.decisions import Decisions
 from common.utility.driving.driving_calculations import *
+import datetime
 
 
 class Vehicle(object):
-
     def __init__(self, perception_size, speed_limit, acceleration, de_acceleration, length, type1):
         self.__id = None
         self.__perception_size = perception_size
@@ -23,44 +23,6 @@ class Vehicle(object):
         self.__decision = "\0"
         self.__extra = "\0"
         self.__current_acc = acceleration
-
-    def move(self, decision, lane_points, right_lane_points, left_lane_points):
-        _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
-        bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
-
-        if Decisions[decision].value == Decisions.Accelerate.value:
-            self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
-            self.x = self.x + self.speed * np.cos(bearing)
-            self.y = self.y + self.speed * np.sin(bearing)
-
-        elif Decisions[decision].value == Decisions.Constant_speed.value:
-            self.x = self.x + self.speed*np.cos(bearing)
-            self.y = self.y + self.speed * np.sin(bearing)
-
-        elif Decisions[decision].value == Decisions.De_accelerate.value:
-            new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
-            if new_speed >= 0:
-                self.__speed = new_speed
-            else:
-                pass
-            #     self.speed = 0
-            self.__x = self.__x + self.speed * np.cos(bearing)
-            self.__y = self.__y + self.speed * np.sin(bearing)
-
-        elif Decisions[decision].value == Decisions.Move_right.value:
-            # distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)
-            _neigh_1, _neigh_2 = get_neighbouring_points(right_lane_points, [self.x, self.y])
-            next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-            self.x = next_point[0]
-            self.y = next_point[1]
-        elif Decisions[decision].value == Decisions.Move_left.value:
-            _neigh_1, _neigh_2 = get_neighbouring_points(left_lane_points, [self.x, self.y])
-            next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-            self.x = next_point[0]
-            self.y = next_point[1]
-
-        self.front_point = (self.x, self.y + (self.car_length / 2.0))
-        self.back_point = (self.x, self.y - (self.car_length / 2.0))
 
     @property
     def car_length(self):
@@ -197,3 +159,57 @@ class Vehicle(object):
     @current_acc.setter
     def current_acc(self, current_acc):
         self.__current_acc = current_acc
+
+    def move(self, decision, lane_points, right_lane_points, left_lane_points):
+        _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [self.x, self.y])
+        bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
+
+        if Decisions[decision].value == Decisions.Accelerate.value:
+            self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            self.x = self.x + self.speed * np.cos(bearing)
+            self.y = self.y + self.speed * np.sin(bearing)
+
+        elif Decisions[decision].value == Decisions.Constant_speed.value:
+            self.x = self.x + self.speed*np.cos(bearing)
+            self.y = self.y + self.speed * np.sin(bearing)
+
+        elif Decisions[decision].value == Decisions.De_accelerate.value:
+            new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            if new_speed >= 0:
+                self.__speed = new_speed
+            else:
+                pass
+            #     self.speed = 0
+            self.__x = self.__x + self.speed * np.cos(bearing)
+            self.__y = self.__y + self.speed * np.sin(bearing)
+
+        elif Decisions[decision].value == Decisions.Move_right.value:
+            # distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)
+            _neigh_1, _neigh_2 = get_neighbouring_points(right_lane_points, [self.x, self.y])
+            next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            self.x = next_point[0]
+            self.y = next_point[1]
+        elif Decisions[decision].value == Decisions.Move_left.value:
+            _neigh_1, _neigh_2 = get_neighbouring_points(left_lane_points, [self.x, self.y])
+            next_point = point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            self.x = next_point[0]
+            self.y = next_point[1]
+
+        self.front_point = (self.x, self.y + (self.car_length / 2.0))
+        self.back_point = (self.x, self.y - (self.car_length / 2.0))
+
+    def get_info(self):
+        current_time = datetime.datetime.now()
+
+        return ('Time : ' + str(current_time)
+                + '  Car ID: ' + str(self.id)
+                + '  Speed limit: ' + str(self.speed_limit)
+                + '  Car x: ' + str(self.x)
+                + '  Car y: ' + str(self.y)
+                + '  Speed: ' + str(self.speed)
+                + '  Acceleration: ' + str(self.acceleration)
+                + '  De-acceleration: ' + str(self.de_acceleration)
+                + '  Car road: ' + str(self.road_id)
+                + '  Car lane: ' + str(self.lane_id)
+                + '  Car decision: ' + self.decision
+                + '  Car Extra:  ' + str(self.extra))

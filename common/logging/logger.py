@@ -1,70 +1,71 @@
 import logging
-from time import gmtime, strftime
-import datetime
+from common.config_reader import ConfigReader
+import copy
+import json
+import os
 
 
 class Logger:
+    __config_filename = "log_config.json"
+    __log_filename = ""
+    __config_type = ""
+    data = ""
 
     def __init__(self):
-        """
 
-        """
+        file_name = self.__config_filename
 
-    """
-     A function to log all information about cars to traffic.log and also to the console
-    """
-    @staticmethod
-    def log_cars(car):
-        logging.basicConfig(filename='traffic.log', filemode='w', level=logging.DEBUG)
+        maps_path = os.path.join(ConfigReader.get_data('base_path'), 'data/configs/app_config/{}'.format(file_name))
+        with open(maps_path, 'r') as f:
+            __data = json.load(f)
 
-        current_time = datetime.datetime.now()
-        #logging.getLogger().addHandler(logging.StreamHandler())
-        car_id = car.id
-        car_speed_limit = car.speed_limit
-        car_x = car.x
-        car_y = car.y
+        data = copy.deepcopy(__data)
 
-        car_road = car.road_id
-        car_lane = car.lane_id
-        car_acc = car.acceleration
-        car_de_acc = car.de_acceleration
-        car_speed = car.speed
-        log = logging.getLogger("traffic-logger")
-        log.info('Time : ' + str(current_time)
-                 + '  Car ID: ' + str(car_id)
-                 + '  Speed limit: ' + str(car_speed_limit)
-                 + '  Car x: ' + str(car_x)
-                 + '  Car y: ' + str(car_y)
-                 + '  Speed: ' + str(car_speed)
-                 + '  Acceleration: ' + str(car_acc)
-                 + '  De-acceleration: ' + str(car_de_acc)
-                 + '  Car road: ' + str(car_road)
-                 + '  Car lane: ' + str(car_lane)
-                 + '  Car decision: ' + car.decision
-                 + '  Car Extra:  ' + str(car.extra))
+        __log_filename = data["log_filename"]
+        __config_type = data["config_type"]
 
     @staticmethod
-    def log_end():
-        logging.basicConfig(filename='traffic.log', filemode='w', level=logging.DEBUG)
-        logging.getLogger().addHandler(logging.StreamHandler())
-        log = logging.getLogger("traffic-logger")
-        log.info("-------------------------------------------------------------")
-
-    """
-         A function to log all information about the Map to traffic.log and also to the console
-                """
-    @staticmethod
-    def log_map(map1):
-        logging.basicConfig(filename='traffic.log', level=logging.DEBUG)
-        logging.getLogger().addHandler(logging.StreamHandler())
-        x = datetime.datetime.now()
-        map_id = map1.id
-        map_name = map1.name
-        log = logging.getLogger("traffic-logger")
-        log.info("Time : "+str(x) + "map_id: "+str(map_id) + "map_id : "+map_name)
+    def get_log_file_name():
+        return Logger.__log_filename
 
     @staticmethod
-    def get_logger(map1):
-        logging.basicConfig(filename='traffic.log', level=logging.DEBUG)
-        logger = logging.getLogger().addHandler(logging.StreamHandler())
-        return logger
+    def get_logger(log_type):
+        if log_type == "FILE":
+            logger = logging.getLogger(__name__)
+            logger.setLevel(logging.INFO)
+
+            formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+
+            file_handler = logging.FileHandler('traffic.log', mode='w', )
+            file_handler.setFormatter(formatter)
+
+            logger.addHandler(file_handler)
+            return logger
+
+        if log_type == "CONSOLE":
+            logger = logging.getLogger(__name__)
+            logger.setLevel(logging.INFO)
+
+            formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(formatter)
+
+            logger.addHandler(stream_handler)
+            return logger
+
+        if log_type == "BOTH":
+            logger = logging.getLogger(__name__)
+            logger.setLevel(logging.INFO)
+
+            formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(formatter)
+            file_handler = logging.FileHandler('traffic.log', mode='w')
+            file_handler.setFormatter(formatter)
+
+            logger.addHandler(stream_handler)
+            logger.addHandler(file_handler)
+
+            return logger

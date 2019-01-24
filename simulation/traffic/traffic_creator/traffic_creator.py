@@ -61,7 +61,8 @@ class TrafficCreator(object):
         car_length = v.car_length
 
         # choose a point where a car is not already present
-        while (TrafficCreator.__is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1, road_idx, lane_idx) is False) or (_do is True):
+        while (TrafficCreator.__is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1,
+                                               road_idx, lane_idx) is False) or (_do is True):
             _do = False
             road_idx = random.randint(0, len(map1.roads)-1)
             lane_idx = random.randint(0, len(map1.roads[road_idx].lanes)-1)
@@ -80,7 +81,7 @@ class TrafficCreator(object):
         upper_limit = lane_points[xy_id][1] + (v.car_length/2.0)
 
         # taken points by this car
-        points = TrafficCreator.points_in_yrange(map1, road_idx, lane_idx, (lower_limit, upper_limit))
+        points = TrafficCreator.points_in_y_range(map1, road_idx, lane_idx, (lower_limit, upper_limit))
 
         # remove taken points by this car
         for p in points:
@@ -115,7 +116,7 @@ class TrafficCreator(object):
             upper_limit = lane_points[xy_id][1] + (car_length / 2.0)
 
             # taken points by this car
-            points = TrafficCreator.points_in_yrange(map1, road_idx, lane_idx, (lower_limit, upper_limit))
+            points = TrafficCreator.points_in_y_range(map1, road_idx, lane_idx, (lower_limit, upper_limit))
 
             for p in points:
                 p_tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, p[1])
@@ -174,6 +175,6 @@ class TrafficCreator(object):
         return coordinates
 
     @staticmethod
-    def points_in_yrange(map1, road_idx, lane_idx, _range):
+    def points_in_y_range(map1, road_idx, lane_idx, _range):
         possible_points = np.array(map1.roads[road_idx].lanes[lane_idx].lane_points)
         return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
