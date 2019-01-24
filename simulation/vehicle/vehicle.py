@@ -41,7 +41,8 @@ class Vehicle(object):
             new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
             if new_speed >= 0:
                 self.__speed = new_speed
-            # else:
+            else:
+                pass
             #     self.speed = 0
             self.__x = self.__x + self.speed * np.cos(bearing)
             self.__y = self.__y + self.speed * np.sin(bearing)
