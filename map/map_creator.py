@@ -129,4 +129,14 @@ class MapCreator:
             coordinates = np.array([x, y]).T
             coordinates = coordinates.astype(int)
 
+        elif RoadType[road_type].value == RoadType.Curve.value:
+            pass
+
+
+
+
+
+
+
+
         return coordinates
