@@ -170,5 +170,6 @@ class Renderer:
             pygame.display.set_caption("renderer")
             _event.set()
 
+
         pygame.quit()
         return playtime

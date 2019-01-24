@@ -45,14 +45,14 @@ class World():
     def world_map(self, world_map):
         self.__world_map = world_map
 
-    def update(self, event):
-        for i in range(100):
-            event.wait()
-            for car in self.cars:
-                car.y += 1
-                car.front_point = (car.front_point[0], car.front_point[1] + 1)
-                car.back_point = (car.back_point[0], car.back_point[1] + 1)
-            event.clear()
+    def update(self, event = None):
+        # for i in range(100):
+            # event.wait()
+        for car in self.cars:
+            car.y += 0.1
+            car.front_point = (car.front_point[0], car.front_point[1] + 1)
+            car.back_point = (car.back_point[0], car.back_point[1] + 1)
+        # event.clear()
 
     @property
     def serialize(self):

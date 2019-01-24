@@ -10,7 +10,7 @@ class My_server:
     def make_server(self):
         app = Flask(__name__)
         app.wsgi_app = socketio.Middleware(self.sio, app.wsgi_app)
-        app.run(host='0.0.0.0', port=8000)
+        app.run()
 
     def run_server(self):
         threading.Thread(target=self.make_server).start()

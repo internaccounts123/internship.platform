@@ -15,22 +15,34 @@ class Game:
         ConfigReader()
         self.__map = MapCreator.create_map()  # Map(map_id, name, version, roads)
         self.__world = World(self.__map, 1)
-        self.__renderer = Renderer(self.__world)
+        # self.__renderer = Renderer(self.__world)
+        # print(self.world.world_map.roads[0].starting_pos)
+        # print(self.world.cars)
 
         s = My_server()
 
         s.run_server()
 
-        # print("server running")
+        print("server running")
 
         data_to_send = self.world.serialize
-
+        # print(json.dumps(data_to_send))
         string_data = str(data_to_send)
         string_data = string_data.replace('\'', '\"')
         # print(string_data)
+
         time.sleep(11)
-        print("sending data...")
-        s.send_data("FRAME", json.loads(string_data))
+        s.send_data("FRAME", data_to_send)
+        while True:
+
+            # print(self.world.world_map.roads[0].starting_pos)
+            # print(self.world.cars)
+            data_to_send = self.world.serialize
+            print("sending data...")
+            print(data_to_send)
+            s.send_data("FRAME", data_to_send)
+            self.__world.update()
+            time.sleep(0.1)
 
     def run(self):
         # for i in range(1000):
