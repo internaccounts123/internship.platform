@@ -1,4 +1,4 @@
-from simulation.vehicle.traffic_creator import TrafficCreator
+from simulation.traffic.traffic_creator.traffic_creator import TrafficCreator
 from collections import defaultdict
 from common.logging.logger import *
 from simulation.renderer.adapter import Adapter

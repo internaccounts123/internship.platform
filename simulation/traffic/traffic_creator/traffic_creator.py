@@ -1,5 +1,5 @@
 from common.config_reader import ConfigReader
-from simulation.vehicle.rule_based import RuleBased
+from simulation.traffic.vehicle.rule_based.rule_based import RuleBased
 from common.enums.model_types import ModelTypes
 import random
 from common.utility.conversions import deg2rad
@@ -49,7 +49,7 @@ class TrafficCreator(object):
         :param v: Vehicle not assigned a position
         :param map1: full map
         :param taken: already allotted points
-        :return: vehicle with assigned initial position
+        :return: traffic with assigned initial position
         """
 
         tup = None
