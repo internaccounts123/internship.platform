@@ -161,3 +161,24 @@ class DrivingCalculations:
                 possible_points.append(lane_points[i])
 
         return possible_points
+
+    @staticmethod
+    def line_point_generation(lane_points, point, length):
+
+        neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [point[0], point[1]])
+        bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+        lower_limit = (point[0] - (length) * np.cos(bearing), point[1]
+                       - (length) * np.sin(bearing))
+        upper_limit = (point[0] + (length) * np.cos(bearing), point[1]
+                       + (length) * np.sin(bearing))
+
+        return lower_limit, upper_limit
+
+    @staticmethod
+    def get_next_point(lane_points, point, length):
+
+        neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [point[0], point[1]])
+        bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+        next_point = (point[0] + (length) * np.cos(bearing), point[1] + (length) * np.sin(bearing))
+
+        return next_point

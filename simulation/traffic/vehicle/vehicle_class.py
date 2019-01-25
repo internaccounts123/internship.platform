@@ -161,17 +161,16 @@ class Vehicle(object):
         self.__current_acc = current_acc
 
     def move(self, decision, lane_points, right_lane_points, left_lane_points):
+
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.x, self.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
         if Decisions[decision].value == Decisions.Accelerate.value:
             self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
-            self.x = self.x + self.speed * np.cos(bearing)
-            self.y = self.y + self.speed * np.sin(bearing)
+            self.x, self.y = DrivingCalculations.get_next_point(lane_points, [self.x, self.y], self.speed)
 
         elif Decisions[decision].value == Decisions.Constant_speed.value:
-            self.x = self.x + self.speed*np.cos(bearing)
-            self.y = self.y + self.speed * np.sin(bearing)
+            self.x, self.y = DrivingCalculations.get_next_point(lane_points, [self.x, self.y], self.speed)
 
         elif Decisions[decision].value == Decisions.DeAccelerate.value:
             new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
@@ -179,9 +178,7 @@ class Vehicle(object):
                 self.__speed = new_speed
             else:
                 pass
-            #     self.speed = 0
-            self.__x = self.__x + self.speed * np.cos(bearing)
-            self.__y = self.__y + self.speed * np.sin(bearing)
+            self.x, self.y = DrivingCalculations.get_next_point(lane_points, [self.x, self.y], self.speed)
 
         elif Decisions[decision].value == Decisions.Move_right.value:
             # distance = point_to_line(road_type, (self.x, self.y), bearing, intercept)
@@ -195,10 +192,8 @@ class Vehicle(object):
             self.x = next_point[0]
             self.y = next_point[1]
 
-        self.back_point = (self.x - (self.car_length / 2.0) * np.cos(bearing), self.y
-                           - (self.car_length / 2.0) * np.sin(bearing))
-        self.front_point = (self.x + (self.car_length / 2.0) * np.cos(bearing), self.y
-                            + (self.car_length / 2.0) * np.sin(bearing))
+        self.back_point, self.front_point = DrivingCalculations.line_point_generation(lane_points, [self.x, self.y],
+                                                                                      self.car_length/2.0)
 
     def get_info(self):
         current_time = datetime.datetime.now()
