@@ -1,11 +1,11 @@
 from map.lane import Lane
 from map.road import Road
 from map.map_class import Map
-from common.utility import *
 import json, os
-import numpy as np
 from common.config_reader import ConfigReader
-from common.road_types import RoadType
+from common.enums.road_types import RoadType
+from common.utility.conversions import *
+from common.utility.driving.driving_calculations import *
 import copy
 
 
@@ -101,9 +101,10 @@ class MapCreator:
 
         for i in range(1, len(lanes)):
             lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
+            distance_points = generate_distance_points(lane_points)
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             data = (lanes[str(i)])
-            lane_objects.append(Lane(i, data["name"], lane_width, lane_points))
+            lane_objects.append(Lane(i, data["name"], lane_width, lane_points, distance_points, data["intercept"]))
         return lane_objects
 
     @staticmethod
@@ -128,5 +129,5 @@ class MapCreator:
             y = np.linspace(starting_position_y, final_y, num=length)
             coordinates = np.array([x, y]).T
             coordinates = coordinates.astype(int)
+
         return list(map(lambda x:list(list(map(lambda x:int(x), x))), coordinates))
-        # return coordinates
