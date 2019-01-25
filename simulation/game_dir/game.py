@@ -31,7 +31,7 @@ class Game:
             while True:
 
                 data_to_send = self.world.serialize
-                time.sleep(1)
+                time.sleep(0.1)
                 print("sending data")
                 self.s.send_data("FRAME", data_to_send)
                 event.set()

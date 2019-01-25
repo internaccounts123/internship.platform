@@ -1,5 +1,5 @@
 {
-	"renderer": "pygame",
+	"renderer": "web",
 	"fps": 28,
 	"game_id": 1,
 	"map": "maps.json",
