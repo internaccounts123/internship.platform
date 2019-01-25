@@ -11,22 +11,8 @@ class Adapter:
 
     @staticmethod
     def calculate_initials(_map, screen_width, screen_height):
-        """
 
-        :param _map:
-        :return:
-        """
-        array_x = []
-        array_y = []
-
-        for i in range(len(_map.roads)):
-            if RoadType[_map.roads[i].road_type].value == RoadType.Straight.value:
-                array_x.append(_map.roads[i].ending_width[0])
-                array_y.append(_map.roads[i].ending_height[1])
-
-        Adapter.old_max.append(max(array_x) + 40)
-        Adapter.old_max.append(max(array_y))
-        Adapter.old_min = [-40, 0]
+        Adapter.old_min, Adapter.old_max = _map.calculate_initials()
         Adapter.new_min = [0,0]
         Adapter.new_max = [screen_width, screen_height]
 

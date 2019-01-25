@@ -26,9 +26,15 @@ class Game:
         event = threading.Event()
         threading.Thread(target=self.world.update, args=(event,)).start()
         # time.sleep(0.5)
+
         if ConfigReader.get_data('renderer')[0] == 'web':
-            data_to_send = self.world.serialize
-            self.s.send_data("FRAME", data_to_send)
+            while True:
+
+                data_to_send = self.world.serialize
+                time.sleep(1)
+                print("sending data")
+                self.s.send_data("FRAME", data_to_send)
+                event.set()
 
         else:
             self.renderer.run_simulation(event)

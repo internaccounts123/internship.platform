@@ -59,8 +59,7 @@ class World:
     def update(self, event=None):
         for i in range(1000):
 
-            if ConfigReader.get_data('renderer') == 'pygame':
-                event.wait()
+            event.wait()
             # extract ys of all cars with lane ids
             # check the difference including car width
             for car in self.cars:
@@ -93,11 +92,11 @@ class World:
                 car.move(dec, lane_points, right_lane_points, left_lane_points)
 
                 car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
+                old_min, old_max = self.__world_map.calculate_initials()
 
-                if car.front_point[1] >= Adapter.old_max[1]:
+                if car.front_point[1] >= old_max[1]:
                     self.cars.remove(car)
 
                 self.__grid = self.__update_init_perception()
 
-            if ConfigReader.get_data('renderer') == 'pygame':
-                event.clear()
+            event.clear()
