@@ -48,7 +48,9 @@ class World(object):
         self.__world_map = world_map
 
     def update(self, event):
-        for i in range(1000):
+        log = Logger.get_logger("FILE")
+
+        while True:
 
             event.wait()
             # extract ys of all cars with lane ids
@@ -75,13 +77,12 @@ class World(object):
 
                 dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points,right_d_points,right_car_list, left_lane_points, left_d_points, left_car_list)
 
-                log = Logger.get_logger("FILE")
                 log_information = car.get_info()
                 log.info(log_information)
 
                 car.move(dec, lane_points, right_lane_points, left_lane_points)
 
-                car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
+                car.road_id, car.lane_id = self.__world_map.update_vehicle_info(car.road_id, car.lane_id, dec)
                 old_min, old_max = self.__world_map.calculate_initials()
 
                 if car.front_point[1] >= old_max[1]:

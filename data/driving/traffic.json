@@ -1,12 +1,12 @@
 {
   "spawn_wait_time": 10,
-  "traffic_amount": 30,
+  "traffic_amount": 50,
   "traffic_speed": 1,
   "min_de_acceleration": 1,
   "_comment": "speed_limit in kph",
   "traffic_speed_limit": 120,
   "driver_profile_type": {
-      "Rule_based":
+      "RuleBased":
         {
           "model_percentage": 1.0,
           "type_percentages": {

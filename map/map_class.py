@@ -54,11 +54,13 @@ class Map:
 
         return lateral_lanes
 
-    def update_lane_info(self, road_id, l_id, dec):
+    def update_vehicle_info(self, road_id, l_id, dec):
         lane_id = None
+        road_id_temp = None
 
         for road in self.__roads:
             if road.road_id == road_id:
+                road_id_temp = road.road_id
                 for lane_idx in range(len(road.lanes)):
                     if road.lanes[lane_idx].id == l_id:
                         if dec == "Move_right":
@@ -68,7 +70,7 @@ class Map:
                         else:
                             lane_id = l_id
 
-        return lane_id
+        return road_id_temp, lane_id
 
     def get_no_of_road_lanes(self,road_id):
         for road in self.__roads:
@@ -112,23 +114,8 @@ class Map:
 
         intercept = lane_points[2][0] - slope * lane_points[2][1]
 
-
-        # checking if point lies on the line:
-
+        # Checking if point lies on the line:
         return current_position[1] == slope * current_position[0] - intercept
-
-    def straight_road_info(self, road_id, lane_id):
-        arr = []
-        for i in range(len(self.__roads)):
-            if self.__roads[i].road_id == road_id:
-                arr.append(self.__roads[i].road_type)
-                arr.append(self.__roads[i].bearing)
-                for lane in self.__roads[i].lanes:
-                    if lane.id == lane_id:
-                        arr.append(lane.intercept)
-                        return arr
-
-        # def move(self, road_type, bearing, intercept, make_decision):
 
     def get_lane_points(self, road_id, lane_id):
         for road in self.__roads:

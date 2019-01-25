@@ -7,7 +7,7 @@
 
 		"1": {
 			"name": "FFJ",
-			"length": 100,
+			"length": 50,
 			"road_type":"Straight",
 			"starting_pos": [0, 0],
 			"bearing": 90,
@@ -23,6 +23,30 @@
 					"intercept": 0
 				},
 				"3": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"4": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"5": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"6": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"7": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"8": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"9": {
 					"name": "fast lane",
 					"intercept": 0
 				}

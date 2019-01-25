@@ -6,7 +6,7 @@ from simulation.renderer.adapter import Adapter
 
 class Renderer:
 
-    def __init__(self, world, fps=30, screen_width=600, screen_height=600):
+    def __init__(self, world, fps=30, screen_width=700, screen_height=700):
         """
         Default constructor
         :param world: world object to draw
