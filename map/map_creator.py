@@ -130,13 +130,18 @@ class MapCreator:
             coordinates = coordinates.astype(int)
 
         elif RoadType[road_type].value == RoadType.Curve.value:
-            pass
-
-
-
-
-
-
-
+            a, b, c, d, e, f = 1, 0, 1, 0, 97, 1
+            y = []
+            X = []
+            for x in range(-50, 50, 1):
+                X.append(x)
+                y.append((1 / 2) * ((e ** 2 - 4 * (x * (d + x) + f)) ** 0.5) - e)
+            for x in range(50, -50, -1):
+                X.append(x)
+                y.append(((-1 / 2) * ((e ** 2 - 4 * (x * (d + x) + f)) ** 0.5) - e))
+            X = np.array(X)
+            y = np.array(y)
+            coordinates = np.array([X, y]).T
+            coordinates = coordinates.astype(int)
 
         return coordinates
