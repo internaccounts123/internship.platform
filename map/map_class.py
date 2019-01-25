@@ -139,7 +139,6 @@ class Map:
 
     def calculate_initials(self):
         """
-
         :param _map:
         :return:
         """
