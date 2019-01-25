@@ -4,6 +4,8 @@ from common.enums.model_types import ModelTypes
 import random
 from common.utility.conversions import deg2rad
 from common.enums.road_types import RoadType
+from common.utility.driving.driving_calculations import *
+from common.utility.driving.angle_calculator import *
 import numpy as np
 
 
@@ -77,11 +79,15 @@ class TrafficCreator(object):
             xy_id = random.randint((v.car_length/2.0), (len(lane_points) - (v.car_length/2.0))-1)
             tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, lane_points[xy_id][1])
 
-        lower_limit = lane_points[xy_id][1] - (v.car_length/2.0)
-        upper_limit = lane_points[xy_id][1] + (v.car_length/2.0)
+        neigh_1, neigh_2 = get_neighbouring_points(lane_points, lane_points[xy_id])
+        bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+        lower_limit = (lane_points[xy_id][0] - (v.car_length/2.0) * np.cos(bearing), lane_points[xy_id][1]
+                         - (v.car_length/2.0) * np.sin(bearing))
+        upper_limit = (lane_points[xy_id][0] + (v.car_length/2.0) * np.cos(bearing), lane_points[xy_id][1]
+                         + (v.car_length/2.0) * np.sin(bearing))
 
         # taken points by this car
-        points = TrafficCreator.points_in_y_range(map1, road_idx, lane_idx, (lower_limit, upper_limit))
+        points = points_in_range(lane_points, upper_limit, lower_limit)
 
         # remove taken points by this car
         for p in points:
@@ -93,8 +99,8 @@ class TrafficCreator(object):
         v.lane_id = map1.roads[road_idx].lanes[lane_idx].id
         v.x = lane_points[xy_id][0]
         v.y = lane_points[xy_id][1]
-        v.front_point = (v.x, upper_limit)
-        v.back_point = (v.x, lower_limit)
+        v.front_point = (upper_limit[0], upper_limit[1])
+        v.back_point = (lower_limit[0], lower_limit[1])
         return v
 
     @staticmethod
@@ -112,11 +118,16 @@ class TrafficCreator(object):
         """
         _taken = taken.copy()
         if (tup is not None) and (len(taken) != 0):
-            lower_limit = lane_points[xy_id][1] - (car_length / 2.0)
-            upper_limit = lane_points[xy_id][1] + (car_length / 2.0)
+            neigh_1, neigh_2 = get_neighbouring_points(lane_points, lane_points[xy_id])
+            bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+            lower_limit = (lane_points[xy_id][0] - (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
+                           - (car_length / 2.0) * np.sin(bearing))
+            upper_limit = (lane_points[xy_id][0] + (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
+                           + (car_length / 2.0) * np.sin(bearing))
 
             # taken points by this car
-            points = TrafficCreator.points_in_y_range(map1, road_idx, lane_idx, (lower_limit, upper_limit))
+            #points_in_range(lane_points, upper_limit, lower_limit)
+            points = points_in_range(lane_points, upper_limit, lower_limit)
 
             for p in points:
                 p_tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, p[1])
@@ -174,7 +185,4 @@ class TrafficCreator(object):
 
         return coordinates
 
-    @staticmethod
-    def points_in_y_range(map1, road_idx, lane_idx, _range):
-        possible_points = np.array(map1.roads[road_idx].lanes[lane_idx].lane_points)
-        return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
+

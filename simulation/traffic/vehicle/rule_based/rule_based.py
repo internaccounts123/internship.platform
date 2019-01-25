@@ -20,11 +20,18 @@ class RuleBased(Vehicle):
         car_at_next_point.x = next_point[0]
         car_at_next_point.y = next_point[1]
 
-        upper_limit = car_at_next_point.y + (car_at_next_point.car_length / 2.0 + 1)
-        lower_limit = car_at_next_point.y - (car_at_next_point.car_length / 2.0 + 1)
+        neigh_1, neigh_2 = get_neighbouring_points(side_lane_points, [car_at_next_point.x,car_at_next_point.y])
+        bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+        lower_limit = (car_at_next_point.x - (car_at_next_point.car_length / 2.0) * np.cos(bearing), car_at_next_point.y
+                       - (car_at_next_point.car_length / 2.0) * np.sin(bearing))
+        upper_limit = (car_at_next_point.x + (car_at_next_point.car_length / 2.0) * np.cos(bearing), car_at_next_point.y
+                       + (car_at_next_point.car_length / 2.0) * np.sin(bearing))
+
+        # upper_limit = car_at_next_point.y + (car_at_next_point.car_length / 2.0 + 1)
+        # lower_limit = car_at_next_point.y - (car_at_next_point.car_length / 2.0 + 1)
 
         for car in side_car_list:
-            if lower_limit <= car.y + car.car_length/2.0 + 1 and upper_limit >= car.y - car.car_length/2.0 - 1:
+            if lower_limit[1] <= car.y + car.car_length/2.0 + 1 and upper_limit[1] >= car.y - car.car_length/2.0 - 1:
                 return False
 
         decision = two_sec_rule(car_at_next_point, side_car_list, side_lane_points, side_d_points)

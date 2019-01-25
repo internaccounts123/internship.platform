@@ -160,3 +160,37 @@ def two_sec_rule(self_car, car_list, lane_points, distance_points, _bool=True):
     #     return False
     # # De_accelerate
     # return True
+
+def generate_distance_points(lane_points):
+    distance_points = np.zeros((np.shape(lane_points)[0],))
+
+    for i in range(1, len(lane_points)):
+        distance_points[i] = np.linalg.norm(np.array(lane_points[i-1]) - np.array(lane_points[i])) + distance_points[i-1]
+
+    return distance_points
+
+
+def points_in_range(lane_points, upper_limit, lower_limit):
+
+    """
+    :param lane_points: possible lane points of current lane
+    :param upper_limit: max point
+    :param lower_limit: min point
+    :return: this function returns possible points within a range
+    """
+
+    possible_points = []
+
+    # [previous neighbour point on lane, index of negihbour 1], [next neighbour point on lane, index of neighbour 2]
+    u_neigh_1, u_neigh_2 = get_neighbouring_points(lane_points, upper_limit)
+    l_neigh_1, l_neigh_2 = get_neighbouring_points(lane_points, lower_limit)
+
+    distances = generate_distance_points(lane_points)
+
+    for i in range(len(lane_points)):
+        if distances[l_neigh_1[1]] <= distances[i] <= distances[u_neigh_2[1]]:
+            possible_points.append(lane_points[i])
+
+    return possible_points
+    # possible_points = np.array(map1.roads[road_idx].lanes[lane_idx].lane_points)
+    # return possible_points[(possible_points[:, 1] >= _range[0]) * (possible_points[:, 1] <= _range[1])]
