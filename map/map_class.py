@@ -1,4 +1,5 @@
 import numpy as np
+from common.enums.road_types import *
 
 
 class Map:
@@ -135,3 +136,24 @@ class Map:
                 for lane in road.lanes:
                     if lane.id == lane_id:
                         return lane.lane_points, lane.distance_points
+
+    def calculate_initials(self):
+        """
+
+        :param _map:
+        :return:
+        """
+        old_max = []
+        array_x = []
+        array_y = []
+
+        for i in range(len(self.roads)):
+            if RoadType[self.roads[i].road_type].value == RoadType.Straight.value:
+                array_x.append(self.roads[i].ending_width[0])
+                array_y.append(self.roads[i].ending_height[1])
+
+        old_max.append(max(array_x) + 40)
+        old_max.append(max(array_y))
+        old_min = [-40, 0]
+
+        return old_min, old_max

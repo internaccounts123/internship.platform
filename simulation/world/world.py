@@ -82,8 +82,9 @@ class World(object):
                 car.move(dec, lane_points, right_lane_points, left_lane_points)
 
                 car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
+                old_min, old_max = self.__world_map.calculate_initials()
 
-                if car.front_point[1] >= Adapter.old_max[1]:
+                if car.front_point[1] >= old_max[1]:
                     self.cars.remove(car)
 
                 self.__grid = self.__update_init_perception()
