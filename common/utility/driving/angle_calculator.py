@@ -8,8 +8,9 @@ class AngleCalculator:
     def calculate_angle(lane_points, self_point, second_point, _neigh_1, _neigh_2):
         # _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, self_point)
         _bearing = AngleCalculator.get_bearing(_neigh_1, _neigh_2)
-        return rad2deg(Map.calculate_bearing((second_point[0] - self_point[0]),
-                                             (second_point[1] - self_point[1])) - _bearing) % 360
+        dx = second_point[0] - self_point[0]
+        dy = second_point[1] - self_point[1]
+        return rad2deg(Map.calculate_bearing(dx, dy) - _bearing) % 360
 
     @staticmethod
     def get_bearing(_neigh_1, _neigh_2):

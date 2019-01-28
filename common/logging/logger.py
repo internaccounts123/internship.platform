@@ -3,6 +3,7 @@ from common.config_reader import ConfigReader
 import copy
 import json
 import os
+import time
 
 
 class Logger:
@@ -35,8 +36,8 @@ class Logger:
             logger.setLevel(logging.INFO)
 
             formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
-
-            file_handler = logging.FileHandler('traffic.log', mode='w', )
+            filename = "File_Log" + str(time.time())+".log"
+            file_handler = logging.FileHandler(filename, mode='a')
             file_handler.setFormatter(formatter)
 
             logger.addHandler(file_handler)
@@ -60,9 +61,11 @@ class Logger:
 
             formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
 
+            filename = "Console and File_Log" + str(time.time()) + ".log"
+
             stream_handler = logging.StreamHandler()
             stream_handler.setFormatter(formatter)
-            file_handler = logging.FileHandler('traffic.log', mode='w')
+            file_handler = logging.FileHandler(filename, mode='a')
             file_handler.setFormatter(formatter)
 
             logger.addHandler(stream_handler)

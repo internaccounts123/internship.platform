@@ -57,6 +57,7 @@ class World:
         }
 
     def update(self, event=None):
+        log = Logger.get_logger("FILE")
         for i in range(1000):
 
             event.wait()
@@ -85,7 +86,7 @@ class World:
                 dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points, right_d_points,
                                         right_car_list, left_lane_points, left_d_points, left_car_list)
 
-                log = Logger.get_logger("FILE")
+
                 log_information = car.get_info()
                 log.info(log_information)
 

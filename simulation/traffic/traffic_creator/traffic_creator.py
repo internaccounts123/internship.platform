@@ -62,6 +62,8 @@ class TrafficCreator(object):
         lane_points = []
         car_length = v.car_length
 
+
+
         # choose a point where a car is not already present
         while (TrafficCreator.__is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1,
                                                road_idx, lane_idx) is False) or (_do is True):

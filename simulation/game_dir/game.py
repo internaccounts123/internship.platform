@@ -2,7 +2,7 @@ import threading
 import time
 from common.config_reader import ConfigReader
 from map.map_creator import MapCreator
-from server.server import My_server
+from server.server import Server
 from simulation.renderer.renderer import Renderer
 from simulation.world.world import World
 
@@ -15,7 +15,7 @@ class Game:
         self.__world = World(self.__map, 1)
 
         if ConfigReader.get_data('renderer')[0] == 'web':
-            self.s = My_server()
+            self.s = Server()
             print("server running")
             self.s.run_server()
         else:

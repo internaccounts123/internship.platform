@@ -1,13 +1,15 @@
 import numpy as np
 from common.enums.road_types import *
+from map.road_info import RoadInfo
 
 
 class Map:
-    def __init__(self, map_id, name, version, roads):
+    def __init__(self, map_id, name, version, roads, road_directory):
         self.__id = map_id
         self.__name = name
         self.__version = version
         self.__roads = roads
+        self.__road_directory = road_directory
 
     @property
     def id(self):
@@ -41,65 +43,71 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
+    @property
+    def road_directory(self):
+        return self.__road_directory
+
+    @roads.setter
+    def roads(self, road_directory):
+        self.__road_directory = road_directory
+
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
-    def get_lateral_lanes(self, lane_id, road_name):
+    def get_lateral_lanes(self, lane_id, road_id):
         lateral_lanes = []
-        road_idx = [x.name for x in self.__roads].index(road_name)
-        lane_idx = [x.__id for x in self.__roads[road_idx].__lanes].index(lane_id)
+
+        road = self.road_directory[road_id]
+        lane_idx = [x.__id for x in road.lanes].index(lane_id)
         if lane_idx < 3:
-            lateral_lanes. append(self.__roads[road_idx].lanes[lane_idx + 1])
+            lateral_lanes. append(road.lanes[lane_idx + 1])
 
         if lane_idx > 0:
-            lateral_lanes.append(self.__roads[road_idx].lanes[lane_idx - 1])
+            lateral_lanes.append(road.lanes[lane_idx - 1])
 
         return lateral_lanes
 
     def update_lane_info(self, road_id, l_id, dec):
         lane_id = None
-
-        for road in self.__roads:
-            if road.road_id == road_id:
-                for lane_idx in range(len(road.lanes)):
-                    if road.lanes[lane_idx].id == l_id:
-                        if dec == "Move_right":
-                            lane_id = road.lanes[lane_idx+1].id
-                        elif dec == "Move_left":
-                            lane_id = road.lanes[lane_idx - 1].id
-                        else:
-                            lane_id = l_id
+        road = self.road_directory[road_id]
+        for lane_idx in range(len(road.lanes)):
+            if road.lanes[lane_idx].id == l_id:
+                if dec == "Move_right":
+                    lane_id = road.lanes[lane_idx+1].id
+                elif dec == "Move_left":
+                    lane_id = road.lanes[lane_idx - 1].id
+                else:
+                    lane_id = l_id
 
         return lane_id
 
     def get_no_of_road_lanes(self,road_id):
-        for road in self.__roads:
-            if road.id == road_id:
-                return len(road.lanes)
+        road = self.road_directory[road_id]
+        return len(road.lanes)
 
     def is_last_lane_id(self, road_id, lane_id):
-        for road in self.__roads:
-            if road.road_id == road_id:
-                return road.lanes[len(road.lanes) - 1].id == lane_id
+        road = self.road_directory[road_id]
+        return road.lanes[len(road.lanes) - 1].id == lane_id
 
     def is_first_lane_id(self, road_id, lane_id):
-        for road in self.__roads:
-            if road.road_id == road_id:
-                return road.lanes[0].id == lane_id
+        road = self.road_directory[road_id]
+        return road.lanes[0].id == lane_id
 
 
     @staticmethod
     def calculate_bearing(x, y):
         return np.arctan2(y, x)
 
+
     def get_road_info(self, current_position):
         for r in self.__roads:
             for l in r.lanes:
                     lane_points = l.lane_points
                     if self.check_point_fit(current_position, lane_points):
-                        return r.road_id, l.id
+                        road_info = RoadInfo(l.id, r.road_id, r.bearing, r.road_type)
+                        return road_info
+
 
     def check_point_fit(self, current_position, lane_points):
         dx = lane_points[1][0] - lane_points[2][0]
-
         dy = lane_points[1][1] - lane_points[2][1]
 
         if dx != 0 and dy != 0:
@@ -111,9 +119,6 @@ class Map:
             return current_position[0] == intercept
 
         intercept = lane_points[2][0] - slope * lane_points[2][1]
-
-
-        # checking if point lies on the line:
 
         return current_position[1] == slope * current_position[0] - intercept
 
@@ -127,25 +132,13 @@ class Map:
 
         }
 
-    def straight_road_info(self, road_id, lane_id):
-        arr = []
-        for i in range(len(self.__roads)):
-            if self.__roads[i].road_id == road_id:
-                arr.append(self.__roads[i].road_type)
-                arr.append(self.__roads[i].bearing)
-                for lane in self.__roads[i].lanes:
-                    if lane.id == lane_id:
-                        arr.append(lane.intercept)
-                        return arr
-
-        # def move(self, road_type, bearing, intercept, make_decision):
-
     def get_lane_points(self, road_id, lane_id):
-        for road in self.__roads:
-            if road.road_id == road_id:
-                for lane in road.lanes:
-                    if lane.id == lane_id:
-                        return lane.lane_points, lane.distance_points
+        road = self.road_directory[road_id]
+        for lane in road.lanes:
+            if lane.id == lane_id:
+                    return lane.lane_points, lane.distance_points
+
+
 
     def calculate_initials(self):
         """

@@ -33,7 +33,9 @@ def get_neighbouring_points(lane_points, point):
     elif point_index == len(lane_points)-1:
         return (lane_points[point_index - 1],point_index-1), (lane_points[point_index],point_index)
 
-    angle = AngleCalculator.calculate_angle(lane_points, list(lane_points[point_index]), list(point),
+    self_point = list(lane_points[point_index])
+    second_point = list(point)
+    angle = AngleCalculator.calculate_angle(lane_points, self_point, second_point,
                                             lane_points[point_index-1], lane_points[point_index + 1])
 
     if AngleCalculator.is_forward(angle):

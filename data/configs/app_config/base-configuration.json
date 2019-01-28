@@ -1,5 +1,5 @@
 {
-	"renderer": "web",
+	"renderer": "renderer",
 	"fps": 28,
 	"game_id": 1,
 	"map": "maps.json",

@@ -25,6 +25,22 @@
 				"3": {
 					"name": "fast lane",
 					"intercept": 0
+				},
+				"4": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"5": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"6": {
+					"name": "fast lane",
+					"intercept": 0
+				},
+				"7": {
+					"name": "fast lane",
+					"intercept": 0
 				}
 			}
 		}
