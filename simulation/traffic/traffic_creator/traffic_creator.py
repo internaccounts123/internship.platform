@@ -4,8 +4,8 @@ from common.enums.model_types import ModelTypes
 import random
 from common.utility.conversions import deg2rad
 from common.enums.road_types import RoadType
-from common.utility.driving.driving_calculations import *
-from common.utility.driving.angle_calculator import *
+from common.utility.driving.driving_calculations import DrivingCalculations
+from common.utility.driving.angle_calculator import AngleCalculator
 import numpy as np
 
 
@@ -81,7 +81,7 @@ class TrafficCreator(object):
             xy_id = random.randint((v.car_length/2.0), (len(lane_points) - (v.car_length/2.0))-1)
             tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, lane_points[xy_id][1])
 
-        neigh_1, neigh_2 = get_neighbouring_points(lane_points, lane_points[xy_id])
+        neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, lane_points[xy_id])
         bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
         lower_limit = (lane_points[xy_id][0] - (v.car_length/2.0) * np.cos(bearing), lane_points[xy_id][1]
                          - (v.car_length/2.0) * np.sin(bearing))
@@ -89,7 +89,7 @@ class TrafficCreator(object):
                          + (v.car_length/2.0) * np.sin(bearing))
 
         # taken points by this car
-        points = points_in_range(lane_points, upper_limit, lower_limit)
+        points = DrivingCalculations.points_in_range(lane_points, upper_limit, lower_limit)
 
         # remove taken points by this car
         for p in points:
@@ -120,7 +120,7 @@ class TrafficCreator(object):
         """
         _taken = taken.copy()
         if (tup is not None) and (len(taken) != 0):
-            neigh_1, neigh_2 = get_neighbouring_points(lane_points, lane_points[xy_id])
+            neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, lane_points[xy_id])
             bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
             lower_limit = (lane_points[xy_id][0] - (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
                            - (car_length / 2.0) * np.sin(bearing))
@@ -129,7 +129,7 @@ class TrafficCreator(object):
 
             # taken points by this car
             #points_in_range(lane_points, upper_limit, lower_limit)
-            points = points_in_range(lane_points, upper_limit, lower_limit)
+            points = DrivingCalculations.points_in_range(lane_points, upper_limit, lower_limit)
 
             for p in points:
                 p_tup = (map1.roads[road_idx].road_id, map1.roads[road_idx].lanes[lane_idx].id, p[1])

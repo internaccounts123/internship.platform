@@ -5,7 +5,7 @@ import json, os
 from common.config_reader import ConfigReader
 from common.enums.road_types import RoadType
 from common.utility.conversions import *
-from common.utility.driving.driving_calculations import *
+from common.utility.driving.driving_calculations import DrivingCalculations
 import copy
 
 
@@ -102,7 +102,7 @@ class MapCreator:
 
         for i in range(1, len(lanes)):
             lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
-            distance_points = generate_distance_points(lane_points)
+            distance_points = DrivingCalculations.generate_distance_points(lane_points)
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             data = (lanes[str(i)])
             lane_objects.append(Lane(i, data["name"], lane_width, lane_points, distance_points, data["intercept"]))
@@ -132,3 +132,5 @@ class MapCreator:
             coordinates = coordinates.astype(int)
 
         return list(map(lambda x:list(list(map(lambda x:int(x), x))), coordinates))
+
+
