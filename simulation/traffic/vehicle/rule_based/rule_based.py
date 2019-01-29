@@ -60,11 +60,11 @@ class RuleBased(Vehicle):
         two_sec_decision = DrivingCalculations.two_sec_rule(self, current_road, lane_points, d_points)
         margin_point = self.speed_limit - (self.speed_limit * .01)
 
-        if self.speed > self.speed_limit or two_sec_decision == "De_accelerate":
+        if self.speed > self.speed_limit or two_sec_decision == Decisions.De_accelerate:
             self._Vehicle__decision = "De_accelerate"
             return "De_accelerate"
 
-        elif two_sec_decision == "Lane_change":
+        elif two_sec_decision == Decisions.Lane_change:
             self._Vehicle__decision = self.lane_change(right_lane_points, right_d_points, right_car_list,
                                                        left_lane_points, left_d_points, left_car_list)
             return self._Vehicle__decision

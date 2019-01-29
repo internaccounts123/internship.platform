@@ -1,5 +1,6 @@
 from common.enums.road_types import *
 from common.utility.driving.angle_calculator import AngleCalculator
+from common.enums.decisions import Decisions
 import numpy as np
 
 
@@ -76,7 +77,7 @@ class DrivingCalculations :
             if len(c) == 0:
                 self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, "no immediate car", "no immediate car")
-                return "Positive"
+                return Decisions.Positive
                 # return False
 
             immediate_car = c[np.argmin(np.array(dis))]
@@ -122,7 +123,7 @@ class DrivingCalculations :
                     # Check if the maximum deceleration does not avoid collision
                     if safe_distance < distance_between_me_and_immediate_car:
                         # self_car.current_acc = maximum_brake
-                        return "De_accelerate"
+                        return Decisions.De_accelerate
                         # return True
 
                     # No way out, stop or lane change
@@ -132,25 +133,24 @@ class DrivingCalculations :
                         # self_car.current_acc = 0
                         # self_car.speed = 0
 
-                        return "Lane_change"
-
+                        return Decisions.Lane_change
                 # No way out, stop or lane change
                 else:
                     # Change lane
                     # Temporary decision
                     # self_car.current_acc = 0
                     # self_car.speed = 0
-                    return "Lane_change"
+                    return Decisions.Lane_change
 
                 self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-                return "De_accelerate"
+                return Decisions.De_accelerate
                 # return True
 
             # 2 second rule not violated
             else:
                 self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-                return "Positive"
+                return Decisions.Positive
                 # return False
 
             # acc = (np.square(immediate_car.speed) - np.square(self_car.speed))/float(2 * s)
@@ -201,3 +201,21 @@ class DrivingCalculations :
                     possible_points.append(lane_points[i])
 
             return possible_points
+
+        @staticmethod
+        def get_limits(xy_id, lane_points, car_length, bearing):
+            limits = []
+
+            lower_limit = (lane_points[xy_id][0] - (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
+                           - (car_length / 2.0) * np.sin(bearing))
+            upper_limit = (lane_points[xy_id][0] + (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
+                           + (car_length / 2.0) * np.sin(bearing))
+            limits.append(lower_limit)
+
+            limits.append(upper_limit)
+
+            return limits
+
+
+
+

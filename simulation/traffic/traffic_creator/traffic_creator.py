@@ -83,10 +83,10 @@ class TrafficCreator(object):
 
         neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, lane_points[xy_id])
         bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
-        lower_limit = (lane_points[xy_id][0] - (v.car_length/2.0) * np.cos(bearing), lane_points[xy_id][1]
-                         - (v.car_length/2.0) * np.sin(bearing))
-        upper_limit = (lane_points[xy_id][0] + (v.car_length/2.0) * np.cos(bearing), lane_points[xy_id][1]
-                         + (v.car_length/2.0) * np.sin(bearing))
+
+        limits = DrivingCalculations.get_limits(xy_id, lane_points, v.car_length, bearing)
+        lower_limit = limits[0]
+        upper_limit = limits[1]
 
         # taken points by this car
         points = DrivingCalculations.points_in_range(lane_points, upper_limit, lower_limit)
@@ -122,10 +122,10 @@ class TrafficCreator(object):
         if (tup is not None) and (len(taken) != 0):
             neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, lane_points[xy_id])
             bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
-            lower_limit = (lane_points[xy_id][0] - (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
-                           - (car_length / 2.0) * np.sin(bearing))
-            upper_limit = (lane_points[xy_id][0] + (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
-                           + (car_length / 2.0) * np.sin(bearing))
+
+            limits = DrivingCalculations.get_limits(xy_id, lane_points, car_length, bearing)
+            lower_limit = limits[0]
+            upper_limit = limits[1]
 
             # taken points by this car
             #points_in_range(lane_points, upper_limit, lower_limit)
