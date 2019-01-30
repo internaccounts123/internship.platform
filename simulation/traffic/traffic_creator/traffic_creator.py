@@ -68,8 +68,8 @@ class TrafficCreator(object):
         while (TrafficCreator.__is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1,
                                                road_idx, lane_idx) is False) or (_do is True):
             _do = False
-            road_idx = random.randint(0, len(map1.roads)-1)
-            lane_idx = random.randint(0, len(map1.roads[road_idx].lanes)-1)
+            road_idx = 1
+            lane_idx = random.randint(1, len(map1.roads[road_idx].lanes)-1)
 
         # pick random points from list of possible lane points
             __road = map1.roads[road_idx]

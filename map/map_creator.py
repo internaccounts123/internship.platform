@@ -33,8 +33,8 @@ class MapCreator:
         map_id = data["Map_id"]
         map_name = data["Map_Name"]
         map_version = data["Map_Version"]
-        road_directory, roads = MapCreator.create_roads(data["roads"])
-        return Map(map_id, map_name, map_version, roads, road_directory)
+        roads = MapCreator.create_roads(data["roads"])
+        return Map(map_id, map_name, map_version, roads)
 
     @staticmethod
     def create_roads(roads):
@@ -57,8 +57,8 @@ class MapCreator:
             road_objects.append(Road(road_id+1, data["length"], data["name"], data["road_type"], data["starting_pos"],
                                 ending_height, ending_width, data["bearing"], data["connection"], lanes))
 
-        road_objects_dict = dict([(x.road_id, x) for x in road_objects])
-        return road_objects_dict, road_objects
+        road_objects = dict([(x.road_id, x) for x in road_objects])
+        return road_objects
 
     @staticmethod
     def __generate_end_points(starting_position, length, width, road_type, bearing):

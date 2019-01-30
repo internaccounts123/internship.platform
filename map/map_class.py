@@ -4,12 +4,12 @@ from map.road_info import RoadInfo
 
 
 class Map:
-    def __init__(self, map_id, name, version, roads, road_directory):
+    def __init__(self, map_id, name, version, roads):
         self.__id = map_id
         self.__name = name
         self.__version = version
         self.__roads = roads
-        self.__road_directory = road_directory
+
 
     @property
     def id(self):
@@ -43,19 +43,12 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-    @property
-    def road_directory(self):
-        return self.__road_directory
-
-    @roads.setter
-    def roads(self, road_directory):
-        self.__road_directory = road_directory
 
     # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
     def get_lateral_lanes(self, lane_id, road_id):
         lateral_lanes = []
 
-        road = self.road_directory[road_id]
+        road = self.roads[road_id]
         lane_idx = [x.__id for x in road.lanes].index(lane_id)
         if lane_idx < 3:
             lateral_lanes. append(road.lanes[lane_idx + 1])
@@ -67,7 +60,7 @@ class Map:
 
     def update_lane_info(self, road_id, l_id, dec):
         lane_id = None
-        road = self.road_directory[road_id]
+        road = self.roads[road_id]
         for lane_idx in range(len(road.lanes)):
             if road.lanes[lane_idx].id == l_id:
                 if dec == "Move_right":
@@ -80,15 +73,15 @@ class Map:
         return lane_id
 
     def get_no_of_road_lanes(self,road_id):
-        road = self.road_directory[road_id]
+        road = self.roads[road_id]
         return len(road.lanes)
 
     def is_last_lane_id(self, road_id, lane_id):
-        road = self.road_directory[road_id]
+        road = self.roads[road_id]
         return road.lanes[len(road.lanes) - 1].id == lane_id
 
     def is_first_lane_id(self, road_id, lane_id):
-        road = self.road_directory[road_id]
+        road = self.roads[road_id]
         return road.lanes[0].id == lane_id
 
 
@@ -98,7 +91,7 @@ class Map:
 
 
     def get_road_info(self, current_position):
-        for r in self.__roads:
+        for r in self.__roads.values:
             for l in r.lanes:
                     lane_points = l.lane_points
                     if self.check_point_fit(current_position, lane_points):
@@ -133,7 +126,7 @@ class Map:
         }
 
     def get_lane_points(self, road_id, lane_id):
-        road = self.road_directory[road_id]
+        road = self.roads[road_id]
         for lane in road.lanes:
             if lane.id == lane_id:
                     return lane.lane_points, lane.distance_points
@@ -149,10 +142,10 @@ class Map:
         array_x = []
         array_y = []
 
-        for i in range(len(self.roads)):
-            if RoadType[self.roads[i].road_type].value == RoadType.Straight.value:
-                array_x.append(self.roads[i].ending_width[0])
-                array_y.append(self.roads[i].ending_height[1])
+        for value in self.roads.values():
+            if RoadType[value.road_type].value == RoadType.Straight.value:
+                array_x.append(value.ending_width[0])
+                array_y.append(value.ending_height[1])
 
         old_max.append(max(array_x) + 40)
         old_max.append(max(array_y))
