@@ -51,7 +51,7 @@ class MapCreator:
                                             data["length"], data["bearing"])
             data = roads[road_id]
             road_id = int(road_id)
-            road_width = len(lanes)*lanes[0].width
+            road_width = len(lanes)*lanes[1].width
             ending_height, ending_width = MapCreator.__generate_end_points(data["starting_pos"], data["length"],
                                                                            road_width, data["road_type"],
                                                                            data["bearing"])
@@ -107,7 +107,8 @@ class MapCreator:
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             data = (lanes[str(i)])
             lane_objects.append(Lane(i, data["name"], lane_width, lane_points, distance_points, data["intercept"]))
-        return lane_objects
+            lane_objects1 = {x.id: x for x in lane_objects}
+        return lane_objects1
 
     @staticmethod
     def __generate_lane_points(starting_position, length, road_type, bearing, lane_width):

@@ -61,14 +61,13 @@ class Map:
     def update_lane_info(self, road_id, l_id, dec):
         lane_id = None
         road = self.roads[road_id]
-        for lane_idx in range(len(road.lanes)):
-            if road.lanes[lane_idx].id == l_id:
-                if dec == "Move_right":
-                    lane_id = road.lanes[lane_idx+1].id
-                elif dec == "Move_left":
-                    lane_id = road.lanes[lane_idx - 1].id
-                else:
-                    lane_id = l_id
+
+        if dec == "Move_right":
+            lane_id = road.lanes[l_id + 1].id
+        elif dec == "Move_left":
+            lane_id = road.lanes[l_id - 1].id
+        else:
+            lane_id = l_id
 
         return lane_id
 
@@ -82,7 +81,7 @@ class Map:
 
     def is_first_lane_id(self, road_id, lane_id):
         road = self.roads[road_id]
-        return road.lanes[0].id == lane_id
+        return road.lanes[1].id == lane_id
 
 
     @staticmethod
@@ -127,9 +126,8 @@ class Map:
 
     def get_lane_points(self, road_id, lane_id):
         road = self.roads[road_id]
-        for lane in road.lanes:
-            if lane.id == lane_id:
-                    return lane.lane_points, lane.distance_points
+        lane = road.lanes[lane_id]
+        return lane.lane_points, lane.distance_points
 
 
 
