@@ -196,11 +196,10 @@ class Vehicle(object):
             self.x = next_point[0]
             self.y = next_point[1]
 
-        self.back_point = (self.x - (self.car_length / 2.0) * np.cos(bearing), self.y
-                           - (self.car_length / 2.0) * np.sin(bearing))
-        self.front_point = (self.x + (self.car_length / 2.0) * np.cos(bearing), self.y
-                            + (self.car_length / 2.0) * np.sin(bearing))
+        points = DrivingCalculations.get_front_and_back_points(self.x,self.y,self.car_length,bearing)
 
+        self.back_point = points[0]
+        self.front_point = points[1]
         # self.front_point = (self.x, self.y + (self.car_length / 2.0))
         # self.back_point = (self.x, self.y - (self.car_length / 2.0))
 

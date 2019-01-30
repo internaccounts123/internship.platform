@@ -86,7 +86,6 @@ class World:
                 dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points, right_d_points,
                                         right_car_list, left_lane_points, left_d_points, left_car_list)
 
-
                 log_information = car.get_info()
                 log.info(log_information)
 

@@ -229,4 +229,17 @@ class DrivingCalculations :
 
             return limits
 
+        @staticmethod
+        def get_front_and_back_points(x, y, car_length, bearing):
+
+            points = []
+
+            back_point = (x - (car_length / 2.0) * np.cos(bearing), y - (car_length / 2.0) * np.sin(bearing))
+            front_point = (x + (car_length / 2.0) * np.cos(bearing), y + (car_length / 2.0) * np.sin(bearing))
+            points.append(back_point)
+
+            points.append(front_point)
+
+            return points
+
 
