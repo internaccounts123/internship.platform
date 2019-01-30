@@ -21,6 +21,12 @@ class DrivingCalculations :
 
         @staticmethod
         def get_neighbouring_points(lane_points, point):
+            """
+
+            :param lane_points: list of points for the respective lane
+            :param point: the current point
+            :return:
+            """
             distances = []
             lane_points = np.array(lane_points)
 
@@ -47,6 +53,15 @@ class DrivingCalculations :
 
         @staticmethod
         def two_sec_rule(self_car, car_list, lane_points, distance_points, _bool=True):
+            """
+
+            :param self_car: the car for which the calculations are being done
+            :param car_list: list of total cars
+            :param lane_points: list of points for that particular lane
+            :param distance_points: list of distance point
+            :param _bool:
+            :return:
+            """
             # ASSUMING BEARING -> map.calculate_bearing
             # # v^2 = u^2 +2as
             # # 2as = u^2
@@ -153,24 +168,15 @@ class DrivingCalculations :
                 return Decisions.Positive
                 # return False
 
-            # acc = (np.square(immediate_car.speed) - np.square(self_car.speed))/float(2 * s)
-            # bearing = AngleCalculator.get_bearing(_neigh_1, _neigh_2)
-            # s = (np.square(self_car.speed)) / (2.0 * self_car.de_acceleration)
-            # s += self_car.car_length
-            # x = self_car.x + s * np.cos(bearing)
-            # y = self_car.y + s * np.sin(bearing)
-            # _neigh_1, _neigh_2 = get_neighbouring_points(lane_points, [x, y])
-            # _angle = AngleCalculator.calculate_angle(lane_points, [x, y],
-            # [immediate_car.x, immediate_car.y], _neigh_1, _neigh_2)
-            # self_car.extra= (s, x, y, _angle,bearing)
-            # if AngleCalculator.is_forward(_angle):
-            #     # car is ahead of the point
-            #     return False
-            # # De_accelerate
-            # return True
+
 
         @staticmethod
         def generate_distance_points(lane_points):
+            """
+
+            :param lane_points: list of points for that specific lane
+            :return:
+            """
             distance_points = np.zeros((np.shape(lane_points)[0],))
 
             for i in range(1, len(lane_points)):
@@ -204,6 +210,14 @@ class DrivingCalculations :
 
         @staticmethod
         def get_limits(xy_id, lane_points, car_length, bearing):
+            """
+
+            :param xy_id: index of the point
+            :param lane_points: lane points for the current road
+            :param car_length: total length of car
+            :param bearing: bearing at that point
+            :return:
+            """
             limits = []
 
             lower_limit = (lane_points[xy_id][0] - (car_length / 2.0) * np.cos(bearing), lane_points[xy_id][1]
@@ -218,6 +232,14 @@ class DrivingCalculations :
 
         @staticmethod
         def get_car_limits(car_x, car_y, car_length, bearing):
+            """
+
+            :param car_x: x coordinate of car
+            :param car_y: y coordinate of car
+            :param car_length: total length of car
+            :param bearing: bearing at the point
+            :return:
+            """
             limits = []
 
             lower_limit = (car_x - (car_length / 2.0) * np.cos(bearing), car_y - (car_length / 2.0) * np.sin(bearing))
@@ -231,6 +253,14 @@ class DrivingCalculations :
 
         @staticmethod
         def get_front_and_back_points(x, y, car_length, bearing):
+            """
+
+                        :param car_x: x coordinate of car
+                        :param car_y: y coordinate of car
+                        :param car_length: total length of car
+                        :param bearing: bearing at the point
+                        :return:
+                        """
 
             points = []
 
@@ -241,5 +271,24 @@ class DrivingCalculations :
             points.append(front_point)
 
             return points
+
+        @staticmethod
+
+        def get_next_point(x, y, speed, bearing):
+            """
+
+            :param x: x coordinate of car
+            :param y: y coordinate of car
+            :param speed: speed of car
+            :param bearing: bearing at that point
+            :return:
+            """
+            point = []
+            x = x + speed * np.cos(bearing)
+            y = y + speed * np.sin(bearing)
+            point.append(x)
+            point.append(y)
+
+            return point
 
 

@@ -22,10 +22,8 @@ class RuleBased(Vehicle):
 
         neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [car_at_next_point.x,car_at_next_point.y])
         bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
-        lower_limit = (car_at_next_point.x - (car_at_next_point.car_length / 2.0) * np.cos(bearing), car_at_next_point.y
-                       - (car_at_next_point.car_length / 2.0) * np.sin(bearing))
-        upper_limit = (car_at_next_point.x + (car_at_next_point.car_length / 2.0) * np.cos(bearing), car_at_next_point.y
-                       + (car_at_next_point.car_length / 2.0) * np.sin(bearing))
+        lower_limit, upper_limit = DrivingCalculations.get_front_and_back_points(car_at_next_point.x,car_at_next_point.y,
+                                                                                 car_at_next_point.car_length, bearing)
 
         #####################################################################################
 
@@ -40,8 +38,7 @@ class RuleBased(Vehicle):
             bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
 
             limits = DrivingCalculations.get_car_limits(car.x,car.y,car.car_length,bearing)
-            car_lower_limit = limits[0]
-            car_upper_limit = limits[1]
+            car_lower_limit, car_upper_limit = limits
             car_front_prev_neigh, car_front_next_neigh = DrivingCalculations.get_neighbouring_points(side_lane_points, car_upper_limit)
             car_back_prev_neigh, car_back_next_neigh = DrivingCalculations.get_neighbouring_points(side_lane_points, car_lower_limit)
 
@@ -57,6 +54,18 @@ class RuleBased(Vehicle):
 
     def make_decision(self, grid, lane_points, d_points, right_lane_points, right_d_points, right_car_list,
                       left_lane_points, left_d_points, left_car_list):
+        """
+        :param grid:
+        :param lane_points:
+        :param d_points:
+        :param right_lane_points:
+        :param right_d_points:
+        :param right_car_list:
+        :param left_lane_points:
+        :param left_d_points:
+        :param left_car_list:
+        :return:
+        """
         current_road = grid[self.road_id][self.lane_id]
         two_sec_decision = DrivingCalculations.two_sec_rule(self, current_road, lane_points, d_points)
         margin_point = self.speed_limit - (self.speed_limit * .01)
