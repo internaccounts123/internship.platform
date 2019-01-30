@@ -38,9 +38,10 @@ class RuleBased(Vehicle):
             # c_neigh_1, c_neigh_2 = get_neighbouring_points(side_lane_points, [car.x,car.y])
             neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [car.x, car.y])
             bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
-            car_lower_limit = (car.x - (car.car_length / 2.0) * np.cos(bearing), car.y - (car.car_length / 2.0) * np.sin(bearing))
-            car_upper_limit = (car.x + (car.car_length / 2.0) * np.cos(bearing), car.y + (car.car_length / 2.0) * np.sin(bearing))
 
+            limits = DrivingCalculations.get_car_limits(car.x,car.y,car.car_length,bearing)
+            car_lower_limit = limits[0]
+            car_upper_limit = limits[1]
             car_front_prev_neigh, car_front_next_neigh = DrivingCalculations.get_neighbouring_points(side_lane_points, car_upper_limit)
             car_back_prev_neigh, car_back_next_neigh = DrivingCalculations.get_neighbouring_points(side_lane_points, car_lower_limit)
 

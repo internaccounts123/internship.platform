@@ -216,6 +216,17 @@ class DrivingCalculations :
 
             return limits
 
+        @staticmethod
+        def get_car_limits(car_x, car_y, car_length, bearing):
+            limits = []
 
+            lower_limit = (car_x - (car_length / 2.0) * np.cos(bearing), car_y - (car_length / 2.0) * np.sin(bearing))
+            upper_limit = (car_x + (car_length / 2.0) * np.cos(bearing), car_y + (car_length / 2.0) * np.sin(bearing))
+
+            limits.append(lower_limit)
+
+            limits.append(upper_limit)
+
+            return limits
 
 
