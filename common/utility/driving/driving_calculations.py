@@ -66,10 +66,7 @@ class DrivingCalculations :
             # # v^2 = u^2 +2as
             # # 2as = u^2
             # # s = u^2/2a deg2r
-            # if len(car_list) == 1:
-            #     self_car.current_acc = self_car.acceleration
-            #     return False
-            # bearing = deg2rad(bearing)
+
 
             c = []
             dis = []
@@ -137,29 +134,26 @@ class DrivingCalculations :
 
                     # Check if the maximum deceleration does not avoid collision
                     if safe_distance < distance_between_me_and_immediate_car:
-                        # self_car.current_acc = maximum_brake
+
                         return Decisions.De_accelerate
-                        # return True
+
 
                     # No way out, stop or lane change
                     else:
                         # Change lane
                         # Temporary decision
-                        # self_car.current_acc = 0
-                        # self_car.speed = 0
 
                         return Decisions.Lane_change
                 # No way out, stop or lane change
                 else:
                     # Change lane
                     # Temporary decision
-                    # self_car.current_acc = 0
-                    # self_car.speed = 0
+
                     return Decisions.Lane_change
 
                 self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
                 return Decisions.De_accelerate
-                # return True
+
 
             # 2 second rule not violated
             else:
@@ -196,7 +190,6 @@ class DrivingCalculations :
 
             possible_points = []
 
-            # [previous neighbour point on lane, index of negihbour 1], [next neighbour point on lane, index of neighbour 2]
             u_neigh_1, u_neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, upper_limit)
             l_neigh_1, l_neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, lower_limit)
 

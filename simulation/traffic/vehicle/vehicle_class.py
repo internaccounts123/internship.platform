@@ -162,6 +162,14 @@ class Vehicle(object):
         self.__current_acc = current_acc
 
     def move(self, decision, lane_points, right_lane_points, left_lane_points):
+        """
+
+        :param decision: decision taken by the make_decision function
+        :param lane_points: list of points for the respective lane
+        :param right_lane_points: lane points at the right of the current position
+        :param left_lane_points: lane points at the left of the current position
+        :return:
+        """
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.x, self.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
@@ -169,7 +177,6 @@ class Vehicle(object):
             self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
 
             self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
-
 
         elif Decisions[decision].value == Decisions.Constant_speed.value:
             self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)

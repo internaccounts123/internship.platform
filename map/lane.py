@@ -3,7 +3,7 @@ class Lane:
         self.__id = id
         self.__width = width
         self.__name = name
-        self.__lane_points = list(lane_points)
+        self.__lane_points = lane_points
         self.__distance_points = distance_points
         self.__intercept = intercept
 
