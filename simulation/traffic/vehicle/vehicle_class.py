@@ -193,20 +193,16 @@ class Vehicle(object):
         elif Decisions[decision].value == Decisions.Move_right.value:
 
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.x, self.y])
-            next_point = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-            self.x = next_point[0]
-            self.y = next_point[1]
+            self.x, self.y = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+
 
 
         elif Decisions[decision].value == Decisions.Move_left.value:
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.x, self.y])
-            next_point = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-            self.x, self.y = next_point
+            self.x, self.y = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
 
+        self.back_point, self.front_point = DrivingCalculations.get_front_and_back_points(self.x,self.y,self.car_length,bearing)
 
-        points = DrivingCalculations.get_front_and_back_points(self.x,self.y,self.car_length,bearing)
-
-        self.back_point, self.front_point = points
 
 
     def get_info(self):
