@@ -6,7 +6,7 @@ from simulation.renderer.adapter import Adapter
 
 class Renderer:
 
-    def __init__(self, world, fps=30, screen_width=800, screen_height=800):
+    def __init__(self, world, fps=30, screen_width=600, screen_height=600):
         """
         Default constructor
         :param world: world object to draw
@@ -139,12 +139,12 @@ class Renderer:
             milliseconds = clock.tick(self.__FPS)  # do not go faster than this frame rate
             playtime += milliseconds / 1000.0
 
-            road_width = self.draw_road(self.__world.world_map.roads[0])
+            road_width = self.draw_road(self.__world.world_map.roads[1])
 
             for car in self.__world.cars:
-                if car.road_id == self.__world.world_map.roads[0].road_id:
+                if car.road_id == self.__world.world_map.roads[1].road_id:
                     self.draw_car(car.front_point, car.back_point, road_width,
-                                  len(self.__world.world_map.roads[0].lanes))
+                                  len(self.__world.world_map.roads[1].lanes))
 
             pygame.display.update()
 
@@ -169,6 +169,7 @@ class Renderer:
 
             pygame.display.set_caption("renderer")
             _event.set()
+
 
         pygame.quit()
         return playtime

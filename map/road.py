@@ -90,3 +90,20 @@ class Road:
     @lanes.setter
     def lanes(self, lanes):
         self.__lanes = lanes
+
+    @property
+    def serialize(self):
+        return {
+            'road_id': self.road_id,
+            'length': self.length,
+            'name': self.name,
+            'starting_pos': self.starting_pos,
+            # 'ending_height': list(self.ending_height),
+            'ending_height': list(map(lambda x:int(x), self.ending_height)),
+            # 'ending_width': list(self.ending_width),
+            'ending_width': list(map(lambda x:int(x), self.ending_width)),
+            'bearing': self.bearing,
+            'connection': self.connection,
+            'road_type': self.road_type,
+            'lanes': list(lane.serialize for lane in self.lanes)
+        }

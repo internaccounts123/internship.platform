@@ -127,3 +127,23 @@ class Vehicle(object):
     @back_point.setter
     def back_point(self, back_point):
         self.__back_point = back_point
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'perception_size': self.perception_size,
+            'speed_limit': self.speed_limit,
+            'acceleration': self.acceleration,
+            'de_acceleration': self.de_acceleration,
+            'car_length': self.car_length,
+            'type': self.type1,
+            'x': float(self.x),
+            'y': float(self.y),
+            'lane_id': self.lane_id,
+            'road_id': self.road_id,
+            # 'front_point': list(self.front_point),
+            'front_point': list(map(lambda x:float(x), self.front_point)),
+            # 'back_point': list(self.back_point)
+            'back_point': list(map(lambda x:float(x), self.back_point))
+        }

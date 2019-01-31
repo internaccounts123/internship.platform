@@ -1,16 +1,27 @@
-# import random
-# import numpy as np
-from simulation.vehicle.traffic_creator import TrafficCreator
-import common.utility
-import time
+from simulation.traffic.traffic_creator.traffic_creator import TrafficCreator
+from collections import defaultdict
+from common.logging.logger import *
+from simulation.renderer.adapter import Adapter
+import gc
 
-class World(object):
+
+class World:
 
     def __init__(self, map1, _id):
         self.__id = _id
         self.__world_map = map1  # Map(map_id, name, version, roads)
         self.__cars = TrafficCreator.create_traffic(map1, self.__id)
-        self.__grid = None
+        self.__grid = []
+        self.__grid = self.__update_init_perception()
+
+    def __update_init_perception(self):
+        del self.__grid
+        gc.collect()
+
+        _grid = defaultdict(lambda: defaultdict(lambda: []))
+        for car in self.__cars:
+            _grid[car.road_id][car.lane_id].append(car)
+        return _grid
 
     @property
     def id(self):
@@ -29,54 +40,63 @@ class World(object):
         self.__cars = cars
 
     @property
-    def world_map (self):
+    def world_map(self):
         return self.__world_map
 
     @world_map.setter
-    def world_map (self, world_map ):
+    def world_map(self, world_map):
         self.__world_map = world_map
 
-    def update(self, event):
-        for i in range(100):
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'world_map': self.world_map.serialize,
+            'cars': list(car.serialize for car in self.cars)
+
+        }
+
+    def update(self, event=None):
+        log = Logger.get_logger("FILE")
+        for i in range(1000):
+
             event.wait()
+            # extract ys of all cars with lane ids
+            # check the difference including car width
             for car in self.cars:
-                car.y += 1
-                car.front_point = (car.front_point[0], car.front_point[1] + 1)
-                car.back_point = (car.back_point[0], car.back_point[1] + 1)
+
+                lane_points, d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id)
+                right_lane_points = []
+                right_d_points = []
+                left_lane_points = []
+                left_d_points = []
+
+                if self.world_map.is_last_lane_id(car.road_id, car.lane_id):
+                    right_car_list = []
+                else:
+                    right_car_list = self.__grid[car.road_id][car.lane_id + 1]
+                    right_lane_points, right_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id + 1)
+
+                if self.world_map.is_first_lane_id(car.road_id, car.lane_id):
+                    left_car_list = []
+                else:
+                    left_car_list = self.__grid[car.road_id][car.lane_id - 1]
+                    left_lane_points, left_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id - 1)
+
+                dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points, right_d_points,
+                                        right_car_list, left_lane_points, left_d_points, left_car_list)
+
+                log_information = car.get_info()
+                log.info(log_information)
+
+                car.move(dec, lane_points, right_lane_points, left_lane_points)
+
+                car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
+                old_min, old_max = self.__world_map.calculate_initials()
+
+                if car.front_point[1] >= old_max[1]:
+                    self.cars.remove(car)
+
+                self.__grid = self.__update_init_perception()
+
             event.clear()
-            time.sleep(0.01)
-
-    # def init_cars(self, type):
-    #
-    #     for i in range(len(self.data[type])):
-    #         arg_list = []
-    #
-    #         for j in self.data[type][i]:
-    #             arg_list.append(self.data[type][i][j])
-    #
-    #         indx=random.randint(len(map.roads))
-    #         arg_list.append(map.roads[indx].name)  #road name
-    #
-    #
-    #         set=0
-    #         while (set==0):
-    #             id_ = map.roads[indx].lanes[random.randint(len(map.roads[indx].lanes))].id
-    #             arg_list.append(id_)  # lane id
-    #
-    #         width=0
-    #         while(map.roads[indx].lanes.id != id_):
-    #             width+=map.roads[indx].lanes.width
-    #         arg_list.append(width) #x
-    #
-    #
-    #         y= random.randint(map.roads[indx].length)
-
-    # arg_list.append()  # y
-    #
-    # for j in range(1):
-    #     arg_list.append(None)
-    #
-    # self.rbCars.append(RuleBased(arg_list))
-    # self.rbSize += 1
-
-    # function update args[6:] map road grid

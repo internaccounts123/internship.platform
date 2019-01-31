@@ -1,11 +1,11 @@
 from map.lane import Lane
 from map.road import Road
 from map.map_class import Map
-from common.utility import *
 import json, os
-import numpy as np
 from common.config_reader import ConfigReader
-from common.road_types import RoadType
+from common.enums.road_types import RoadType
+from common.utility.conversions import *
+from common.utility.driving.driving_calculations import DrivingCalculations
 import copy
 
 
@@ -43,20 +43,22 @@ class MapCreator:
         : param roads: roads dictionary from the json file
         : return: list of road objects
         """
-        road_objects = []
+        road_objects = {}
 
-        for road_id, i in enumerate(list(roads)):
-            data = copy.deepcopy(roads[str(i)])
+        for road_id, road in roads.items():
+            data = copy.deepcopy(roads[road_id])
             lanes = MapCreator.create_lanes(data["lanes"], data["road_type"], data["starting_pos"],
                                             data["length"], data["bearing"])
-            data = (roads[str(i)])
-            road_width = len(lanes)*lanes[0].width
+            data = roads[road_id]
+            road_id = int(road_id)
+            road_width = len(lanes)*lanes[1].width
             ending_height, ending_width = MapCreator.__generate_end_points(data["starting_pos"], data["length"],
                                                                            road_width, data["road_type"],
                                                                            data["bearing"])
-            road_objects.append(Road(road_id+1, data["length"], data["name"], data["road_type"], data["starting_pos"],
-                                ending_height, ending_width, data["bearing"], data["connection"], lanes))
-
+            road_objects[road_id] = Road(road_id, data["length"], data["name"],
+                                         data["road_type"], data["starting_pos"],
+                                         ending_height, ending_width, data["bearing"],
+                                         data["connection"], lanes)
         return road_objects
 
     @staticmethod
@@ -101,10 +103,12 @@ class MapCreator:
 
         for i in range(1, len(lanes)):
             lane_points = MapCreator.__generate_lane_points(starting_position, length, road_type, bearing, lane_width)
+            distance_points = DrivingCalculations.generate_distance_points(lane_points)
             starting_position[0] += lane_width  # Subject to change on the basis of renderer meeting
             data = (lanes[str(i)])
-            lane_objects.append(Lane(i, data["name"], lane_width, lane_points))
-        return lane_objects
+            lane_objects.append(Lane(i, data["name"], lane_width, lane_points, distance_points, data["intercept"]))
+            lane_objects1 = {x.id: x for x in lane_objects}
+        return lane_objects1
 
     @staticmethod
     def __generate_lane_points(starting_position, length, road_type, bearing, lane_width):
@@ -129,4 +133,6 @@ class MapCreator:
             coordinates = np.array([x, y]).T
             coordinates = coordinates.astype(int)
 
-        return coordinates
+        return list(map(lambda x:list(list(map(lambda x:int(x), x))), coordinates))
+
+
