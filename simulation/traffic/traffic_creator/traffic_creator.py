@@ -84,9 +84,8 @@ class TrafficCreator(object):
         neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, lane_points[xy_id])
         bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
 
-        limits = DrivingCalculations.get_limits(xy_id, lane_points, v.car_length, bearing)
-        lower_limit = limits[0]
-        upper_limit = limits[1]
+        lower_limit, upper_limit = DrivingCalculations.get_limits(xy_id, lane_points, v.car_length, bearing)
+
 
         # taken points by this car
         points = DrivingCalculations.points_in_range(lane_points, upper_limit, lower_limit)
