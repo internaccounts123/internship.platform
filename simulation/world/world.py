@@ -64,8 +64,10 @@ class World:
             # extract ys of all cars with lane ids
             # check the difference including car width
             for car in self.cars:
+                self.__grid = self.__update_init_perception()
 
                 car.main_work_flow.play_car_step(self.__grid, self.world_map)
+
                 old_min, old_max = self.__world_map.calculate_initials()
 
                 if car.front_point[1] >= old_max[1]:
@@ -73,7 +75,5 @@ class World:
 
                 log_information = car.get_info()
                 log.info(log_information)
-
-                self.__grid = self.__update_init_perception()
 
             event.clear()

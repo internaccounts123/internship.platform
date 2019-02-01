@@ -1,5 +1,4 @@
 
-
 class DecisionWorkFlow:
     def __init__(self):
         self.__self_car = None
