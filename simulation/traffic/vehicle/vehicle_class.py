@@ -180,49 +180,6 @@ class Vehicle(object):
     def driving_work_flow(self, driving_workflow):
         self.__driving_work_flow = driving_workflow
 
-    def move(self, decision, lane_points, right_lane_points, left_lane_points):
-        """
-
-        :param decision: decision taken by the make_decision function
-        :param lane_points: list of points for the respective lane
-        :param right_lane_points: lane points at the right of the current position
-        :param left_lane_points: lane points at the left of the current position
-        :return:
-        """
-        _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.x, self.y])
-        bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
-
-        if Decisions[decision].value == Decisions.Accelerate.value:
-            self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
-
-            self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
-
-        elif Decisions[decision].value == Decisions.Constant_speed.value:
-            self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
-
-        elif Decisions[decision].value == Decisions.De_accelerate.value:
-            new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
-            if new_speed >= 0:
-                self.__speed = new_speed
-            else:
-                pass
-            #     self.speed = 0
-            self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
-
-        elif Decisions[decision].value == Decisions.Move_right.value:
-
-            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.x, self.y])
-            self.x, self.y = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-
-
-
-        elif Decisions[decision].value == Decisions.Move_left.value:
-            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.x, self.y])
-            self.x, self.y = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-
-        self.back_point, self.front_point = DrivingCalculations.get_front_and_back_points(self.x,self.y,self.car_length,bearing)
-
-
 
     def get_info(self):
         current_time = datetime.datetime.now()
