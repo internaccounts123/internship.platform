@@ -26,6 +26,7 @@ class Vehicle(object):
         self.__extra = "\0"
         self.__current_acc = acceleration
         self.__decision_workflow = None
+        self.__driving_workflow = None
 
     @property
     def car_length(self):
@@ -170,6 +171,14 @@ class Vehicle(object):
     @decision_work_flow.setter
     def decision_work_flow(self, a):
         self.__decision_work_flow = a
+
+    @property
+    def driving_work_flow(self):
+        return self.__driving_work_flow
+
+    @driving_work_flow.setter
+    def driving_work_flow(self, driving_workflow):
+        self.__driving_work_flow = driving_workflow
 
     def move(self, decision, lane_points, right_lane_points, left_lane_points):
         """

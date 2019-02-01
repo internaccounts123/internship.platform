@@ -88,7 +88,7 @@ class World:
                 log_information = car.get_info()
                 log.info(log_information)
 
-                car.move(dec, lane_points, right_lane_points, left_lane_points)
+                car.driving_work_flow.implement_decision(dec, lane_points, right_lane_points, left_lane_points)
 
                 car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
                 old_min, old_max = self.__world_map.calculate_initials()
