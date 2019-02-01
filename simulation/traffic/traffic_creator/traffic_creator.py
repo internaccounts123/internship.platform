@@ -2,6 +2,7 @@ from common.config_reader import ConfigReader
 from simulation.traffic.decision_workflow.rule_based_decision_workflow.rule_based_decision_workflow import \
     RuleBasedDecisionWorkFlow
 from simulation.traffic.driving_workflow.rule_based_driving_workflow.rule_based_driving_workflow import RuleBasedDrivingWorkflow
+from simulation.traffic.main_workflow.main_workflow import MainWorkFlow
 from simulation.traffic.vehicle.rule_based.rule_based import RuleBased
 from common.enums.model_types import ModelTypes
 import random
@@ -151,13 +152,20 @@ class TrafficCreator(object):
                                           ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
                                           ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
                                           ConfigReader.get_data("driving." + type1 + ".length")[0], type1)
+
+                main_work_flow = MainWorkFlow()
+                main_work_flow.self_car = vehicle
+
+                vehicle.main_work_flow = main_work_flow
+
                 decision_work_flow = RuleBasedDecisionWorkFlow()
                 decision_work_flow.self_car = vehicle
-                vehicle.decision_work_flow = decision_work_flow
+
+                vehicle.main_work_flow.decision_work_flow = decision_work_flow
 
                 driving_work_flow = RuleBasedDrivingWorkflow()
                 driving_work_flow.self_car = vehicle
-                vehicle.driving_work_flow = driving_work_flow
+                vehicle.main_work_flow.driving_work_flow = driving_work_flow
                 vehicles.append(vehicle)
 
         return vehicles
