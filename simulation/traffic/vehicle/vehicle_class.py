@@ -1,6 +1,7 @@
 from common.config_reader import ConfigReader
 from common.enums.decisions import Decisions
 from common.utility.driving.driving_calculations import *
+from simulation.traffic.decision_workflow.rule_based_decision_workflow.rule_based_decision_workflow import RuleBasedDecisionWorkFlow
 import numpy as np
 import datetime
 
@@ -24,6 +25,7 @@ class Vehicle(object):
         self.__decision = "\0"
         self.__extra = "\0"
         self.__current_acc = acceleration
+        self.__decision_workflow = None
 
     @property
     def car_length(self):
@@ -160,6 +162,14 @@ class Vehicle(object):
     @current_acc.setter
     def current_acc(self, current_acc):
         self.__current_acc = current_acc
+
+    @property
+    def decision_work_flow(self):
+        return self.__decision_work_flow
+
+    @decision_work_flow.setter
+    def decision_work_flow(self, a):
+        self.__decision_work_flow = a
 
     def move(self, decision, lane_points, right_lane_points, left_lane_points):
         """

@@ -82,8 +82,7 @@ class World:
                 else:
                     left_car_list = self.__grid[car.road_id][car.lane_id - 1]
                     left_lane_points, left_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id - 1)
-
-                dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points, right_d_points,
+                dec = car.decision_work_flow.make_decision(self.__grid, lane_points, d_points, right_lane_points, right_d_points,
                                         right_car_list, left_lane_points, left_d_points, left_car_list)
 
                 log_information = car.get_info()

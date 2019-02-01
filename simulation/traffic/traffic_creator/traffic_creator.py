@@ -1,4 +1,6 @@
 from common.config_reader import ConfigReader
+from simulation.traffic.decision_workflow.rule_based_decision_workflow.rule_based_decision_workflow import \
+    RuleBasedDecisionWorkFlow
 from simulation.traffic.vehicle.rule_based.rule_based import RuleBased
 from common.enums.model_types import ModelTypes
 import random
@@ -143,11 +145,15 @@ class TrafficCreator(object):
         vehicles = []
         for i in range(int(ConfigReader.get_data("driving.traffic.traffic_amount")[0] * percentage)):
             if ModelTypes[model_name].value == ModelTypes.Rule_based.value:
-                vehicles.append(RuleBased(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
+                vehicle = RuleBased(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
                                           ConfigReader.get_data("driving." + type1 + ".speed_limit")[0],
                                           ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
                                           ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
-                                          ConfigReader.get_data("driving." + type1 + ".length")[0], type1))
+                                          ConfigReader.get_data("driving." + type1 + ".length")[0], type1)
+                work_flow = RuleBasedDecisionWorkFlow()
+                work_flow.self_car = vehicle
+                vehicle.decision_work_flow = work_flow
+                vehicles.append(vehicle)
 
         return vehicles
 
@@ -181,7 +187,7 @@ class TrafficCreator(object):
             x = np.linspace(starting_position_x, final_x, num=length)
             y = np.linspace(starting_position_y, final_y, num=length)
             coordinates = np.array([x, y]).T
-            # coordinates = coordinates.astype(int)
+
 
         return coordinates
 
