@@ -1,7 +1,7 @@
 import datetime
 
 from simulation.traffic.decision_workflow.rule_based_decision_workflow import RuleBasedDecisionWorkFlow
-from simulation.traffic.driving_workflow.rule_based_driving_workflow import RuleBasedDrivingWorkflow
+from simulation.traffic.driving_workflow.driving_workflow import RuleBasedDrivingWorkflow
 
 
 class Vehicle(object):
