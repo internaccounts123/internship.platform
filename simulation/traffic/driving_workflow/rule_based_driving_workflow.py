@@ -58,7 +58,7 @@ class RuleBasedDrivingWorkflow():
         lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points = \
             self.get_decision_arguments(decision, __world_map, __grid)
 
-        car.lane_id = __world_map.update_lane_info(car.road_id, car.lane_id, decision)
+
 
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.car.x, self.car.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
@@ -84,12 +84,14 @@ class RuleBasedDrivingWorkflow():
 
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.car.x, self.car.y])
             self.car.x, self.car.y = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            car.lane_id = __world_map.update_lane_info(car.road_id, car.lane_id, decision)
 
 
 
         elif decision == Decisions.Move_left:
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.car.x, self.car.y])
             self.car.x, self.car.y = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            car.lane_id = __world_map.update_lane_info(car.road_id, car.lane_id, decision)
 
         self.car.back_point, self.car.front_point = DrivingCalculations.get_front_and_back_points(self.car.x, self.car.y, self.car.car_length, bearing)
 
