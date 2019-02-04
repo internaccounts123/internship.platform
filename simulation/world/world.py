@@ -66,7 +66,7 @@ class World:
             for car in self.cars:
                 self.__grid = self.__update_init_perception()
 
-                car.main_work_flow.play_car_step(self.__grid, self.world_map)
+                car.play_car_step(self.__grid, self.world_map)
 
                 old_min, old_max = self.__world_map.calculate_initials()
 

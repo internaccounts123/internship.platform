@@ -1,5 +1,8 @@
 import datetime
 
+from simulation.traffic.decision_workflow.rule_based_decision_workflow import RuleBasedDecisionWorkFlow
+from simulation.traffic.driving_workflow.rule_based_driving_workflow import RuleBasedDrivingWorkflow
+
 
 class Vehicle(object):
     def __init__(self, perception_size, speed_limit, acceleration, de_acceleration, length, type1):
@@ -20,7 +23,8 @@ class Vehicle(object):
         self.__decision = "\0"
         self.__extra = "\0"
         self.__current_acc = acceleration
-        self.__main_work_flow = None
+        self.__decision_work_flow = RuleBasedDecisionWorkFlow()
+        self.__driving_work_flow = RuleBasedDrivingWorkflow()
 
 
     @property
@@ -163,11 +167,29 @@ class Vehicle(object):
     def main_work_flow(self):
         return self.__main_work_flow
 
-    @main_work_flow.setter
-    def main_work_flow(self, main_work_flow):
-        self.__main_work_flow = main_work_flow
+
+    @property
+    def decision_work_flow(self):
+        return self.__decision_work_flow
+
+    @decision_work_flow.setter
+    def decision_work_flow(self, a):
+        self.__decision_work_flow = a
+
+    @property
+    def driving_work_flow(self):
+        return self.__driving_work_flow
+
+    @driving_work_flow.setter
+    def driving_work_flow(self, a):
+        self.__driving_work_flow = a
 
 
+
+    def initialize_workflows(self):
+        self.decision_work_flow.car = self
+
+        self.driving_work_flow.car = self
 
 
     def get_info(self):
@@ -204,3 +226,10 @@ class Vehicle(object):
             # 'back_point': list(self.back_point)
             'back_point': list(map(lambda x:float(x), self.back_point))
         }
+
+
+    def play_car_step(self, __grid, __world_map):
+
+        dec = self.__decision_work_flow.make_decision(__grid, __world_map)
+
+        self.__driving_work_flow.implement_decision(dec, __world_map, __grid)

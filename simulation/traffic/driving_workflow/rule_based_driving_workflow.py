@@ -1,6 +1,5 @@
 import numpy as np
 
-from common.config_reader import ConfigReader
 from common.enums.decisions import Decisions
 from common.utility.driving.angle_calculator import AngleCalculator
 from common.utility.driving.driving_calculations import DrivingCalculations
@@ -18,7 +17,32 @@ class RuleBasedDrivingWorkflow():
     def car(self, car):
         self.__car = car
 
-    def implement_decision(self, decision, lane_points, right_lane_points, left_lane_points):
+
+    def get_decision_arguments(self, decision, __world_map, __grid):
+
+        car = self.car
+        lane_points, d_points = __world_map.get_lane_points(car.road_id, car.lane_id)
+        right_lane_points = []
+        right_d_points = []
+        left_lane_points = []
+        left_d_points = []
+
+        if __world_map.is_last_lane_id(car.road_id, car.lane_id):
+            right_car_list = []
+        else:
+            right_car_list = __grid[car.road_id][car.lane_id + 1]
+            right_lane_points, right_d_points = __world_map.get_lane_points(car.road_id, car.lane_id + 1)
+
+        if __world_map.is_first_lane_id(car.road_id, car.lane_id):
+            left_car_list = []
+        else:
+            left_car_list = __grid[car.road_id][car.lane_id - 1]
+            left_lane_points, left_d_points = __world_map.get_lane_points(car.road_id, car.lane_id - 1)
+
+        return lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points
+
+
+    def implement_decision(self, decision, __world_map, __grid):
         """
 
         :param decision: decision taken by the make_decision function
@@ -28,6 +52,13 @@ class RuleBasedDrivingWorkflow():
         :return:
         """
 
+
+        car = self.car
+
+        lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points = \
+            self.get_decision_arguments(decision, __world_map, __grid)
+
+        car.lane_id = __world_map.update_lane_info(car.road_id, car.lane_id, decision)
 
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.car.x, self.car.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
