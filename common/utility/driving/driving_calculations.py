@@ -290,4 +290,10 @@ class DrivingCalculations :
 
             return car.current_acc * (1.0 / ConfigReader.get_data("fps")[0])
 
+        @staticmethod
+
+        def get_margin_point(car):
+
+            return car.speed_limit - (car.speed_limit * .01)
+
 

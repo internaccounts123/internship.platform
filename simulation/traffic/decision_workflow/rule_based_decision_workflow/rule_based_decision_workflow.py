@@ -75,7 +75,7 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
 
         current_road = grid[self.car.road_id][self.car.lane_id]
         two_sec_decision = DrivingCalculations.two_sec_rule(self.car, current_road, lane_points, d_points)
-        margin_point = self.car.speed_limit - (self.car.speed_limit * .01)
+        margin_point = DrivingCalculations.get_margin_point(self.car)
 
         if self.car.speed > self.car.speed_limit or two_sec_decision == Decisions.De_accelerate:
             self.car._Vehicle__decision = Decisions.De_accelerate
