@@ -1,4 +1,6 @@
 import numpy as np
+
+from common.enums.decisions import Decisions
 from common.enums.road_types import *
 from map.road_info import RoadInfo
 
@@ -62,9 +64,9 @@ class Map:
         lane_id = None
         road = self.roads[road_id]
 
-        if dec == "Move_right":
+        if dec == Decisions.Move_right:
             lane_id = road.lanes[l_id + 1].id
-        elif dec == "Move_left":
+        elif dec == Decisions.Move_left:
             lane_id = road.lanes[l_id - 1].id
         else:
             lane_id = l_id

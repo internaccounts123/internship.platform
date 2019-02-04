@@ -18,18 +18,20 @@ class RuleBasedDrivingWorkflow(DrivingWorkFlow):
         :param left_lane_points: lane points at the left of the current position
         :return:
         """
+
+
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.car.x, self.car.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
-        if Decisions[decision].value == Decisions.Accelerate.value:
+        if decision == Decisions.Accelerate:
             self.car.speed += (self.car.current_acc * (1.0 / ConfigReader.get_data("fps")[0]))
 
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
-        elif Decisions[decision].value == Decisions.Constant_speed.value:
+        elif decision == Decisions.Constant_speed:
             self.x, self.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
-        elif Decisions[decision].value == Decisions.De_accelerate.value:
+        elif decision == Decisions.De_accelerate:
             new_speed = self.car.speed + (self.car.current_acc * (1.0 / ConfigReader.get_data("fps")[0]))
             if new_speed >= 0:
                 self.car.__speed = new_speed
@@ -38,14 +40,14 @@ class RuleBasedDrivingWorkflow(DrivingWorkFlow):
 
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
-        elif Decisions[decision].value == Decisions.Move_right.value:
+        elif decision == Decisions.Move_right:
 
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.car.x, self.car.y])
             self.car.x, self.car.y = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
 
 
 
-        elif Decisions[decision].value == Decisions.Move_left.value:
+        elif decision == Decisions.Move_left:
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.car.x, self.car.y])
             self.car.x, self.car.y = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
 

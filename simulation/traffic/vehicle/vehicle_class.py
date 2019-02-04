@@ -188,8 +188,7 @@ class Vehicle(object):
                 + '  De-acceleration: ' + str(self.de_acceleration)
                 + '  Car road: ' + str(self.road_id)
                 + '  Car lane: ' + str(self.lane_id)
-                + '  Car decision: ' + self.decision
-                + '  Car Extra:  ' + str(self.extra))
+                )
 
     @property
     def serialize(self):

@@ -53,7 +53,7 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
 
         decision = DrivingCalculations.two_sec_rule(car_at_next_point, side_car_list, side_lane_points, side_d_points)
 
-        if decision == "Lane_change":
+        if decision == Decisions.Lane_change:
             return False
         else:
             return True
@@ -78,8 +78,8 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
         margin_point = self.car.speed_limit - (self.car.speed_limit * .01)
 
         if self.car.speed > self.car.speed_limit or two_sec_decision == Decisions.De_accelerate:
-            self.car._Vehicle__decision = "De_accelerate"
-            return "De_accelerate"
+            self.car._Vehicle__decision = Decisions.De_accelerate
+            return Decisions.De_accelerate
 
         elif two_sec_decision == Decisions.Lane_change:
             self.car._Vehicle__decision = self.lane_change(right_lane_points, right_d_points, right_car_list,
@@ -87,25 +87,24 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
             return self.car._Vehicle__decision
 
         elif margin_point <= self.car.speed <= self.car.speed_limit:
-            self.car._Vehicle__decision = "Constant_speed"
-            return "Constant_speed"
+            self.car._Vehicle__decision = Decisions.Constant_speed
+            return Decisions.Constant_speed
         elif self.car.speed < margin_point:
-            self._Vehicle__decision = "Accelerate"
-            return "Accelerate"
-
+            self._Vehicle__decision = Decisions.Accelerate
+            return Decisions.Accelerate
     def lane_change(self, right_lane_points, right_d_points, right_car_list, left_lane_points, left_d_points,
                     left_car_list):
 
         right_bool = self.lane_change_assistant( right_lane_points, right_d_points, right_car_list)
 
         if right_bool is True:
-            return "Move_right"
+            return Decisions.Move_right
         else:
             left_bool = self.lane_change_assistant( left_lane_points, left_d_points, left_car_list)
             if left_bool is True:
-                return "Move_left"
+                return Decisions.Move_left
             else:
                 # self.acceleration = -8.64
                 self.car.current_acc = 0
                 self.car.speed = 0
-                return "De_accelerate"
+                return Decisions.De_accelerate
