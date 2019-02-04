@@ -24,7 +24,7 @@ class RuleBasedDrivingWorkflow(DrivingWorkFlow):
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
         if decision == Decisions.Accelerate:
-            self.car.speed += (self.car.current_acc * (1.0 / ConfigReader.get_data("fps")[0]))
+            self.car.speed += DrivingCalculations.speed_increment(self.car)
 
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
@@ -32,7 +32,7 @@ class RuleBasedDrivingWorkflow(DrivingWorkFlow):
             self.x, self.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif decision == Decisions.De_accelerate:
-            new_speed = self.car.speed + (self.car.current_acc * (1.0 / ConfigReader.get_data("fps")[0]))
+            new_speed = self.car.speed + DrivingCalculations.speed_increment(self.car)
             if new_speed >= 0:
                 self.car.__speed = new_speed
             else:

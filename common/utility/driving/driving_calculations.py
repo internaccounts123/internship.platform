@@ -1,3 +1,4 @@
+from common.config_reader import ConfigReader
 from common.enums.road_types import *
 from common.utility.driving.angle_calculator import AngleCalculator
 from common.enums.decisions import Decisions
@@ -283,5 +284,10 @@ class DrivingCalculations :
             point.append(y)
 
             return point
+
+        @staticmethod
+        def speed_increment(car):
+
+            return car.current_acc * (1.0 / ConfigReader.get_data("fps")[0])
 
 
