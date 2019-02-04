@@ -1,17 +1,17 @@
 
 class MainWorkFlow:
     def __init__(self):
-        self.__self_car = None
+        self.__car = None
         self.__decision_work_flow = None
         self.__driving_work_flow = None
 
     @property
-    def self_car(self):
-        return self.__self_car
+    def car(self):
+        return self.__car
 
-    @self_car.setter
-    def self_car(self, self_car):
-        self.__self_car = self_car
+    @car.setter
+    def car(self, self_car):
+        self.__car = self_car
 
     @property
     def decision_work_flow(self):
@@ -32,7 +32,7 @@ class MainWorkFlow:
 
     def play_car_step(self, __grid, __world_map):
 
-        car = self.self_car
+        car = self.car
         lane_points, d_points = __world_map.get_lane_points(car.road_id, car.lane_id)
         right_lane_points = []
         right_d_points = []

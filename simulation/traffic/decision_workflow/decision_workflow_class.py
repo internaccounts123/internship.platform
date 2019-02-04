@@ -1,12 +1,12 @@
 
 class DecisionWorkFlow:
     def __init__(self):
-        self.__self_car = None
+        self.__car = None
 
     @property
-    def self_car(self):
-        return self.__self_car
+    def car(self):
+        return self.__car
 
-    @self_car.setter
-    def self_car(self, self_car):
-        self.__self_car = self_car
+    @car.setter
+    def car(self, car):
+        self.__car = car

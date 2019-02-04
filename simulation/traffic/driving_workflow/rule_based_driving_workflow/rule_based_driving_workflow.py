@@ -18,37 +18,37 @@ class RuleBasedDrivingWorkflow(DrivingWorkFlow):
         :param left_lane_points: lane points at the left of the current position
         :return:
         """
-        _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.self_car.x, self.self_car.y])
+        _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.car.x, self.car.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
         if Decisions[decision].value == Decisions.Accelerate.value:
-            self.self_car.speed += (self.self_car.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            self.car.speed += (self.car.current_acc * (1.0 / ConfigReader.get_data("fps")[0]))
 
-            self.self_car.x, self.self_car.y = DrivingCalculations.get_next_point(self.self_car.x, self.self_car.y, self.self_car.speed, bearing)
+            self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif Decisions[decision].value == Decisions.Constant_speed.value:
-            self.x, self.y = DrivingCalculations.get_next_point(self.self_car.x, self.self_car.y, self.self_car.speed, bearing)
+            self.x, self.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif Decisions[decision].value == Decisions.De_accelerate.value:
-            new_speed = self.self_car.speed + (self.self_car.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+            new_speed = self.car.speed + (self.car.current_acc * (1.0 / ConfigReader.get_data("fps")[0]))
             if new_speed >= 0:
-                self.self_car.__speed = new_speed
+                self.car.__speed = new_speed
             else:
                 pass
 
-            self.self_car.x, self.self_car.y = DrivingCalculations.get_next_point(self.self_car.x, self.self_car.y, self.self_car.speed, bearing)
+            self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif Decisions[decision].value == Decisions.Move_right.value:
 
-            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.self_car.x, self.self_car.y])
-            self.self_car.x, self.self_car.y = DrivingCalculations.point_to_line_intersection(np.array([self.self_car.x, self.self_car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.car.x, self.car.y])
+            self.car.x, self.car.y = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
 
 
 
         elif Decisions[decision].value == Decisions.Move_left.value:
-            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.self_car.x, self.self_car.y])
-            self.self_car.x, self.self_car.y = DrivingCalculations.point_to_line_intersection(np.array([self.self_car.x, self.self_car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.car.x, self.car.y])
+            self.car.x, self.car.y = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
 
-        self.self_car.back_point, self.self_car.front_point = DrivingCalculations.get_front_and_back_points(self.self_car.x,self.self_car.y,self.self_car.car_length,bearing)
+        self.car.back_point, self.car.front_point = DrivingCalculations.get_front_and_back_points(self.car.x, self.car.y, self.car.car_length, bearing)
 
 

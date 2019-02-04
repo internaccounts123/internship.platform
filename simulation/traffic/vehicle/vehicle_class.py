@@ -169,8 +169,8 @@ class Vehicle(object):
         return self.__main_work_flow
 
     @main_work_flow.setter
-    def main_work_flow(self, a):
-        self.__main_work_flow = a
+    def main_work_flow(self, main_work_flow):
+        self.__main_work_flow = main_work_flow
 
 
 

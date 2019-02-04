@@ -18,10 +18,10 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
         if len(side_car_list) == 0:
             return False
 
-        _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [self.self_car.x, self.self_car.y])
+        _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [self.car.x, self.car.y])
 
-        next_point = DrivingCalculations.point_to_line_intersection(np.array([self.self_car.x, self.self_car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-        car_at_next_point = copy.deepcopy(self.self_car)
+        next_point = DrivingCalculations.point_to_line_intersection(np.array([self.car.x, self.car.y]), np.array([_neigh_1[0], _neigh_2[0]]))
+        car_at_next_point = copy.deepcopy(self.car)
 
         car_at_next_point.x = next_point[0]
         car_at_next_point.y = next_point[1]
@@ -73,23 +73,23 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
         :return:
         """
 
-        current_road = grid[self.self_car.road_id][self.self_car.lane_id]
-        two_sec_decision = DrivingCalculations.two_sec_rule(self.self_car, current_road, lane_points, d_points)
-        margin_point = self.self_car.speed_limit - (self.self_car.speed_limit * .01)
+        current_road = grid[self.car.road_id][self.car.lane_id]
+        two_sec_decision = DrivingCalculations.two_sec_rule(self.car, current_road, lane_points, d_points)
+        margin_point = self.car.speed_limit - (self.car.speed_limit * .01)
 
-        if self.self_car.speed > self.self_car.speed_limit or two_sec_decision == Decisions.De_accelerate:
-            self.self_car._Vehicle__decision = "De_accelerate"
+        if self.car.speed > self.car.speed_limit or two_sec_decision == Decisions.De_accelerate:
+            self.car._Vehicle__decision = "De_accelerate"
             return "De_accelerate"
 
         elif two_sec_decision == Decisions.Lane_change:
-            self.self_car._Vehicle__decision = self.lane_change(right_lane_points, right_d_points, right_car_list,
-                                                       left_lane_points, left_d_points, left_car_list)
-            return self.self_car._Vehicle__decision
+            self.car._Vehicle__decision = self.lane_change(right_lane_points, right_d_points, right_car_list,
+                                                           left_lane_points, left_d_points, left_car_list)
+            return self.car._Vehicle__decision
 
-        elif margin_point <= self.self_car.speed <= self.self_car.speed_limit:
-            self.self_car._Vehicle__decision = "Constant_speed"
+        elif margin_point <= self.car.speed <= self.car.speed_limit:
+            self.car._Vehicle__decision = "Constant_speed"
             return "Constant_speed"
-        elif self.self_car.speed < margin_point:
+        elif self.car.speed < margin_point:
             self._Vehicle__decision = "Accelerate"
             return "Accelerate"
 
@@ -106,6 +106,6 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
                 return "Move_left"
             else:
                 # self.acceleration = -8.64
-                self.self_car.current_acc = 0
-                self.self_car.speed = 0
+                self.car.current_acc = 0
+                self.car.speed = 0
                 return "De_accelerate"

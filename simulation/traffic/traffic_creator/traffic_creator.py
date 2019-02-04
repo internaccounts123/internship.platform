@@ -154,17 +154,17 @@ class TrafficCreator(object):
                                           ConfigReader.get_data("driving." + type1 + ".length")[0], type1)
 
                 main_work_flow = MainWorkFlow()
-                main_work_flow.self_car = vehicle
+                main_work_flow.car = vehicle
 
                 vehicle.main_work_flow = main_work_flow
 
                 decision_work_flow = RuleBasedDecisionWorkFlow()
-                decision_work_flow.self_car = vehicle
+                decision_work_flow.car = vehicle
 
                 vehicle.main_work_flow.decision_work_flow = decision_work_flow
 
                 driving_work_flow = RuleBasedDrivingWorkflow()
-                driving_work_flow.self_car = vehicle
+                driving_work_flow.car = vehicle
                 vehicle.main_work_flow.driving_work_flow = driving_work_flow
                 vehicles.append(vehicle)
 
