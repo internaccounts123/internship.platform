@@ -4,10 +4,19 @@ from common.config_reader import ConfigReader
 from common.enums.decisions import Decisions
 from common.utility.driving.angle_calculator import AngleCalculator
 from common.utility.driving.driving_calculations import DrivingCalculations
-from simulation.traffic.driving_workflow.driving_workflow_class import DrivingWorkFlow
 
+class RuleBasedDrivingWorkflow():
 
-class RuleBasedDrivingWorkflow(DrivingWorkFlow):
+    def __init__(self):
+        self.__car = None
+
+    @property
+    def car(self):
+        return self.__car
+
+    @car.setter
+    def car(self, car):
+        self.__car = car
 
     def implement_decision(self, decision, lane_points, right_lane_points, left_lane_points):
         """
