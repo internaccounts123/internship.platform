@@ -1,7 +1,7 @@
 from common.config_reader import ConfigReader
-from simulation.traffic.decision_workflow.rule_based_decision_workflow.rule_based_decision_workflow import \
+from simulation.traffic.decision_workflow.rule_based_decision_workflow import \
     RuleBasedDecisionWorkFlow
-from simulation.traffic.driving_workflow.rule_based_driving_workflow.rule_based_driving_workflow import RuleBasedDrivingWorkflow
+from simulation.traffic.driving_workflow.rule_based_driving_workflow import RuleBasedDrivingWorkflow
 from simulation.traffic.main_workflow.main_workflow import MainWorkFlow
 from simulation.traffic.vehicle.rule_based.rule_based import RuleBased
 from common.enums.model_types import ModelTypes
