@@ -92,7 +92,7 @@ class DrivingCalculations :
             if len(c) == 0:
                 self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, "no immediate car", "no immediate car")
-                return Decisions.Positive
+                return Decisions.No_obstructions_ahead
                 # return False
 
             immediate_car = c[np.argmin(np.array(dis))]
@@ -162,7 +162,7 @@ class DrivingCalculations :
             else:
                 self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-                return Decisions.Positive
+                return Decisions.No_obstructions_ahead
                 # return False
 
 

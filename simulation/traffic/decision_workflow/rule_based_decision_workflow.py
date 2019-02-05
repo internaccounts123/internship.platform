@@ -57,7 +57,7 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
                                                            left_lane_points, left_d_points, left_car_list)
             return self.car._Vehicle__decision
 
-        if two_sec_decision == Decisions.Positive:
+        if two_sec_decision == Decisions.No_obstructions_ahead:
 
             if margin_point <= self.car.speed <= self.car.speed_limit:
                 self.car._Vehicle__decision = Decisions.Constant_speed
