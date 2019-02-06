@@ -1,4 +1,6 @@
 
+import abc as ABC
+
 
 class DrivingWorkFlow:
     def __init__(self):
@@ -11,3 +13,13 @@ class DrivingWorkFlow:
     @car.setter
     def car(self, car):
         self.__car = car
+
+    @ABC.abstractmethod
+    def implement_decision(self, decision, __world_map, __grid):
+        """
+
+        :param decision: decision to be implemented
+        :param __world_map: current world map
+        :param __grid: current global perception
+        :return:
+        """

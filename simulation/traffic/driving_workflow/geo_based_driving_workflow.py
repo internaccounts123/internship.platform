@@ -49,12 +49,12 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
 
     def implement_decision(self, decision, __world_map, __grid):
         """
-        :param decision: decision taken by the make_decision function
-        :param lane_points: list of points for the respective lane
-        :param right_lane_points: lane points at the right of the current position
-        :param left_lane_points: lane points at the left of the current position
-        :return:
-        """
+
+                :param decision: decision to be implemented
+                :param __world_map: current world map
+                :param __grid: current global perception
+                :return:
+                """
         car = self.car
 
         lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points = \
