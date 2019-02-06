@@ -68,7 +68,7 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif decision == Decisions.Constant_speed:
-            self.x, self.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
+            self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif decision == Decisions.De_accelerate:
             new_speed = self.car.speed + DrivingCalculations.speed_increment(self.car)
