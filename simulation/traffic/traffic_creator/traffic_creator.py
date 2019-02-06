@@ -1,7 +1,4 @@
 from common.config_reader import ConfigReader
-from simulation.traffic.decision_workflow.rule_based_decision_workflow import \
-    RuleBasedDecisionWorkFlow
-from simulation.traffic.driving_workflow.driving_workflow import RuleBasedDrivingWorkflow
 from simulation.traffic.vehicle.rule_based.rule_based import RuleBased
 from common.enums.model_types import ModelTypes
 import random
@@ -65,8 +62,6 @@ class TrafficCreator(object):
         lane_points = []
         car_length = v.car_length
 
-
-
         # choose a point where a car is not already present
         while (TrafficCreator.__is_tuple_valid(tup, taken, lane_points, xy_id, car_length, map1,
                                                road_idx, lane_idx) is False) or (_do is True):
@@ -88,7 +83,6 @@ class TrafficCreator(object):
         bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
 
         lower_limit, upper_limit = DrivingCalculations.get_limits(xy_id, lane_points, v.car_length, bearing)
-
 
         # taken points by this car
         points = DrivingCalculations.points_in_range(lane_points, upper_limit, lower_limit)
@@ -127,9 +121,6 @@ class TrafficCreator(object):
 
             lower_limit,  upper_limit= DrivingCalculations.get_limits(xy_id, lane_points, car_length, bearing)
 
-
-            # taken points by this car
-            #points_in_range(lane_points, upper_limit, lower_limit)
             points = DrivingCalculations.points_in_range(lane_points, upper_limit, lower_limit)
 
             for p in points:
@@ -151,9 +142,6 @@ class TrafficCreator(object):
                                           ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
                                           ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
                                           ConfigReader.get_data("driving." + type1 + ".length")[0], type1)
-
-
-
 
                 vehicle.initialize_workflows()
                 vehicles.append(vehicle)
@@ -190,7 +178,6 @@ class TrafficCreator(object):
             x = np.linspace(starting_position_x, final_x, num=length)
             y = np.linspace(starting_position_y, final_y, num=length)
             coordinates = np.array([x, y]).T
-
 
         return coordinates
 

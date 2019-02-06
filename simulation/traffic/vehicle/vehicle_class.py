@@ -23,8 +23,8 @@ class Vehicle(object):
         self.__decision = "\0"
         self.__extra = "\0"
         self.__current_acc = acceleration
-        self.__decision_work_flow = RuleBasedDecisionWorkFlow()
-        self.__driving_work_flow = RuleBasedDrivingWorkflow()
+        self.__decision_work_flow = None
+        self.__driving_work_flow = None
 
 
     @property
@@ -163,7 +163,6 @@ class Vehicle(object):
     def current_acc(self, current_acc):
         self.__current_acc = current_acc
 
-
     @property
     def decision_work_flow(self):
         return self.__decision_work_flow
@@ -180,13 +179,14 @@ class Vehicle(object):
     def driving_work_flow(self, driving_work_flow):
         self.__driving_work_flow = driving_work_flow
 
-
-
     def initialize_workflows(self):
+
+        self.__decision_work_flow = RuleBasedDecisionWorkFlow()
+        self.__driving_work_flow = RuleBasedDrivingWorkflow()
+
         self.decision_work_flow.car = self
 
         self.driving_work_flow.car = self
-
 
     def get_info(self):
         current_time = datetime.datetime.now()
@@ -222,7 +222,6 @@ class Vehicle(object):
             # 'back_point': list(self.back_point)
             'back_point': list(map(lambda x:float(x), self.back_point))
         }
-
 
     def play_car_step(self, __grid, __world_map):
 

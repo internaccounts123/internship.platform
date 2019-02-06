@@ -38,7 +38,6 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
         return grid, lane_points, d_points,  right_lane_points, right_d_points, left_lane_points\
             , left_d_points, left_car_list, right_car_list
 
-
     def make_decision(self, __grid, __world_map):
 
         grid, lane_points, d_points, right_lane_points, right_d_points,\
