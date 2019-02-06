@@ -43,20 +43,20 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
         margin_point = DrivingCalculations.get_margin_point(self.car)
 
         if self.car.speed > self.car.speed_limit or two_sec_decision == Decisions.De_accelerate:
-            self.car._Vehicle__decision = Decisions.De_accelerate
+            self.car.decision = Decisions.De_accelerate
             return Decisions.De_accelerate
 
         elif two_sec_decision == Decisions.Lane_change:
-            self.car._Vehicle__decision = DrivingCalculations.predict_lane_change(self.car, right_lane_points, right_d_points, right_car_list,
-                                                                                  left_lane_points, left_d_points, left_car_list)
-            return self.car._Vehicle__decision
+            self.car.decision = DrivingCalculations.predict_lane_change(self.car, right_lane_points, right_d_points, right_car_list,
+                                                                        left_lane_points, left_d_points, left_car_list)
+            return self.car.decision
 
         if two_sec_decision == Decisions.No_obstructions_ahead:
 
             if margin_point <= self.car.speed <= self.car.speed_limit:
-                self.car._Vehicle__decision = Decisions.Constant_speed
+                self.car.decision = Decisions.Constant_speed
                 return Decisions.Constant_speed
             elif self.car.speed < margin_point:
-                self._Vehicle__decision = Decisions.Accelerate
+                self.car.decision = Decisions.Accelerate
                 return Decisions.Accelerate
 

@@ -20,8 +20,8 @@ class Vehicle(object):
         self.__front_point = None
         self.__back_point = None
         self.__speed = 0.5
-        self.__decision = "\0"
-        self.__extra = "\0"
+        self.__decision = None
+        self.__extra = None
         self.__current_acc = acceleration
         self.__decision_work_flow = None
         self.__driving_work_flow = None
