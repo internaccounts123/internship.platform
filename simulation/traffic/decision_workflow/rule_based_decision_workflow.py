@@ -3,7 +3,7 @@ import numpy as np
 from common.enums.decisions import Decisions
 from common.utility.driving.angle_calculator import AngleCalculator
 from common.utility.driving.driving_calculations import DrivingCalculations
-from simulation.traffic.decision_workflow.decision_workflow_class import DecisionWorkFlow
+from simulation.traffic.decision_workflow.decision_workflow import DecisionWorkFlow
 
 import copy
 
@@ -41,7 +41,7 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
     def make_decision(self, __grid, __world_map):
 
         grid, lane_points, d_points, right_lane_points, right_d_points,\
-        left_lane_points, left_d_points, left_car_list, right_car_list  = self.get_decision_arguments(__world_map, __grid)
+        left_lane_points, left_d_points, left_car_list, right_car_list = self.get_decision_arguments(__world_map, __grid)
         grid = __grid
         current_road = grid[self.car.road_id][self.car.lane_id]
         two_sec_decision = DrivingCalculations.two_sec_rule(self.car, current_road, lane_points, d_points)

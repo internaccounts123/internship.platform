@@ -292,10 +292,7 @@ class DrivingCalculations:
             return car.speed_limit - (car.speed_limit * .01)
 
         @staticmethod
-        def lane_change_helper(car, side_lane_points, side_d_points, side_car_list):
-            if len(side_car_list) == 0:
-                return False
-
+        def initialize_lane_change_helper_variables(car, side_lane_points, side_d_points, side_car_list):
             _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [car.x, car.y])
 
             next_point = DrivingCalculations.point_to_line_intersection(np.array([car.x, car.y]),
@@ -319,6 +316,18 @@ class DrivingCalculations:
             l_neigh_1, l_neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, lower_limit)
 
             distances = DrivingCalculations.generate_distance_points(side_lane_points)
+
+            return u_neigh_1, u_neigh_2,  l_neigh_1, l_neigh_2, distances, neigh_1, neigh_2, car_at_next_point
+
+        @staticmethod
+        def lane_change_helper(car, side_lane_points, side_d_points, side_car_list):
+            if len(side_car_list) == 0:
+                return False
+
+            u_neigh_1, u_neigh_2, l_neigh_1, l_neigh_2, distances, neigh_1, neigh_2, car_at_next_point = \
+                DrivingCalculations.initialize_lane_change_helper_variables(car,
+                                                                            side_lane_points,
+                                                                            side_d_points, side_car_list)
 
             for car in side_car_list:
                 # c_neigh_1, c_neigh_2 = get_neighbouring_points(side_lane_points, [car.x,car.y])

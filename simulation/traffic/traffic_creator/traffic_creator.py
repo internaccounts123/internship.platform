@@ -1,5 +1,4 @@
 from common.config_reader import ConfigReader
-from simulation.traffic.vehicle.rule_based.rule_based import RuleBased
 from common.enums.model_types import ModelTypes
 import random
 from common.utility.conversions import deg2rad
@@ -7,6 +6,8 @@ from common.enums.road_types import RoadType
 from common.utility.driving.driving_calculations import DrivingCalculations
 from common.utility.driving.angle_calculator import AngleCalculator
 import numpy as np
+
+from simulation.traffic.vehicle import Vehicle
 
 
 class TrafficCreator(object):
@@ -137,7 +138,7 @@ class TrafficCreator(object):
         vehicles = []
         for i in range(int(ConfigReader.get_data("driving.traffic.traffic_amount")[0] * percentage)):
             if ModelTypes[model_name].value == ModelTypes.Rule_based.value:
-                vehicle = RuleBased(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
+                vehicle = Vehicle(ConfigReader.get_data("driving." + type1 + ".perception_size")[0],
                                           ConfigReader.get_data("driving." + type1 + ".speed_limit")[0],
                                           ConfigReader.get_data("driving." + type1 + ".acceleration")[0],
                                           ConfigReader.get_data("driving." + type1 + ".de_acceleration")[0],
