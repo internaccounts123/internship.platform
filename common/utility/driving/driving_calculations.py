@@ -299,7 +299,7 @@ class DrivingCalculations :
             return car.speed_limit - (car.speed_limit * .01)
 
         @staticmethod
-        def lane_change_assistant(car, side_lane_points, side_d_points, side_car_list):
+        def lane_change_helper(car, side_lane_points, side_d_points, side_car_list):
             if len(side_car_list) == 0:
                 return False
 
@@ -354,8 +354,8 @@ class DrivingCalculations :
 
         @staticmethod
 
-        def lane_change(car, right_lane_points, right_d_points, right_car_list, left_lane_points, left_d_points,
-                        left_car_list):
+        def predict_lane_change(car, right_lane_points, right_d_points, right_car_list, left_lane_points, left_d_points,
+                                left_car_list):
             """
 
             :param right_lane_points: lane points for the lane at the right side
@@ -367,14 +367,14 @@ class DrivingCalculations :
             :return:
             """
 
-            right_bool = DrivingCalculations.lane_change_assistant(car, right_lane_points, right_d_points,
-                                                                   right_car_list)
+            right_bool = DrivingCalculations.lane_change_helper(car, right_lane_points, right_d_points,
+                                                                right_car_list)
 
             if right_bool is True:
                 return Decisions.Move_right
             else:
-                left_bool = DrivingCalculations.lane_change_assistant(car, left_lane_points, left_d_points,
-                                                                      left_car_list)
+                left_bool = DrivingCalculations.lane_change_helper(car, left_lane_points, left_d_points,
+                                                                   left_car_list)
                 if left_bool is True:
                     return Decisions.Move_left
                 else:

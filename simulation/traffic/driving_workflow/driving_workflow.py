@@ -18,8 +18,14 @@ class RuleBasedDrivingWorkflow():
         self.__car = car
 
 
-    def get_decision_arguments(self, decision, __world_map, __grid):
+    def get_decision_arguments(self, __world_map, __grid):
 
+        """
+
+        :param __world_map: map of the current world
+        :param __grid: grid denotes the overall, global perception
+        :return:
+        """
         car = self.car
         lane_points, d_points = __world_map.get_lane_points(car.road_id, car.lane_id)
         right_lane_points = []
@@ -56,7 +62,7 @@ class RuleBasedDrivingWorkflow():
         car = self.car
 
         lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points = \
-            self.get_decision_arguments(decision, __world_map, __grid)
+            self.get_decision_arguments(__world_map, __grid)
 
 
 

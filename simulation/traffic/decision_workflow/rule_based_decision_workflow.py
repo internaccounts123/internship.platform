@@ -53,8 +53,8 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
             return Decisions.De_accelerate
 
         elif two_sec_decision == Decisions.Lane_change:
-            self.car._Vehicle__decision = DrivingCalculations.lane_change(self.car, right_lane_points, right_d_points, right_car_list,
-                                                           left_lane_points, left_d_points, left_car_list)
+            self.car._Vehicle__decision = DrivingCalculations.predict_lane_change(self.car, right_lane_points, right_d_points, right_car_list,
+                                                                                  left_lane_points, left_d_points, left_car_list)
             return self.car._Vehicle__decision
 
         if two_sec_decision == Decisions.No_obstructions_ahead:
