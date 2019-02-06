@@ -1,7 +1,7 @@
 import datetime
 
 from simulation.traffic.decision_workflow.rule_based_decision_workflow import RuleBasedDecisionWorkFlow
-from simulation.traffic.driving_workflow.driving_workflow import RuleBasedDrivingWorkflow
+from simulation.traffic.driving_workflow.geo_based_driving_workflow import GeoBasedDrivingWorkflow
 
 
 class Vehicle(object):
@@ -182,7 +182,7 @@ class Vehicle(object):
     def initialize_workflows(self):
 
         self.__decision_work_flow = RuleBasedDecisionWorkFlow()
-        self.__driving_work_flow = RuleBasedDrivingWorkflow()
+        self.__driving_work_flow = GeoBasedDrivingWorkflow()
 
         self.decision_work_flow.car = self
 

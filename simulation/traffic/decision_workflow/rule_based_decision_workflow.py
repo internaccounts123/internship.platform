@@ -3,7 +3,7 @@ import numpy as np
 from common.enums.decisions import Decisions
 from common.utility.driving.angle_calculator import AngleCalculator
 from common.utility.driving.driving_calculations import DrivingCalculations
-from simulation.traffic.decision_workflow.decision_workflow_class import DecisionWorkFlow
+from simulation.traffic.decision_workflow.decision_workflow import DecisionWorkFlow
 
 import copy
 
