@@ -1,4 +1,5 @@
 import numpy as np
+from common.enums.decisions import Decisions
 from common.enums.road_types import *
 from map.road_info import RoadInfo
 
@@ -43,9 +44,13 @@ class Map:
     def roads(self, roads):
         self.__roads = roads
 
-
-    # Returns Next Lane Point using the road name, LaneId and Current Position of the Car
     def get_lateral_lanes(self, lane_id, road_id):
+        """
+
+        :param lane_id: current lane id
+        :param road_id: current road id
+        :return:
+        """
         lateral_lanes = []
 
         road = self.roads[road_id]
@@ -59,12 +64,12 @@ class Map:
         return lateral_lanes
 
     def update_lane_info(self, road_id, l_id, dec):
-        lane_id = None
+
         road = self.roads[road_id]
 
-        if dec == "Move_right":
+        if dec == Decisions.Move_right:
             lane_id = road.lanes[l_id + 1].id
-        elif dec == "Move_left":
+        elif dec == Decisions.Move_left:
             lane_id = road.lanes[l_id - 1].id
         else:
             lane_id = l_id
@@ -83,11 +88,9 @@ class Map:
         road = self.roads[road_id]
         return road.lanes[1].id == lane_id
 
-
     @staticmethod
     def calculate_bearing(x, y):
         return np.arctan2(y, x)
-
 
     def get_road_info(self, current_position):
         for r in self.__roads.values:
@@ -96,7 +99,6 @@ class Map:
                     if self.check_point_fit(current_position, lane_points):
                         road_info = RoadInfo(l.id, r.road_id, r.bearing, r.road_type)
                         return road_info
-
 
     def check_point_fit(self, current_position, lane_points):
         dx = lane_points[1][0] - lane_points[2][0]
@@ -117,10 +119,10 @@ class Map:
     @property
     def serialize(self):
         return {
-            'id' : self.id,
-            'name' : self.name,
-            'version' : self.version,
-            'roads' : list(r.serialize for r in self.roads)
+            'id': self.id,
+            'name': self.name,
+            'version': self.version,
+            'roads': list(r.serialize for r in self.roads)
 
         }
 
@@ -129,13 +131,8 @@ class Map:
         lane = road.lanes[lane_id]
         return lane.lane_points, lane.distance_points
 
-
-
     def calculate_initials(self):
-        """
-        :param _map:
-        :return:
-        """
+
         old_max = []
         array_x = []
         array_y = []

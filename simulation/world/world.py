@@ -64,39 +64,16 @@ class World:
             # extract ys of all cars with lane ids
             # check the difference including car width
             for car in self.cars:
+                self.__grid = self.__update_init_perception()
 
-                lane_points, d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id)
-                right_lane_points = []
-                right_d_points = []
-                left_lane_points = []
-                left_d_points = []
+                car.play_car_step(self.__grid, self.world_map)
 
-                if self.world_map.is_last_lane_id(car.road_id, car.lane_id):
-                    right_car_list = []
-                else:
-                    right_car_list = self.__grid[car.road_id][car.lane_id + 1]
-                    right_lane_points, right_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id + 1)
-
-                if self.world_map.is_first_lane_id(car.road_id, car.lane_id):
-                    left_car_list = []
-                else:
-                    left_car_list = self.__grid[car.road_id][car.lane_id - 1]
-                    left_lane_points, left_d_points = self.__world_map.get_lane_points(car.road_id, car.lane_id - 1)
-
-                dec = car.make_decision(self.__grid, lane_points, d_points, right_lane_points, right_d_points,
-                                        right_car_list, left_lane_points, left_d_points, left_car_list)
-
-                log_information = car.get_info()
-                log.info(log_information)
-
-                car.move(dec, lane_points, right_lane_points, left_lane_points)
-
-                car.lane_id = self.__world_map.update_lane_info(car.road_id, car.lane_id, dec)
                 old_min, old_max = self.__world_map.calculate_initials()
 
                 if car.front_point[1] >= old_max[1]:
                     self.cars.remove(car)
 
-                self.__grid = self.__update_init_perception()
+                log_information = car.get_info()
+                log.info(log_information)
 
             event.clear()

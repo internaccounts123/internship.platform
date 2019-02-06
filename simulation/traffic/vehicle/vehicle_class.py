@@ -1,8 +1,7 @@
-from common.config_reader import ConfigReader
-from common.enums.decisions import Decisions
-from common.utility.driving.driving_calculations import *
-import numpy as np
 import datetime
+
+from simulation.traffic.decision_workflow.rule_based_decision_workflow import RuleBasedDecisionWorkFlow
+from simulation.traffic.driving_workflow.driving_workflow import RuleBasedDrivingWorkflow
 
 
 class Vehicle(object):
@@ -24,6 +23,9 @@ class Vehicle(object):
         self.__decision = "\0"
         self.__extra = "\0"
         self.__current_acc = acceleration
+        self.__decision_work_flow = None
+        self.__driving_work_flow = None
+
 
     @property
     def car_length(self):
@@ -161,49 +163,30 @@ class Vehicle(object):
     def current_acc(self, current_acc):
         self.__current_acc = current_acc
 
-    def move(self, decision, lane_points, right_lane_points, left_lane_points):
-        """
+    @property
+    def decision_work_flow(self):
+        return self.__decision_work_flow
 
-        :param decision: decision taken by the make_decision function
-        :param lane_points: list of points for the respective lane
-        :param right_lane_points: lane points at the right of the current position
-        :param left_lane_points: lane points at the left of the current position
-        :return:
-        """
-        _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.x, self.y])
-        bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
+    @decision_work_flow.setter
+    def decision_work_flow(self, decision_work_flow):
+        self.__decision_work_flow = decision_work_flow
 
-        if Decisions[decision].value == Decisions.Accelerate.value:
-            self.speed += (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
+    @property
+    def driving_work_flow(self):
+        return self.__driving_work_flow
 
-            self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
+    @driving_work_flow.setter
+    def driving_work_flow(self, driving_work_flow):
+        self.__driving_work_flow = driving_work_flow
 
-        elif Decisions[decision].value == Decisions.Constant_speed.value:
-            self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
+    def initialize_workflows(self):
 
-        elif Decisions[decision].value == Decisions.De_accelerate.value:
-            new_speed = self.speed + (self.current_acc * (1.0/ConfigReader.get_data("fps")[0]))
-            if new_speed >= 0:
-                self.__speed = new_speed
-            else:
-                pass
-            #     self.speed = 0
-            self.x, self.y = DrivingCalculations.get_next_point(self.x, self.y, self.speed, bearing)
+        self.__decision_work_flow = RuleBasedDecisionWorkFlow()
+        self.__driving_work_flow = RuleBasedDrivingWorkflow()
 
-        elif Decisions[decision].value == Decisions.Move_right.value:
+        self.decision_work_flow.car = self
 
-            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(right_lane_points, [self.x, self.y])
-            self.x, self.y = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-
-
-
-        elif Decisions[decision].value == Decisions.Move_left.value:
-            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(left_lane_points, [self.x, self.y])
-            self.x, self.y = DrivingCalculations.point_to_line_intersection(np.array([self.x, self.y]), np.array([_neigh_1[0], _neigh_2[0]]))
-
-        self.back_point, self.front_point = DrivingCalculations.get_front_and_back_points(self.x,self.y,self.car_length,bearing)
-
-
+        self.driving_work_flow.car = self
 
     def get_info(self):
         current_time = datetime.datetime.now()
@@ -218,8 +201,7 @@ class Vehicle(object):
                 + '  De-acceleration: ' + str(self.de_acceleration)
                 + '  Car road: ' + str(self.road_id)
                 + '  Car lane: ' + str(self.lane_id)
-                + '  Car decision: ' + self.decision
-                + '  Car Extra:  ' + str(self.extra))
+                )
 
     @property
     def serialize(self):
@@ -240,3 +222,9 @@ class Vehicle(object):
             # 'back_point': list(self.back_point)
             'back_point': list(map(lambda x:float(x), self.back_point))
         }
+
+    def play_car_step(self, __grid, __world_map):
+
+        dec = self.__decision_work_flow.make_decision(__grid, __world_map)
+
+        self.__driving_work_flow.implement_decision(dec, __world_map, __grid)

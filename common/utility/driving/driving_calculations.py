@@ -1,10 +1,11 @@
-from common.enums.road_types import *
+import copy
+from common.config_reader import ConfigReader
 from common.utility.driving.angle_calculator import AngleCalculator
 from common.enums.decisions import Decisions
 import numpy as np
 
 
-class DrivingCalculations :
+class DrivingCalculations:
 
         @staticmethod
         def point_to_line_intersection(point, neighbours):
@@ -25,7 +26,7 @@ class DrivingCalculations :
 
             :param lane_points: list of points for the respective lane
             :param point: the current point
-            :return:
+            :return: neighouring points
             """
             distances = []
             lane_points = np.array(lane_points)
@@ -89,7 +90,7 @@ class DrivingCalculations :
             if len(c) == 0:
                 self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, "no immediate car", "no immediate car")
-                return Decisions.Positive
+                return Decisions.No_obstructions_ahead
                 # return False
 
             immediate_car = c[np.argmin(np.array(dis))]
@@ -137,7 +138,6 @@ class DrivingCalculations :
 
                         return Decisions.De_accelerate
 
-
                     # No way out, stop or lane change
                     else:
                         # Change lane
@@ -154,12 +154,11 @@ class DrivingCalculations :
                 self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
                 return Decisions.De_accelerate
 
-
             # 2 second rule not violated
             else:
                 self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-                return Decisions.Positive
+                return Decisions.No_obstructions_ahead
                 # return False
 
 
@@ -248,8 +247,8 @@ class DrivingCalculations :
         def get_front_and_back_points(x, y, car_length, bearing):
             """
 
-                        :param car_x: x coordinate of car
-                        :param car_y: y coordinate of car
+                        :param x: x coordinate of car
+                        :param y: y coordinate of car
                         :param car_length: total length of car
                         :param bearing: bearing at the point
                         :return:
@@ -266,10 +265,8 @@ class DrivingCalculations :
             return points
 
         @staticmethod
-
         def get_next_point(x, y, speed, bearing):
             """
-
             :param x: x coordinate of car
             :param y: y coordinate of car
             :param speed: speed of car
@@ -283,5 +280,102 @@ class DrivingCalculations :
             point.append(y)
 
             return point
+
+        @staticmethod
+        def speed_increment(car):
+
+            return car.current_acc * (1.0 / ConfigReader.get_data("fps")[0])
+
+        @staticmethod
+        def get_margin_point(car):
+
+            return car.speed_limit - (car.speed_limit * .01)
+
+        @staticmethod
+        def lane_change_helper(car, side_lane_points, side_d_points, side_car_list):
+            if len(side_car_list) == 0:
+                return False
+
+            _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [car.x, car.y])
+
+            next_point = DrivingCalculations.point_to_line_intersection(np.array([car.x, car.y]),
+                                                                        np.array([_neigh_1[0], _neigh_2[0]]))
+            car_at_next_point = copy.deepcopy(car)
+
+            car_at_next_point.x = next_point[0]
+            car_at_next_point.y = next_point[1]
+
+            neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points,
+                                                                           [car_at_next_point.x, car_at_next_point.y])
+            bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+            lower_limit, upper_limit = DrivingCalculations.get_front_and_back_points(car_at_next_point.x,
+                                                                                     car_at_next_point.y,
+                                                                                     car_at_next_point.car_length,
+                                                                                     bearing)
+
+            #####################################################################################
+
+            u_neigh_1, u_neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, upper_limit)
+            l_neigh_1, l_neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, lower_limit)
+
+            distances = DrivingCalculations.generate_distance_points(side_lane_points)
+
+            for car in side_car_list:
+                # c_neigh_1, c_neigh_2 = get_neighbouring_points(side_lane_points, [car.x,car.y])
+                neigh_1, neigh_2 = DrivingCalculations.get_neighbouring_points(side_lane_points, [car.x, car.y])
+                bearing = AngleCalculator.get_bearing(neigh_1[0], neigh_2[0])
+
+                car_lower_limit, car_upper_limit = DrivingCalculations.get_car_limits(car.x, car.y, car.car_length,
+                                                                                      bearing)
+
+                car_front_prev_neigh, car_front_next_neigh = DrivingCalculations.get_neighbouring_points(
+                    side_lane_points, car_upper_limit)
+                car_back_prev_neigh, car_back_next_neigh = DrivingCalculations.get_neighbouring_points(side_lane_points,
+                                                                                                       car_lower_limit)
+
+                if distances[l_neigh_1[1]] <= distances[car_front_next_neigh[1]]\
+                        and distances[car_back_prev_neigh[1]] \
+                        <= distances[u_neigh_2[1]]:
+                    return False
+
+            decision = DrivingCalculations.two_sec_rule(car_at_next_point, side_car_list, side_lane_points,
+                                                        side_d_points)
+
+            if decision == Decisions.Lane_change:
+                return False
+            else:
+                return True
+
+        @staticmethod
+        def predict_lane_change(car, right_lane_points, right_d_points, right_car_list
+                                , left_lane_points, left_d_points,
+                                left_car_list):
+            """
+            :param car: the care being considered for prediction
+            :param right_lane_points: lane points for the lane at the right side
+            :param right_d_points: distance points for the lane at the side
+            :param right_car_list: list of cars for the lane at the right side
+            :param left_lane_points: lane points for the lane at the left side
+            :param left_d_points: distance points for the lane at the left side
+            :param left_car_list: lane points for the lane at the side
+            :return:
+            """
+
+            right_bool = DrivingCalculations.lane_change_helper(car, right_lane_points, right_d_points,
+                                                                right_car_list)
+
+            if right_bool is True:
+                return Decisions.Move_right
+            else:
+                left_bool = DrivingCalculations.lane_change_helper(car, left_lane_points, left_d_points,
+                                                                   left_car_list)
+                if left_bool is True:
+                    return Decisions.Move_left
+                else:
+                    # self.acceleration = -8.64
+                    car.current_acc = 0
+                    car.speed = 0
+                    return Decisions.De_accelerate
+
 
 

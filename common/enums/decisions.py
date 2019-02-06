@@ -8,4 +8,4 @@ class Decisions(Enum):
     Lane_change = 4
     Move_right = 5
     Move_left = 6
-    Positive = 7
+    No_obstructions_ahead = 7
