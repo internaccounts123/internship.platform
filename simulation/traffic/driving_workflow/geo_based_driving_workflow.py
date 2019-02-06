@@ -45,11 +45,10 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
             left_car_list = __grid[car.road_id][car.lane_id - 1]
             left_lane_points, left_d_points = __world_map.get_lane_points(car.road_id, car.lane_id - 1)
 
-        return lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points
+        return lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points, right_car_list, left_car_list
 
     def implement_decision(self, decision, __world_map, __grid):
         """
-
                 :param decision: decision to be implemented
                 :param __world_map: current world map
                 :param __grid: current global perception
@@ -57,7 +56,7 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
                 """
         car = self.car
 
-        lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points = \
+        lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points, right_car_list, left_car_list = \
             self.get_decision_arguments(__world_map, __grid)
 
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.car.x, self.car.y])
