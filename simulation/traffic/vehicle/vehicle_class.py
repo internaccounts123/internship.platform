@@ -163,26 +163,22 @@ class Vehicle(object):
     def current_acc(self, current_acc):
         self.__current_acc = current_acc
 
-    @property
-    def main_work_flow(self):
-        return self.__main_work_flow
-
 
     @property
     def decision_work_flow(self):
         return self.__decision_work_flow
 
     @decision_work_flow.setter
-    def decision_work_flow(self, a):
-        self.__decision_work_flow = a
+    def decision_work_flow(self, decision_work_flow):
+        self.__decision_work_flow = decision_work_flow
 
     @property
     def driving_work_flow(self):
         return self.__driving_work_flow
 
     @driving_work_flow.setter
-    def driving_work_flow(self, a):
-        self.__driving_work_flow = a
+    def driving_work_flow(self, driving_work_flow):
+        self.__driving_work_flow = driving_work_flow
 
 
 

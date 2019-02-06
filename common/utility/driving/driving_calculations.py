@@ -28,7 +28,7 @@ class DrivingCalculations :
 
             :param lane_points: list of points for the respective lane
             :param point: the current point
-            :return:
+            :return: neighouring points
             """
             distances = []
             lane_points = np.array(lane_points)
