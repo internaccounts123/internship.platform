@@ -9,7 +9,6 @@ class Vehicle(object):
         self.__id = None
         self.__perception_size = perception_size
         self.__speed_limit = speed_limit
-        self.__acceleration = acceleration
         self.__de_acceleration = de_acceleration
         self.__car_length = length
         self.__type = type1
@@ -21,8 +20,7 @@ class Vehicle(object):
         self.__back_point = None
         self.__speed = 0.5
         self.__decision = None
-        self.__extra = None
-        self.__current_acc = acceleration
+        self.__acceleration = acceleration
         self.__decision_work_flow = None
         self.__driving_work_flow = None
 
@@ -35,13 +33,7 @@ class Vehicle(object):
     def car_length(self, car_length):
         self.__car_length = car_length
 
-    @property
-    def extra(self):
-        return self.__extra
 
-    @extra.setter
-    def extra(self, extra):
-        self.__extra = extra
 
     @property
     def road_id(self):
@@ -157,11 +149,11 @@ class Vehicle(object):
 
     @property
     def current_acc(self):
-        return self.__current_acc
+        return self.__acceleration
 
     @current_acc.setter
     def current_acc(self, current_acc):
-        self.__current_acc = current_acc
+        self.__acceleration = current_acc
 
     @property
     def decision_work_flow(self):
@@ -226,5 +218,4 @@ class Vehicle(object):
     def play_car_step(self, __grid, __world_map):
 
         dec = self.__decision_work_flow.make_decision(__grid, __world_map)
-
         self.__driving_work_flow.implement_decision(dec, __world_map, __grid)

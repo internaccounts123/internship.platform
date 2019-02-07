@@ -68,38 +68,21 @@ class DrivingCalculations:
             # # 2as = u^2
             # # s = u^2/2a deg2r
 
-
-            c = []
-            dis = []
-            for car in car_list:
-
-                if car.id != self_car.id:
-                    _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self_car.x, self_car.y])
-                    angle = AngleCalculator.calculate_angle(lane_points, [self_car.x, self_car.y], [car.x, car.y],
-                                                            _neigh_1[0], _neigh_2[0])
-
-                    if _bool is True:
-                        if AngleCalculator.is_forward(angle):
-                            c.append(car)
-                            dis.append(np.linalg.norm(np.array([car.x, car.y]) - np.array([self_car.x, self_car.y])))
-                    else:
-                        if AngleCalculator.is_backward(angle):
-                            c.append(car)
-                            dis.append(np.linalg.norm(np.array([car.x, car.y]) - np.array([self_car.x, self_car.y])))
+            c, dis = DrivingCalculations.get_immediate_car(self_car, car_list, lane_points, _bool)
 
             if len(c) == 0:
-                self_car.current_acc = self_car.acceleration
                 self_car.extra = (self_car.current_acc, "no immediate car", "no immediate car")
+                self_car.acceleration = ConfigReader.get_data("driving." + self_car.type1 + ".acceleration")[0]
                 return Decisions.No_obstructions_ahead
-                # return False
 
             immediate_car = c[np.argmin(np.array(dis))]
 
-            self_car_neigh_1, self_car_neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self_car.x, self_car.y])
-            imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [immediate_car.x, immediate_car.y])
-            distance_between_me_and_immediate_car = np.abs(distance_points[imm_neigh_1[1]]
-                                                           - distance_points[self_car_neigh_2[1]]) - (
-                                                                self_car.car_length / 2.0 + immediate_car.car_length / 2.0)
+            self_car_neigh_1, self_car_neigh_2 = DrivingCalculations.get_neighbouring_points\
+                (lane_points, [self_car.x, self_car.y])
+            imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points\
+                (lane_points, [immediate_car.x, immediate_car.y])
+            distance_between_me_and_immediate_car = DrivingCalculations.get_distance_from_immediate_car\
+                (self_car.car_length, immediate_car.car_length, distance_points, imm_neigh_1, self_car_neigh_2)
             time = 2.0
 
             # S = vit + 1/2at^2 + car_length + 1
@@ -110,28 +93,16 @@ class DrivingCalculations:
             # Change as required
             margin = distance_two_sec_rule * 0.10
 
-            # Audi brake limit
-            maximum_brake = -8.64
-
             # 2 second rule is violated
             if distance_between_me_and_immediate_car < distance_two_sec_rule:
 
                 # Check if it is possible to brake and avoid collision
-                if distance_between_me_and_immediate_car > self_car.car_length / 2.0 + immediate_car.car_length / 2.0 + 1 + margin:
-                    self_car.current_acc = (np.square(0.0) - np.square(self_car.speed)) / (
-                                2.0 * distance_between_me_and_immediate_car)
+                if distance_between_me_and_immediate_car > DrivingCalculations.get_collision_distance\
+                            (self_car, immediate_car, margin):
 
-                    #  Minimum deceleration rate can be not be less than minimum rate
-                    if self_car.current_acc > -1:
-                        self_car.current_acc = -1
+                    # Calculate the distance after hitting max
 
-                    # Maximum deceleration rate can be not be more than maximum brake
-                    if self_car.current_acc < maximum_brake:
-                        self_car.current_acc = maximum_brake
-
-                    # Calculate the distance after hitting max brake
-                    safe_distance = (np.square(0.0) - np.square(self_car.speed)) / (
-                                2.0 * self_car.current_acc) - self_car.car_length / 2.0
+                    safe_distance = DrivingCalculations.equation_of_motion(self_car)
 
                     # Check if the maximum deceleration does not avoid collision
                     if safe_distance < distance_between_me_and_immediate_car:
@@ -151,17 +122,9 @@ class DrivingCalculations:
 
                     return Decisions.Lane_change
 
-                self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-                return Decisions.De_accelerate
-
             # 2 second rule not violated
             else:
-                self_car.current_acc = self_car.acceleration
-                self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
                 return Decisions.No_obstructions_ahead
-                # return False
-
-
 
         @staticmethod
         def generate_distance_points(lane_points):
@@ -282,9 +245,9 @@ class DrivingCalculations:
             return point
 
         @staticmethod
-        def speed_increment(car):
+        def speed_increment(acceleration_rate):
 
-            return car.current_acc * (1.0 / ConfigReader.get_data("fps")[0])
+            return acceleration_rate * (1.0 / ConfigReader.get_data("fps")[0])
 
         @staticmethod
         def get_margin_point(car):
@@ -386,5 +349,71 @@ class DrivingCalculations:
                     car.speed = 0
                     return Decisions.De_accelerate
 
+        @staticmethod
+        def get_collision_distance(self_car, immediate_car, margin):
+            return self_car.car_length / 2.0 + immediate_car.car_length / 2.0 + 1 + margin
 
+        @staticmethod
+        def equation_of_motion(self_car):
+            return (np.square(0.0) - np.square(self_car.speed)) / (
+                    2.0 * self_car.current_acc) - self_car.car_length / 2.0
 
+        @staticmethod
+        def calculate_deceleration_rate(speed, distance_between_me_and_immediate_car, acceleration):
+
+            # Audi brake limit
+            maximum_brake = -8.64
+            current_acc = (np.square(0.0) - np.square(speed)) / (
+                        2.0 * distance_between_me_and_immediate_car)
+
+            #  Minimum deceleration rate can be not be less than minimum rate
+            if acceleration > -1:
+                current_acc = -1
+
+            # Maximum deceleration rate can be not be more than maximum brake
+            if acceleration < maximum_brake:
+                current_acc = maximum_brake
+
+            return current_acc
+
+        @staticmethod
+        def get_distance_from_immediate_car(car_length, immediate_car_length, distance_points, imm_neigh_1, self_car_neigh_2):
+
+            return np.abs(distance_points[imm_neigh_1[1]] - distance_points[self_car_neigh_2[1]]) - (
+                    car_length / 2.0 + immediate_car_length / 2.0)
+
+        @staticmethod
+        def get_immediate_car(self_car, car_list, lane_points, _bool=True):
+            c = []
+            dis = []
+            for car in car_list:
+
+                if car.id != self_car.id:
+                    _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points,
+                                                                                     [self_car.x, self_car.y])
+                    angle = AngleCalculator.calculate_angle(lane_points, [self_car.x, self_car.y], [car.x, car.y],
+                                                            _neigh_1[0], _neigh_2[0])
+
+                    if _bool is True:
+                        if AngleCalculator.is_forward(angle):
+                            c.append(car)
+                            dis.append(np.linalg.norm(np.array([car.x, car.y]) - np.array([self_car.x, self_car.y])))
+                    else:
+                        if AngleCalculator.is_backward(angle):
+                            c.append(car)
+                            dis.append(np.linalg.norm(np.array([car.x, car.y]) - np.array([self_car.x, self_car.y])))
+
+            return c, dis
+
+        @staticmethod
+        def update_speed(current_speed, acceleration):
+            return current_speed - DrivingCalculations.speed_increment(acceleration)
+
+        @staticmethod
+        def initialize_immediate_distance_arguments(car, immediate_car, lane_points):
+            self_car_neigh_1, self_car_neigh_2 = DrivingCalculations.get_neighbouring_points \
+                (lane_points, [car.x, car.y])
+            imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points \
+                (lane_points, [immediate_car.x, immediate_car.y])
+
+            return self_car_neigh_1, self_car_neigh_2, imm_neigh_1, imm_neigh_2
