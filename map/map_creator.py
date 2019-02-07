@@ -17,8 +17,6 @@ class MapCreator:
         Create a map from map file which it will get from ConfigReader
         :return: Map object
         """
-
-        # TODO: Implement this after game_dir class is done
         # Get map file name
         # file_name = ConfigReader.get_data('map')[0]
 

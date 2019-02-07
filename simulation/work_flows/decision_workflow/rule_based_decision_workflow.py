@@ -38,8 +38,8 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
         grid, lane_points, d_points, right_lane_points, right_d_points,\
         left_lane_points, left_d_points, left_car_list, right_car_list = self.__get_decision_arguments(__world_map, __grid)
         grid = __grid
-        current_road = grid[self.car.road_id][self.car.lane_id]
-        two_sec_decision = DrivingCalculations.two_sec_rule(self.car, current_road, lane_points, d_points)
+        car_list = grid[self.car.road_id][self.car.lane_id]
+        two_sec_decision = DrivingCalculations.two_sec_rule(self.car, car_list, lane_points, d_points)
         margin_point = DrivingCalculations.get_margin_point(self.car)
 
         if self.car.speed > self.car.speed_limit or two_sec_decision == Decisions.De_accelerate:
