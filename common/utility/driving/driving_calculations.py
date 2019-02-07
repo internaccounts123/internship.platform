@@ -72,6 +72,7 @@ class DrivingCalculations:
 
             if len(c) == 0:
                 self_car.extra = (self_car.current_acc, "no immediate car", "no immediate car")
+                self_car.current_acc = self_car.acceleration
                 return Decisions.No_obstructions_ahead
 
             immediate_car = c[np.argmin(np.array(dis))]
@@ -126,13 +127,7 @@ class DrivingCalculations:
 
             # 2 second rule not violated
             else:
-                # TODO remove this
-                #
-                self_car.current_acc = self_car.acceleration
-                self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
                 return Decisions.No_obstructions_ahead
-                # return False
-
         @staticmethod
         def generate_distance_points(lane_points):
             """
@@ -370,16 +365,18 @@ class DrivingCalculations:
 
             # Audi brake limit
             maximum_brake = -8.64
-            self_car.current_acc = (np.square(0.0) - np.square(self_car.speed)) / (
+            current_acc = (np.square(0.0) - np.square(self_car.speed)) / (
                         2.0 * distance_between_me_and_immediate_car)
 
             #  Minimum deceleration rate can be not be less than minimum rate
             if self_car.current_acc > -1:
-                self_car.current_acc = -1
+                current_acc = -1
 
             # Maximum deceleration rate can be not be more than maximum brake
             if self_car.current_acc < maximum_brake:
-                self_car.current_acc = maximum_brake
+                current_acc = maximum_brake
+
+            return current_acc
 
         @staticmethod
         def get_distance_from_immediate_car(self_car, immediate_car, distance_points, imm_neigh_1, self_car_neigh_2):

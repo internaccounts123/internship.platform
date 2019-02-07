@@ -65,29 +65,26 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
 
         if decision == Decisions.Accelerate:
-
+            self.car.current_acc = self.car.acceleration
             self.car.speed += DrivingCalculations.speed_increment(self.car.acceleration)
 
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif decision == Decisions.Constant_speed:
+            self.car.current_acc = self.car.acceleration
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif decision == Decisions.De_accelerate:
             c, dis = DrivingCalculations.get_immediate_car(self.car, car_list, lane_points)
-            # remove if else
-            if len(c) != 0:
-                immediate_car = c[np.argmin(np.array(dis))]
-                self_car_neigh_1, self_car_neigh_2 = DrivingCalculations.get_neighbouring_points\
-                    (lane_points, [self.car.x, self.car.y])
-                imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points\
-                    (lane_points, [immediate_car.x, immediate_car.y])
-                distance_between_me_and_immediate_car = DrivingCalculations.get_distance_from_immediate_car\
-                    (self.car, immediate_car, d_points, imm_neigh_1, self_car_neigh_2)
-                # TODO assign deceleration rate here
-                DrivingCalculations.calculate_deceleration_rate(self.car, distance_between_me_and_immediate_car)
-            else:
-                self.car.current_acc = self.car.acceleration
+            immediate_car = c[np.argmin(np.array(dis))]
+            self_car_neigh_1, self_car_neigh_2 = DrivingCalculations.get_neighbouring_points\
+                (lane_points, [self.car.x, self.car.y])
+            imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points\
+                (lane_points, [immediate_car.x, immediate_car.y])
+            distance_between_me_and_immediate_car = DrivingCalculations.get_distance_from_immediate_car\
+                (self.car, immediate_car, d_points, imm_neigh_1, self_car_neigh_2)
+
+            self.car.current_acc = DrivingCalculations.calculate_deceleration_rate(self.car, distance_between_me_and_immediate_car)
 
             new_speed = DrivingCalculations.update_speed(self.car.speed, self.car.acceleration)
             if new_speed >= 0:
