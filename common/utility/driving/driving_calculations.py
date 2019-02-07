@@ -122,12 +122,10 @@ class DrivingCalculations:
 
                     return Decisions.Lane_change
 
-                self_car.extra = (self_car.current_acc, distance_between_me_and_immediate_car, distance_two_sec_rule)
-                return Decisions.De_accelerate
-
             # 2 second rule not violated
             else:
                 return Decisions.No_obstructions_ahead
+
         @staticmethod
         def generate_distance_points(lane_points):
             """
@@ -361,19 +359,19 @@ class DrivingCalculations:
                     2.0 * self_car.current_acc) - self_car.car_length / 2.0
 
         @staticmethod
-        def calculate_deceleration_rate(self_car, distance_between_me_and_immediate_car):
+        def calculate_deceleration_rate(speed, distance_between_me_and_immediate_car, acceleration):
 
             # Audi brake limit
             maximum_brake = -8.64
-            current_acc = (np.square(0.0) - np.square(self_car.speed)) / (
+            current_acc = (np.square(0.0) - np.square(speed)) / (
                         2.0 * distance_between_me_and_immediate_car)
 
             #  Minimum deceleration rate can be not be less than minimum rate
-            if self_car.current_acc > -1:
+            if acceleration > -1:
                 current_acc = -1
 
             # Maximum deceleration rate can be not be more than maximum brake
-            if self_car.current_acc < maximum_brake:
+            if acceleration < maximum_brake:
                 current_acc = maximum_brake
 
             return current_acc
@@ -410,3 +408,12 @@ class DrivingCalculations:
         @staticmethod
         def update_speed(current_speed, acceleration):
             return current_speed - DrivingCalculations.speed_increment(acceleration)
+
+        @staticmethod
+        def initialize_immediate_distance_arguments(car, immediate_car, lane_points):
+            self_car_neigh_1, self_car_neigh_2 = DrivingCalculations.get_neighbouring_points \
+                (lane_points, [car.x, car.y])
+            imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points \
+                (lane_points, [immediate_car.x, immediate_car.y])
+
+            return self_car_neigh_1, self_car_neigh_2, imm_neigh_1, imm_neigh_2

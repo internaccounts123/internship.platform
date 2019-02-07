@@ -20,8 +20,6 @@ class Vehicle(object):
         self.__back_point = None
         self.__speed = 0.5
         self.__decision = None
-
-        # TODO remove current acc
         self.__acceleration = acceleration
         self.__decision_work_flow = None
         self.__driving_work_flow = None
