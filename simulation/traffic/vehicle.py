@@ -9,7 +9,6 @@ class Vehicle(object):
         self.__id = None
         self.__perception_size = perception_size
         self.__speed_limit = speed_limit
-        self.__acceleration = acceleration
         self.__de_acceleration = de_acceleration
         self.__car_length = length
         self.__type = type1
@@ -23,7 +22,7 @@ class Vehicle(object):
         self.__decision = None
 
         # TODO remove current acc
-        self.__current_acc = acceleration
+        self.__acceleration = acceleration
         self.__decision_work_flow = None
         self.__driving_work_flow = None
 
@@ -152,11 +151,11 @@ class Vehicle(object):
 
     @property
     def current_acc(self):
-        return self.__current_acc
+        return self.__acceleration
 
     @current_acc.setter
     def current_acc(self, current_acc):
-        self.__current_acc = current_acc
+        self.__acceleration = current_acc
 
     @property
     def decision_work_flow(self):

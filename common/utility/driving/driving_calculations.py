@@ -72,7 +72,7 @@ class DrivingCalculations:
 
             if len(c) == 0:
                 self_car.extra = (self_car.current_acc, "no immediate car", "no immediate car")
-                self_car.current_acc = self_car.acceleration
+                self_car.acceleration = ConfigReader.get_data("driving." + self_car.type1 + ".acceleration")[0]
                 return Decisions.No_obstructions_ahead
 
             immediate_car = c[np.argmin(np.array(dis))]
