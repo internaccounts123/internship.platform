@@ -84,7 +84,7 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
                 DrivingCalculations.initialize_immediate_distance_arguments(car, immediate_car, lane_points)
 
             distance_between_me_and_immediate_car = DrivingCalculations.get_distance_from_immediate_car\
-                (self.car.car_length, immediate_car, d_points, imm_neigh_1, self_car_neigh_2)
+                (self.car.car_length, immediate_car.car_length, d_points, imm_neigh_1, self_car_neigh_2)
 
             self.car.acceleration = DrivingCalculations.calculate_deceleration_rate\
                 (self.car.speed, distance_between_me_and_immediate_car, self.car.acceleration)
