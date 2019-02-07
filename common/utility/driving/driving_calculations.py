@@ -82,7 +82,7 @@ class DrivingCalculations:
             imm_neigh_1, imm_neigh_2 = DrivingCalculations.get_neighbouring_points\
                 (lane_points, [immediate_car.x, immediate_car.y])
             distance_between_me_and_immediate_car = DrivingCalculations.get_distance_from_immediate_car\
-                (self_car, immediate_car, distance_points, imm_neigh_1, self_car_neigh_2)
+                (self_car.car_length, immediate_car, distance_points, imm_neigh_1, self_car_neigh_2)
             time = 2.0
 
             # S = vit + 1/2at^2 + car_length + 1
@@ -377,10 +377,10 @@ class DrivingCalculations:
             return current_acc
 
         @staticmethod
-        def get_distance_from_immediate_car(self_car, immediate_car, distance_points, imm_neigh_1, self_car_neigh_2):
+        def get_distance_from_immediate_car(car_length, immediate_car, distance_points, imm_neigh_1, self_car_neigh_2):
 
             return np.abs(distance_points[imm_neigh_1[1]] - distance_points[self_car_neigh_2[1]]) - (
-                    self_car.car_length / 2.0 + immediate_car.car_length / 2.0)
+                    car_length / 2.0 + immediate_car.car_length / 2.0)
 
         @staticmethod
         def get_immediate_car(self_car, car_list, lane_points, _bool=True):
