@@ -8,7 +8,7 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
     def __init__(self):
         super().__init__()
 
-    def get_decision_arguments(self, __world_map, __grid):
+    def __get_decision_arguments(self, __world_map, __grid):
 
         car = self.car
         grid = __grid
@@ -36,7 +36,7 @@ class RuleBasedDecisionWorkFlow(DecisionWorkFlow):
     def make_decision(self, __grid, __world_map):
 
         grid, lane_points, d_points, right_lane_points, right_d_points,\
-        left_lane_points, left_d_points, left_car_list, right_car_list = self.get_decision_arguments(__world_map, __grid)
+        left_lane_points, left_d_points, left_car_list, right_car_list = self.__get_decision_arguments(__world_map, __grid)
         grid = __grid
         current_road = grid[self.car.road_id][self.car.lane_id]
         two_sec_decision = DrivingCalculations.two_sec_rule(self.car, current_road, lane_points, d_points)

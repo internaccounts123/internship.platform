@@ -18,7 +18,7 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
     def car(self, car):
         self.__car = car
 
-    def get_decision_arguments(self, __world_map, __grid):
+    def __get_decision_arguments(self, __world_map, __grid):
 
         """
 
@@ -57,7 +57,7 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
         car = self.car
 
         lane_points, d_points, right_lane_points, right_d_points, left_lane_points, left_d_points, right_car_list, left_car_list = \
-            self.get_decision_arguments(__world_map, __grid)
+            self.__get_decision_arguments(__world_map, __grid)
 
         _neigh_1, _neigh_2 = DrivingCalculations.get_neighbouring_points(lane_points, [self.car.x, self.car.y])
         bearing = AngleCalculator.get_bearing(_neigh_1[0], _neigh_2[0])
@@ -71,7 +71,7 @@ class GeoBasedDrivingWorkflow(DrivingWorkFlow):
             self.car.x, self.car.y = DrivingCalculations.get_next_point(self.car.x, self.car.y, self.car.speed, bearing)
 
         elif decision == Decisions.De_accelerate:
-            new_speed = self.car.speed + DrivingCalculations.speed_increment(self.car)
+            new_speed = self.car.speed - DrivingCalculations.speed_increment(self.car)
             if new_speed >= 0:
                 self.car.__speed = new_speed
             else:

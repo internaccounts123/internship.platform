@@ -58,7 +58,7 @@ class World:
 
     def update(self, event=None):
         log = Logger.get_logger("FILE")
-        for i in range(1000):
+        while True:
 
             event.wait()
             # extract ys of all cars with lane ids
